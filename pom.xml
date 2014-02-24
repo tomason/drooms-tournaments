@@ -7,16 +7,82 @@
   <artifactId>drooms-tournaments</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Drooms server</name>
+  <name>Drooms tournaments</name>
 
   <modules>
+    <module>drooms-tournaments-domain</module>
     <module>drooms-tournaments-server</module>
     <module>drooms-tournaments-execution-client</module>
   </modules>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <version.jboss.bom>1.0.7.Final</version.jboss.bom>
+    <version.drooms>2.0-SNAPSHOT</version.drooms>
+    <version.drools>6.1.0-SNAPSHOT</version.drools>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- Drooms tournaments dependencies -->
+      <dependency>
+        <groupId>cz.schlosserovi.tomas</groupId>
+        <artifactId>drooms-tournaments-domain</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- JBossAS/ EAP dependencies -->
+      <dependency>
+        <groupId>org.jboss.bom</groupId>
+        <artifactId>jboss-javaee-6.0-with-tools</artifactId>
+        <version>${version.jboss.bom}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.bom</groupId>
+        <artifactId>jboss-javaee-6.0-with-resteasy</artifactId>
+        <version>${version.jboss.bom}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.bom</groupId>
+        <artifactId>jboss-javaee-6.0-with-hibernate</artifactId>
+        <version>${version.jboss.bom}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- Drooms dependencies -->
+      <dependency>
+        <groupId>com.github.triceo.drooms</groupId>
+        <artifactId>drooms-game-impl</artifactId>
+        <version>${version.drooms}</version>
+      </dependency>
+
+      <!-- Other dependencies -->
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.0.13</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <repositories>
     <repository>
