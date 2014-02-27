@@ -96,4 +96,23 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>openshift</id>
+      <build>
+        <finalName>tournaments</finalName>
+        <plugins>
+          <plugin>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>${version.war.plugin}</version>
+            <configuration>
+              <outputDirectory>deployments</outputDirectory>
+              <warName>ROOT</warName>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

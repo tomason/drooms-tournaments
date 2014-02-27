@@ -17,7 +17,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <version.jboss.bom>1.0.7.Final</version.jboss.bom>
+    <version.jboss.bom>1.0.4.Final-redhat-1</version.jboss.bom>
+    <version.war.plugin>2.1.1</version.war.plugin>
     <version.drooms>2.0-SNAPSHOT</version.drooms>
     <version.drools>6.1.0-SNAPSHOT</version.drools>
   </properties>
@@ -34,21 +35,7 @@
       <!-- JBossAS/ EAP dependencies -->
       <dependency>
         <groupId>org.jboss.bom</groupId>
-        <artifactId>jboss-javaee-6.0-with-tools</artifactId>
-        <version>${version.jboss.bom}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.bom</groupId>
-        <artifactId>jboss-javaee-6.0-with-resteasy</artifactId>
-        <version>${version.jboss.bom}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.bom</groupId>
-        <artifactId>jboss-javaee-6.0-with-hibernate</artifactId>
+        <artifactId>jboss-javaee-6.0-with-all</artifactId>
         <version>${version.jboss.bom}</version>
         <type>pom</type>
         <scope>import</scope>
@@ -85,22 +72,35 @@
   </build>
 
   <repositories>
+    <!-- Drooms repository - contains Drooms binaries and strategies -->
     <repository>
       <id>drooms-public</id>
       <name>Repository group for Drooms</name>
       <url>http://nexus-drooms.rhcloud.com/nexus/content/groups/public</url>
     </repository>
+    <!-- JBoss repository - contains latest Drools SNAPSHOTS -->
     <repository>
       <id>jboss-public-repository-group</id>
       <name>JBoss Public Maven Repository Group</name>
       <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
     </repository>
+    <!-- EAP repository - for EAP dependencies -->
+    <repository>
+      <id>eap</id>
+      <url>http://maven.repository.redhat.com/techpreview/all</url>
+    </repository>
   </repositories>
   <pluginRepositories>
+    <!-- JBoss repository - contains latest Drools SNAPSHOTS -->
     <pluginRepository>
       <id>jboss-public-repository-group</id>
       <name>JBoss Public Maven Repository Group</name>
       <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+    </pluginRepository>
+    <!-- EAP repository - for EAP dependencies -->
+    <pluginRepository>
+      <id>eap</id>
+      <url>http://maven.repository.redhat.com/techpreview/all</url>
     </pluginRepository>
   </pluginRepositories>
 </project>
