@@ -22,9 +22,9 @@ public class GameDAO extends AbstractDAO {
     }
 
     public void setFinishedGame(Game game) {
-        em.refresh(game);
-        game.setFinished(true);
-        em.merge(game);
+        Game managed = em.find(Game.class, game.getId());
+        managed.setFinished(true);
+        em.merge(managed);
         em.flush();
     }
 

@@ -57,6 +57,7 @@ public class GameRegistryBean {
             result.setPoints(Integer.parseInt(results.getResults().getProperty(result.getStrategy().getAuthor().getName(), "0")));
             resultsDao.updateGameResult(result);
         }
+        gameDao.setFinishedGame(game);
 
         for (UUID key : inProgress.keySet()) {
             if (key.equals(results.getGameId())) {
