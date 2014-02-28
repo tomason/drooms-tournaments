@@ -28,7 +28,7 @@ public class UserRegistryBean {
     @PostConstruct
     public void startThread() {
         logger.info("Scheduling executor check-in");
-        thread.scheduleWithFixedDelay(new TimeoutChecker(), 0, 10, TimeUnit.MINUTES);
+        thread.scheduleWithFixedDelay(new TimeoutChecker(), 10L, 10L, TimeUnit.MINUTES);
     }
 
     @PreDestroy
