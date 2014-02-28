@@ -19,6 +19,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.jboss.bom>1.0.4.Final-redhat-1</version.jboss.bom>
     <version.war.plugin>2.1.1</version.war.plugin>
+    <version.jboss.maven.plugin>7.4.Final</version.jboss.maven.plugin>
     <version.drooms>2.0-SNAPSHOT</version.drooms>
     <version.drools>6.1.0-SNAPSHOT</version.drools>
   </properties>
