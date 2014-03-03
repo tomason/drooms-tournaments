@@ -1,80 +1,98 @@
 package cz.schlosserovi.tomas.drooms.tournaments.data;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
-import cz.schlosserovi.tomas.drooms.tournaments.model.Game;
-import cz.schlosserovi.tomas.drooms.tournaments.model.GameResult;
-import cz.schlosserovi.tomas.drooms.tournaments.model.Playground;
-import cz.schlosserovi.tomas.drooms.tournaments.model.Strategy;
-import cz.schlosserovi.tomas.drooms.tournaments.model.User;
+import cz.schlosserovi.tomas.drooms.tournaments.domain.GAV;
+import cz.schlosserovi.tomas.drooms.tournaments.model.GameEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.model.GameResultEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.model.StrategyEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 @Stateless
 public class GameResultDAO extends AbstractDAO {
+    @Inject
+    private GameDAO games;
+    @Inject
+    private StrategyDAO strategies;
 
-    public void insertGameResult(GameResult newGameResult, Strategy strategy, Game game) {
-        strategy.addGameResult(newGameResult);
-        game.addGameResult(newGameResult);
-        em.persist(newGameResult);
+    public GameResultEntity insertGameResult(UUID gameId, GAV gav) {
+        GameResultEntity result = new GameResultEntity();
+        result.setStrategy(strategies.getStrategy(gav));
+        result.setGame(games.getGame(gameId));
+
+        em.persist(result);
+        em.flush();
+
+        return result;
+    }
+
+    public void setPoints(Long id, int points) {
+        GameResultEntity entity = getGameResult(id);
+        entity.setPoints(points);
+
+        em.merge(entity);
         em.flush();
     }
 
-    public void updateGameResult(GameResult updatedGameResult) {
-        em.merge(updatedGameResult);
-        em.flush();
+    public GameResultEntity getGameResult(Long id) {
+        return em.find(GameResultEntity.class, id);
     }
 
-    public List<GameResult> getGameResults() {
+    public List<GameResultEntity> getGameResults() {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<GameResult> query = builder.createQuery(GameResult.class);
+        CriteriaQuery<GameResultEntity> query = builder.createQuery(GameResultEntity.class);
 
-        query.select(query.from(GameResult.class));
+        query.select(query.from(GameResultEntity.class));
 
         return em.createQuery(query).getResultList();
     }
 
-    public List<GameResult> getGameResults(Game game) {
+    public List<GameResultEntity> getGameResults(GameEntity game) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<GameResult> query = builder.createQuery(GameResult.class);
+        CriteriaQuery<GameResultEntity> query = builder.createQuery(GameResultEntity.class);
 
-        Root<GameResult> gameResult = query.from(GameResult.class);
+        Root<GameResultEntity> gameResult = query.from(GameResultEntity.class);
         query.select(gameResult).where(builder.equal(gameResult.get("game"), game));
 
         return em.createQuery(query).getResultList();
     }
 
-    public List<GameResult> getGameResults(Strategy strategy) {
+    public List<GameResultEntity> getGameResults(StrategyEntity strategy) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<GameResult> query = builder.createQuery(GameResult.class);
+        CriteriaQuery<GameResultEntity> query = builder.createQuery(GameResultEntity.class);
 
-        Root<GameResult> gameResult = query.from(GameResult.class);
+        Root<GameResultEntity> gameResult = query.from(GameResultEntity.class);
         query.select(gameResult).where(builder.equal(gameResult.get("strategy"), strategy));
 
         return em.createQuery(query).getResultList();
     }
 
-    public List<GameResult> getGameResults(User author) {
+    public List<GameResultEntity> getGameResults(UserEntity author) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<GameResult> query = builder.createQuery(GameResult.class);
+        CriteriaQuery<GameResultEntity> query = builder.createQuery(GameResultEntity.class);
 
-        Root<GameResult> strategy = query.from(GameResult.class);
-        Join<GameResult, Strategy> join = strategy.join("strategy");
+        Root<GameResultEntity> strategy = query.from(GameResultEntity.class);
+        Join<GameResultEntity, StrategyEntity> join = strategy.join("strategy");
         query.select(strategy).where(builder.equal(join.get("author"), author));
 
         return em.createQuery(query).getResultList();
     }
 
-    public List<GameResult> getGameResults(Playground playground) {
+    public List<GameResultEntity> getGameResults(PlaygroundEntity playground) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<GameResult> query = builder.createQuery(GameResult.class);
+        CriteriaQuery<GameResultEntity> query = builder.createQuery(GameResultEntity.class);
 
-        Root<GameResult> strategy = query.from(GameResult.class);
-        Join<GameResult, Game> join = strategy.join("game");
+        Root<GameResultEntity> strategy = query.from(GameResultEntity.class);
+        Join<GameResultEntity, GameEntity> join = strategy.join("game");
         query.select(strategy).where(builder.equal(join.get("playground"), playground));
 
         return em.createQuery(query).getResultList();
