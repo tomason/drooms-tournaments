@@ -33,6 +33,15 @@
         <version>${project.version}</version>
       </dependency>
 
+      <!-- Override Drools version from Drooms -->
+      <dependency>
+        <groupId>org.kie</groupId>
+        <artifactId>kie-parent-with-dependencies</artifactId>
+        <version>${version.drools}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
       <!-- JBossAS/ EAP dependencies -->
       <dependency>
         <groupId>org.jboss.bom</groupId>
@@ -47,13 +56,6 @@
         <groupId>com.github.triceo.drooms</groupId>
         <artifactId>drooms-game-impl</artifactId>
         <version>${version.drooms}</version>
-      </dependency>
-
-      <!-- Other dependencies -->
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>1.0.13</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
