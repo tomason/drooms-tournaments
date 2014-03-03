@@ -3,11 +3,11 @@ package cz.schlosserovi.tomas.drooms.tournaments.domain;
 import java.util.Properties;
 import java.util.UUID;
 
-public class GameResults {
+public class ExecutionResults {
     private UUID gameId;
     private Properties results;
 
-    public GameResults() {
+    public ExecutionResults() {
     }
 
     public UUID getGameId() {
@@ -34,7 +34,7 @@ public class GameResults {
         boolean first = true;
         for (String player : results.stringPropertyNames()) {
             if (!first) {
-                builder.append(",");
+                builder.append(", ");
             }
             builder.append(player).append("=").append(results.getProperty(player));
             first = false;

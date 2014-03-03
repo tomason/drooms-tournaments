@@ -4,14 +4,14 @@ package cz.schlosserovi.tomas.drooms.tournaments.domain;
 import java.util.Properties;
 import java.util.UUID;
 
-public class GameSetup {
+public class ExecutionSetup {
     private UUID gameId;
     private String className;
     private String playground;
     private Properties players;
     private Properties gameConfig;
 
-    public GameSetup() {
+    public ExecutionSetup() {
     }
 
     public UUID getGameId() {
@@ -54,4 +54,28 @@ public class GameSetup {
         this.gameConfig = gameConfig;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("GameSetup[gameId='").append(gameId).append("', ");
+        sb.append("className='").append(className).append("', players={");
+        boolean first = true;
+        for (String key : players.stringPropertyNames()) {
+            if (!first) {
+                sb.append(", ");
+            }
+            sb.append(key).append("=").append(players.getProperty(key));
+        }
+        sb.append("}, gameConfig={");
+        first = true;
+        for (String key : gameConfig.stringPropertyNames()) {
+            if (!first) {
+                sb.append(", ");
+            }
+            sb.append(key).append("=").append(gameConfig.getProperty(key));
+        }
+        sb.append("}, playground='").append(playground).append("']");
+
+        return sb.toString();
+    }
 }
