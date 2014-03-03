@@ -3,12 +3,8 @@ package cz.schlosserovi.tomas.drooms.tournaments.services;
 import java.util.UUID;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -16,18 +12,16 @@ import javax.ws.rs.core.Response.Status;
 
 import cz.schlosserovi.tomas.drooms.tournaments.beans.GameRegistryBean;
 import cz.schlosserovi.tomas.drooms.tournaments.beans.UserRegistryBean;
-import cz.schlosserovi.tomas.drooms.tournaments.domain.GameResults;
+import cz.schlosserovi.tomas.drooms.tournaments.domain.ExecutionResults;
 
 @Path("/execution")
-public class ExecutorService {
+public class ExecutorServiceImpl implements ExecutorService {
     @Inject
     private UserRegistryBean userRegistry;
     @Inject
     private GameRegistryBean gameRegistry;
 
-    @GET
-    @Path("/register")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Override
     public Response register() {
         ResponseBuilder builder;
         try {
@@ -40,8 +34,7 @@ public class ExecutorService {
         return builder.build();
     }
 
-    @GET
-    @Path("/{id}/ping")
+    @Override
     public Response ping(@PathParam("id") String id) {
         ResponseBuilder builder;
         try {
@@ -56,9 +49,7 @@ public class ExecutorService {
         return builder.build();
     }
 
-    @GET
-    @Path("/{id}/new")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Override
     public Response getNewGame(@PathParam("id") String id) {
         ResponseBuilder builder;
         try {
@@ -72,10 +63,8 @@ public class ExecutorService {
         return builder.build();
     }
 
-    @POST
-    @Path("/{id}/return")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response returnGameResults(@PathParam("id") String id, GameResults results) {
+    @Override
+    public Response returnGameResults(@PathParam("id") String id, ExecutionResults results) {
         ResponseBuilder builder;
         try {
             ping(id);
