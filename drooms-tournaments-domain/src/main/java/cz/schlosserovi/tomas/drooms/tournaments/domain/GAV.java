@@ -1,4 +1,4 @@
-package cz.schlosserovi.tomas.drooms.tournaments.model;
+package cz.schlosserovi.tomas.drooms.tournaments.domain;
 
 import java.io.Serializable;
 
@@ -9,11 +9,36 @@ public class GAV implements Serializable {
     private String artifactId;
     private String version;
 
+    public GAV() {
+    }
+
+    public GAV(String gav) {
+        final String[] gavParts = gav.split("\\Q:\\E");
+        if (gavParts.length != 3) {
+            throw new IllegalArgumentException("Wrong Maven GAV " + gav);
+        }
+        this.groupId = gavParts[0];
+        this.artifactId = gavParts[1];
+        this.version = gavParts[2];
+    }
+
+    public GAV(String groupId, String artifactId, String version) {
+        if (groupId == null || artifactId == null || version == null) {
+            throw new IllegalArgumentException("groupId, artifactId and version must not be null");
+        }
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+        this.version = version;
+    }
+
     public String getGroupId() {
         return groupId;
     }
 
     public void setGroupId(String groupId) {
+        if (groupId == null) {
+            throw new IllegalArgumentException("groupId must not be null");
+        }
         this.groupId = groupId;
     }
 
@@ -22,6 +47,9 @@ public class GAV implements Serializable {
     }
 
     public void setArtifactId(String artifactId) {
+        if (artifactId == null) {
+            throw new IllegalArgumentException("artifactId must not be null");
+        }
         this.artifactId = artifactId;
     }
 
@@ -30,7 +58,15 @@ public class GAV implements Serializable {
     }
 
     public void setVersion(String version) {
+        if (version == null) {
+            throw new IllegalArgumentException("version must not be null");
+        }
         this.version = version;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s:%s:%s", groupId, artifactId, version);
     }
 
     @Override
