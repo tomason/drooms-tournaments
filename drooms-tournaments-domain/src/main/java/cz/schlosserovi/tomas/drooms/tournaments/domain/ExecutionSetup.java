@@ -57,7 +57,7 @@ public class ExecutionSetup {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("GameSetup[gameId='").append(gameId).append("', ");
+        sb.append("ExecutionSetup[gameId='").append(gameId).append("', ");
         sb.append("className='").append(className).append("', players={");
         boolean first = true;
         for (String key : players.stringPropertyNames()) {
@@ -65,6 +65,7 @@ public class ExecutionSetup {
                 sb.append(", ");
             }
             sb.append(key).append("=").append(players.getProperty(key));
+            first = false;
         }
         sb.append("}, gameConfig={");
         first = true;
@@ -73,6 +74,7 @@ public class ExecutionSetup {
                 sb.append(", ");
             }
             sb.append(key).append("=").append(gameConfig.getProperty(key));
+            first = false;
         }
         sb.append("}, playground='").append(playground).append("']");
 

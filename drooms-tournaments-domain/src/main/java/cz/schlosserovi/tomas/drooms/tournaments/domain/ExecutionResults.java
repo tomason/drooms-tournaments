@@ -30,7 +30,7 @@ public class ExecutionResults {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("GameResults[gameId=").append(gameId).append(", results={");
+        builder.append("ExecutionResults[gameId=").append(gameId).append(", results={");
         boolean first = true;
         for (String player : results.stringPropertyNames()) {
             if (!first) {
