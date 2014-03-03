@@ -94,8 +94,8 @@ public class GameEntity implements Serializable {
         if (gameResult == null) {
             throw new IllegalArgumentException("GameResult must not be null");
         }
-        if (gameResult.getGame() != null) {
-            throw new IllegalArgumentException("GameResult must not be assigned to another game");
+        if (!equals(gameResult.getGame())) {
+            throw new IllegalArgumentException("GameResult must not be assigned to another Game");
         }
         gameResults.add(gameResult);
     }

@@ -114,6 +114,9 @@ public class PlaygroundEntity implements Serializable {
         if (game == null) {
             throw new IllegalArgumentException("Game must not be null");
         }
+        if (!equals(game.getPlayground())) {
+            throw new IllegalArgumentException("Game must not be assigned to another Playground");
+        }
         games.add(game);
     }
 

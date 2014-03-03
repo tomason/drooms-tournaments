@@ -90,6 +90,9 @@ public class UserEntity implements Serializable {
         if (playground == null) {
             throw new IllegalArgumentException("Playground must not be null");
         }
+        if (!equals(playground.getAuthor())) {
+            throw new IllegalArgumentException("Playground must not be assigned to another User");
+        }
         playgrounds.add(playground);
     }
 
@@ -108,7 +111,35 @@ public class UserEntity implements Serializable {
         if (strategy == null) {
             throw new IllegalArgumentException("Strategy must not be null");
         }
+        if (!equals(strategy.getAuthor())) {
+            throw new IllegalArgumentException("Strategy must not be assigned to another User");
+        }
         strategies.add(strategy);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        UserEntity other = (UserEntity) obj;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        return true;
     }
 
 }
