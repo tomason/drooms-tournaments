@@ -22,7 +22,7 @@ public class PlaygroundEntity implements Serializable {
     @Id
     private String name;
     private int maxPlayers;
-    @Column(length = Integer.MAX_VALUE)
+    @Column(length = 100_000)
     private String source;
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
     private UserEntity author;
