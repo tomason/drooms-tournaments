@@ -26,8 +26,8 @@ public class GameResultDAO extends AbstractDAO {
 
     public GameResultEntity insertGameResult(UUID gameId, GAV gav) {
         GameResultEntity result = new GameResultEntity();
-        result.setStrategy(strategies.getStrategy(gav));
         result.setGame(games.getGame(gameId));
+        result.setStrategy(strategies.getStrategy(gav));
 
         em.persist(result);
         em.flush();
