@@ -1,9 +1,7 @@
 package cz.schlosserovi.tomas.drooms.tournaments.data;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -34,12 +32,12 @@ public class PlaygroundDAO extends AbstractDAO {
     }
 
     public void setPlaygroundConfiguration(String playgroundName, Properties playgroundConfig) {
-        Set<PlaygroundConfigEntity> config = new HashSet<>();
-        for (String key : playgroundConfig.stringPropertyNames()) {
-            config.add(new PlaygroundConfigEntity(key, playgroundConfig.getProperty(key)));
-        }
         PlaygroundEntity playground = getPlayground(playgroundName);
-        playground.setConfigurations(config);
+        for (String key : playgroundConfig.stringPropertyNames()) {
+            PlaygroundConfigEntity config = new PlaygroundConfigEntity(key, playgroundConfig.getProperty(key));
+            playground.addConfiguration(config);
+            em.persist(config);
+        }
 
         em.merge(playground);
         em.flush();
