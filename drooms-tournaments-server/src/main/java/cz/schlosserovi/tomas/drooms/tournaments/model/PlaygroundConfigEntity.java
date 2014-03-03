@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "PLAYGROUND_CONFIGURATION")
@@ -16,9 +15,7 @@ public class PlaygroundConfigEntity implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
-    @NotNull
     private String key;
-    @NotNull
     private String value;
 
     public PlaygroundConfigEntity() {

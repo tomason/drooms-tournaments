@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "USER")
@@ -18,9 +17,7 @@ public class UserEntity implements Serializable {
 
     @Id
     private String name;
-    @NotNull
     private byte[] password;
-    @NotNull
     private byte[] salt;
     @OneToMany(mappedBy = "author")
     private Set<PlaygroundEntity> playgrounds = new HashSet<>();
