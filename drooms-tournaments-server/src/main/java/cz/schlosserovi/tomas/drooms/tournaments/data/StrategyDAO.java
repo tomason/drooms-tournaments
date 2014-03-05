@@ -7,10 +7,13 @@ import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.GAV;
 import cz.schlosserovi.tomas.drooms.tournaments.model.StrategyEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentResultEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 @Stateless
@@ -88,4 +91,19 @@ public class StrategyDAO extends AbstractDAO {
 
         return em.createQuery(query).getSingleResult();
     }
+
+    public List<StrategyEntity> getActiveStrategies(TournamentEntity tournament) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<StrategyEntity> query = builder.createQuery(StrategyEntity.class);
+
+        Root<StrategyEntity> strategy = query.from(StrategyEntity.class);
+        Join<StrategyEntity, TournamentResultEntity> join = strategy.<StrategyEntity, UserEntity>join("author").join("tournamentResults");
+
+        query.select(strategy).where(
+                builder.and(builder.equal(join.get("tournament"), tournament),
+                        builder.equal(strategy.get("active"), true)));
+
+        return em.createQuery(query).getResultList();
+    }
+
 }

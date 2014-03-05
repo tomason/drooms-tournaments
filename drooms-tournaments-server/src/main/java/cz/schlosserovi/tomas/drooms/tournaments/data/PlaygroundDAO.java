@@ -1,5 +1,6 @@
 package cz.schlosserovi.tomas.drooms.tournaments.data;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
@@ -11,6 +12,7 @@ import javax.persistence.criteria.Root;
 
 import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundConfigEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 @Stateless
@@ -69,8 +71,18 @@ public class PlaygroundDAO extends AbstractDAO {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<PlaygroundEntity> query = builder.createQuery(PlaygroundEntity.class);
 
-        Root<PlaygroundEntity> gameResult = query.from(PlaygroundEntity.class);
-        query.select(gameResult).where(builder.equal(gameResult.get("author"), author));
+        Root<PlaygroundEntity> playground = query.from(PlaygroundEntity.class);
+        query.select(playground).where(builder.equal(playground.get("author"), author));
+
+        return em.createQuery(query).getResultList();
+    }
+
+    public List<PlaygroundEntity> getPlaygrounds(TournamentEntity tournament) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<PlaygroundEntity> query = builder.createQuery(PlaygroundEntity.class);
+
+        Root<PlaygroundEntity> playground = query.from(PlaygroundEntity.class);
+        query.select(playground).where(builder.isMember(tournament, playground.<Collection<TournamentEntity>>get("tournaments")));
 
         return em.createQuery(query).getResultList();
     }
