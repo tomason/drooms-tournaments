@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import cz.schlosserovi.tomas.drooms.tournaments.util.NullForbiddingSet;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "PLAYER")
 public class UserEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

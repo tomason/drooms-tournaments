@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -21,7 +22,9 @@ public class TournamentEntity implements Serializable {
 
     @Id
     private String name;
+    @Column(name = "TOURNAMENT_START")
     private Calendar start;
+    @Column(name = "TOURNAMENT_END")
     private Calendar end;
     private int period = 24;
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
