@@ -4,12 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -18,23 +16,18 @@ import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 public class UserRegistryBean {
-    private static final Logger logger = LoggerFactory.getLogger(UserRegistryBean.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserRegistryBean.class);
     @Inject
     private GameRegistryBean gameQueue;
+    @Inject
+    private ScheduledExecutorService scheduler;
 
     private final Map<UUID, Long> userRegistry = new HashMap<>();
-    private final ScheduledExecutorService thread = Executors.newSingleThreadScheduledExecutor();
 
     @PostConstruct
     public void startThread() {
-        logger.info("Scheduling executor check-in");
-        thread.scheduleWithFixedDelay(new TimeoutChecker(), 10L, 10L, TimeUnit.MINUTES);
-    }
-
-    @PreDestroy
-    public void stopThread() {
-        logger.info("Shutting down executor check-in thread");
-        thread.shutdown();
+        LOGGER.info("Scheduling executor check-in");
+        scheduler.scheduleWithFixedDelay(new TimeoutChecker(), 10L, 10L, TimeUnit.MINUTES);
     }
 
     public UUID register() {
@@ -70,7 +63,7 @@ public class UserRegistryBean {
             long currentTime = getTime();
             for (Entry<UUID, Long> e : userRegistry.entrySet()) {
                 if (currentTime - e.getValue() > TIMEOUT) {
-                    logger.warn("Executor {} failed to check-in, unregistering", e.getKey());
+                    LOGGER.warn("Executor {} failed to check-in, unregistering", e.getKey());
                     unregister(e.getKey());
                 }
             }
