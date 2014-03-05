@@ -1,4 +1,4 @@
-package cz.schlosserovi.tomas.drooms.tournaments;
+package cz.schlosserovi.tomas.drooms.tournaments.util;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.GameResult;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
