@@ -1,5 +1,6 @@
 package cz.schlosserovi.tomas.drooms.tournaments.data;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,7 +10,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import cz.schlosserovi.tomas.drooms.tournaments.domain.GAV;
 import cz.schlosserovi.tomas.drooms.tournaments.model.GameEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.model.GameResultEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
 
@@ -19,12 +22,21 @@ public class GameDAO extends AbstractDAO {
     private PlaygroundDAO playgrounds;
     @Inject
     private TournamentDAO tournaments;
+    @Inject
+    private StrategyDAO strategies;
 
-    public GameEntity insertGame(String playgroundName, String tounamentName) {
+    public GameEntity insertGame(String playgroundName, String tounamentName, Collection<GAV> strategies) {
+        if (strategies.size() < 2) {
+            throw new IllegalArgumentException("Can't play game with less than 2 players");
+        }
         GameEntity result = new GameEntity();
         result.setId(UUID.randomUUID());
         result.setPlayground(playgrounds.getPlayground(playgroundName));
         result.setTournament(tournaments.getTournament(tounamentName));
+
+        for (GAV strategy : strategies) {
+            em.persist(new GameResultEntity(this.strategies.getStrategy(strategy), result));
+        }
 
         em.persist(result);
         em.flush();

@@ -1,16 +1,13 @@
 package cz.schlosserovi.tomas.drooms.tournaments.data;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
-import cz.schlosserovi.tomas.drooms.tournaments.domain.GAV;
 import cz.schlosserovi.tomas.drooms.tournaments.model.GameEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.GameResultEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundEntity;
@@ -19,21 +16,6 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 @Stateless
 public class GameResultDAO extends AbstractDAO {
-    @Inject
-    private GameDAO games;
-    @Inject
-    private StrategyDAO strategies;
-
-    public GameResultEntity insertGameResult(UUID gameId, GAV gav) {
-        GameResultEntity result = new GameResultEntity();
-        result.setGame(games.getGame(gameId));
-        result.setStrategy(strategies.getStrategy(gav));
-
-        em.persist(result);
-        em.flush();
-
-        return result;
-    }
 
     public void setPoints(Long id, int points) {
         GameResultEntity entity = getGameResult(id);
