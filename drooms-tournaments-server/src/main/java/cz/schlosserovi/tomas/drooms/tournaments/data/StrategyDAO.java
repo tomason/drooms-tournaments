@@ -29,7 +29,7 @@ public class StrategyDAO extends AbstractDAO {
         strategy.setActive(active);
         strategy.setAuthor(author);
         try {
-            StrategyEntity prev = getDefaultStrategy(author);
+            StrategyEntity prev = getActiveStrategy(author);
             if (active) {
                 prev.setActive(!active);
                 em.merge(prev);
@@ -46,7 +46,7 @@ public class StrategyDAO extends AbstractDAO {
 
     public void setDefaultStrategy(GAV gav) {
         StrategyEntity current = getStrategy(gav);
-        StrategyEntity prev = getDefaultStrategy(current.getAuthor());
+        StrategyEntity prev = getActiveStrategy(current.getAuthor());
         prev.setActive(false);
         current.setActive(true);
 
@@ -78,7 +78,7 @@ public class StrategyDAO extends AbstractDAO {
         return em.createQuery(query).getResultList();
     }
 
-    public StrategyEntity getDefaultStrategy(UserEntity author) {
+    public StrategyEntity getActiveStrategy(UserEntity author) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<StrategyEntity> query = builder.createQuery(StrategyEntity.class);
 
