@@ -1,6 +1,6 @@
 package cz.schlosserovi.tomas.drooms.tournaments.services;
 
-import static cz.schlosserovi.tomas.drooms.tournaments.ConversionUtil.entityToDomain;
+import static cz.schlosserovi.tomas.drooms.tournaments.util.ConversionUtil.entityToDomain;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.UUID;
 
-import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
@@ -34,7 +33,7 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.StrategyEntity;
 public class UserServiceImpl implements UserService {
     private Map<String, String> loggedInUsers = Collections.synchronizedMap(new HashMap<String, String>());
 
-    @EJB
+    @Inject
     private UserDAO users;
     @Inject
     private StrategyDAO strategies;
