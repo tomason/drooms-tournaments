@@ -1,9 +1,9 @@
 package cz.schlosserovi.tomas.drooms.tournaments.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -21,8 +21,8 @@ public class TournamentEntity implements Serializable {
 
     @Id
     private String name;
-    private Date start;
-    private Date end;
+    private Calendar start;
+    private Calendar end;
     private int period = 24;
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
     private Collection<GameEntity> games = new NullForbiddingSet<GameEntity>();
@@ -34,7 +34,7 @@ public class TournamentEntity implements Serializable {
     public TournamentEntity() {
     }
 
-    public TournamentEntity(String name, Date start, Date end, int period) {
+    public TournamentEntity(String name, Calendar start, Calendar end, int period) {
         setName(name);
         setStart(start);
         setEnd(end);
@@ -55,28 +55,36 @@ public class TournamentEntity implements Serializable {
         this.name = name;
     }
 
-    public Date getStart() {
+    public Calendar getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(Calendar start) {
         if (this.start != null) {
             throw new IllegalStateException("Start date was already set");
         }
         if (start == null) {
             throw new IllegalArgumentException("Start date must not be null");
         }
+        start.set(Calendar.HOUR_OF_DAY, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+        start.set(Calendar.MILLISECOND, 0);
         this.start = start;
     }
 
-    public Date getEnd() {
+    public Calendar getEnd() {
         return end;
     }
 
-    public void setEnd(Date end) {
+    public void setEnd(Calendar end) {
         if (end == null) {
             throw new IllegalArgumentException("End date must not be null");
         }
+        end.set(Calendar.HOUR_OF_DAY, 0);
+        end.set(Calendar.MINUTE, 0);
+        end.set(Calendar.SECOND, 0);
+        end.set(Calendar.MILLISECOND, 0);
         this.end = end;
     }
 
