@@ -17,7 +17,8 @@ public class GameResultEntity implements Serializable, Comparable<GameResultEnti
     @Id
     @GeneratedValue
     private Long id;
-    private int points = -1;
+    private Integer points;
+    private Integer position;
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
     private StrategyEntity strategy;
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
@@ -27,11 +28,8 @@ public class GameResultEntity implements Serializable, Comparable<GameResultEnti
     }
 
     public GameResultEntity(StrategyEntity strategy, GameEntity game) {
-        if (strategy == null || game == null) {
-            throw new IllegalArgumentException("Strategy and GameEntity must not be null");
-        }
-        this.strategy = strategy;
-        this.game = game;
+        setStrategy(strategy);
+        setGame(game);
     }
 
     public Long getId() {
@@ -48,12 +46,26 @@ public class GameResultEntity implements Serializable, Comparable<GameResultEnti
         this.id = id;
     }
 
-    public int getPoints() {
+    public Integer getPoints() {
         return points;
     }
 
-    public void setPoints(int points) {
+    public void setPoints(Integer points) {
+        if (this.points != null) {
+            throw new IllegalStateException("Points are already set");
+        }
         this.points = points;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        if (this.position != null) {
+            throw new IllegalStateException("Position is already set");
+        }
+        this.position = position;
     }
 
     public StrategyEntity getStrategy() {

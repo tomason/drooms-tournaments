@@ -1,9 +1,8 @@
 package cz.schlosserovi.tomas.drooms.tournaments.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.GAV;
+import cz.schlosserovi.tomas.drooms.tournaments.util.NullForbiddingSet;
 
 @Entity
 @Table(name = "STRATEGY")
@@ -25,18 +25,14 @@ public class StrategyEntity implements Serializable {
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
     private UserEntity author;
     @OneToMany(mappedBy = "strategy", cascade = CascadeType.ALL)
-    private Set<GameResultEntity> gameResults = new HashSet<>();
+    private Collection<GameResultEntity> gameResults = new NullForbiddingSet<>();
 
     public StrategyEntity() {
     }
 
     public StrategyEntity(UserEntity author, GAV gav) {
-        if (author == null || gav == null) {
-            throw new IllegalArgumentException("Author and GAV must not be null");
-        }
-        this.gav = gav;
-        this.author = author;
-        author.addStrategy(this);
+        setAuthor(author);
+        setGav(gav);
     }
 
     public GAV getGav() {
@@ -76,15 +72,16 @@ public class StrategyEntity implements Serializable {
         this.active = active;
     }
 
-    public Set<GameResultEntity> getGameResults() {
-        return Collections.unmodifiableSet(gameResults);
+    public Collection<GameResultEntity> getGameResults() {
+        return Collections.unmodifiableCollection(gameResults);
     }
 
-    public void setGameResults(Set<GameResultEntity> gameResults) {
+    public void setGameResults(Collection<GameResultEntity> gameResults) {
         if (gameResults == null) {
             throw new IllegalArgumentException("GameResults must not be null");
         }
-        this.gameResults = gameResults;
+        this.gameResults.clear();
+        this.gameResults.addAll(gameResults);
     }
 
     public void addGameResult(GameResultEntity gameResult) {

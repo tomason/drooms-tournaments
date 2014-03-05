@@ -22,11 +22,8 @@ public class PlaygroundConfigEntity implements Serializable {
     }
 
     public PlaygroundConfigEntity(String key, String value) {
-        if (key == null || value == null || key.length() == 0 || value.length() == 0) {
-            throw new IllegalArgumentException("Key and Value must not be null nor empty");
-        }
-        this.key = key;
-        this.value = value;
+        setKey(key);
+        setValue(value);
     }
 
     public Long getId() {
