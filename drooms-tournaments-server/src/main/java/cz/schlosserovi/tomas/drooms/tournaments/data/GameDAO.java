@@ -11,16 +11,20 @@ import javax.persistence.criteria.Root;
 
 import cz.schlosserovi.tomas.drooms.tournaments.model.GameEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
 
 @Stateless
 public class GameDAO extends AbstractDAO {
     @Inject
     private PlaygroundDAO playgrounds;
+    @Inject
+    private TournamentDAO tournaments;
 
-    public GameEntity insertGame(String playgroundName) {
+    public GameEntity insertGame(String playgroundName, String tounamentName) {
         GameEntity result = new GameEntity();
         result.setId(UUID.randomUUID());
         result.setPlayground(playgrounds.getPlayground(playgroundName));
+        result.setTournament(tournaments.getTournament(tounamentName));
 
         em.persist(result);
         em.flush();
@@ -61,6 +65,16 @@ public class GameDAO extends AbstractDAO {
 
         Root<GameEntity> game = query.from(GameEntity.class);
         query.select(game).where(builder.equal(game.get("playground"), playground));
+
+        return em.createQuery(query).getResultList();
+    }
+
+    public List<GameEntity> getGames(TournamentEntity tournament) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<GameEntity> query = builder.createQuery(GameEntity.class);
+
+        Root<GameEntity> game = query.from(GameEntity.class);
+        query.select(game).where(builder.equal(game.get("tournament"), tournament));
 
         return em.createQuery(query).getResultList();
     }
