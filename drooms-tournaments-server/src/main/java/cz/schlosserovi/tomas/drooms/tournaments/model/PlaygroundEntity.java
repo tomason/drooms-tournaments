@@ -1,18 +1,20 @@
 package cz.schlosserovi.tomas.drooms.tournaments.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import cz.schlosserovi.tomas.drooms.tournaments.util.NullForbiddingSet;
 
 @Entity
 @Table(name = "PLAYGROUND")
@@ -27,24 +29,19 @@ public class PlaygroundEntity implements Serializable {
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
     private UserEntity author;
     @OneToMany(mappedBy = "playground")
-    private Set<GameEntity> games = new HashSet<>();
+    private Collection<GameEntity> games = new NullForbiddingSet<>();
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<PlaygroundConfigEntity> configurations = new HashSet<>();
+    private Collection<PlaygroundConfigEntity> configurations = new NullForbiddingSet<>();
+    @ManyToMany(mappedBy = "playgrounds")
+    private Collection<TournamentEntity> tournaments = new NullForbiddingSet<>();
 
     public PlaygroundEntity() {
     }
 
     public PlaygroundEntity(UserEntity author, String name, String source) {
-        if (author == null) {
-            throw new IllegalArgumentException("Author must not be null");
-        }
-        if (name == null || source == null || name.length() == 0 || source.length() == 0) {
-            throw new IllegalArgumentException("Name and Source must not be null nor emty");
-        }
-        this.name = name;
-        this.source = source;
-        this.author = author;
-        author.addPlayground(this);
+        setAuthor(author);
+        setName(name);
+        setSource(source);
     }
 
     public String getName() {
@@ -99,15 +96,16 @@ public class PlaygroundEntity implements Serializable {
         author.addPlayground(this);
     }
 
-    public Set<GameEntity> getGames() {
-        return Collections.unmodifiableSet(games);
+    public Collection<GameEntity> getGames() {
+        return Collections.unmodifiableCollection(games);
     }
 
-    public void setGames(Set<GameEntity> games) {
+    public void setGames(Collection<GameEntity> games) {
         if (games == null) {
             throw new IllegalArgumentException("Games must not be null");
         }
-        this.games = games;
+        this.games.clear();
+        this.games.addAll(games);
     }
 
     public void addGame(GameEntity game) {
@@ -120,15 +118,16 @@ public class PlaygroundEntity implements Serializable {
         games.add(game);
     }
 
-    public Set<PlaygroundConfigEntity> getConfigurations() {
-        return Collections.unmodifiableSet(configurations);
+    public Collection<PlaygroundConfigEntity> getConfigurations() {
+        return Collections.unmodifiableCollection(configurations);
     }
 
-    public void setConfigurations(Set<PlaygroundConfigEntity> configurations) {
+    public void setConfigurations(Collection<PlaygroundConfigEntity> configurations) {
         if (configurations == null) {
             throw new IllegalArgumentException("Configurations must not be null");
         }
-        this.configurations = configurations;
+        this.configurations.clear();
+        this.configurations.addAll(configurations);
     }
 
     public void addConfiguration(PlaygroundConfigEntity configuration) {
@@ -143,6 +142,28 @@ public class PlaygroundEntity implements Serializable {
             throw new IllegalArgumentException("Configuration must not be null");
         }
         configurations.remove(configuration);
+    }
+
+    public Collection<TournamentEntity> getTournaments() {
+        return Collections.unmodifiableCollection(tournaments);
+    }
+
+    public void setTournaments(Collection<TournamentEntity> tournaments) {
+        if (tournaments == null) {
+            throw new IllegalArgumentException("Tournaments must not be null");
+        }
+        this.tournaments.clear();
+        this.tournaments.addAll(tournaments);
+    }
+
+    public void addTournament(TournamentEntity tournament) {
+        if (tournament == null) {
+            throw new IllegalArgumentException("Tournament must not be null");
+        }
+        if (!tournament.getPlaygrounds().contains(this)) {
+            throw new IllegalArgumentException("This playground is not registered in Tournament");
+        }
+        tournaments.add(tournament);
     }
 
     @Override

@@ -1,14 +1,15 @@
 package cz.schlosserovi.tomas.drooms.tournaments.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import cz.schlosserovi.tomas.drooms.tournaments.util.NullForbiddingSet;
 
 @Entity
 @Table(name = "USER")
@@ -20,9 +21,11 @@ public class UserEntity implements Serializable {
     private byte[] password;
     private byte[] salt;
     @OneToMany(mappedBy = "author")
-    private Set<PlaygroundEntity> playgrounds = new HashSet<>();
+    private Collection<PlaygroundEntity> playgrounds = new NullForbiddingSet<>();
     @OneToMany(mappedBy = "author")
-    private Set<StrategyEntity> strategies = new HashSet<>();
+    private Collection<StrategyEntity> strategies = new NullForbiddingSet<>();
+    @OneToMany(mappedBy = "player")
+    private Collection<TournamentResultEntity> tournamentResults = new NullForbiddingSet<>();
 
     public UserEntity() {
     }
@@ -72,15 +75,16 @@ public class UserEntity implements Serializable {
         this.salt = salt;
     }
 
-    public Set<PlaygroundEntity> getPlaygrounds() {
-        return Collections.unmodifiableSet(playgrounds);
+    public Collection<PlaygroundEntity> getPlaygrounds() {
+        return Collections.unmodifiableCollection(playgrounds);
     }
 
-    public void setPlaygrounds(Set<PlaygroundEntity> playgrounds) {
+    public void setPlaygrounds(Collection<PlaygroundEntity> playgrounds) {
         if (playgrounds == null) {
             throw new IllegalArgumentException("Playgrounds must not be null");
         }
-        this.playgrounds = playgrounds;
+        this.playgrounds.clear();
+        this.playgrounds.addAll(playgrounds);
     }
 
     public void addPlayground(PlaygroundEntity playground) {
@@ -93,15 +97,16 @@ public class UserEntity implements Serializable {
         playgrounds.add(playground);
     }
 
-    public Set<StrategyEntity> getStrategies() {
-        return Collections.unmodifiableSet(strategies);
+    public Collection<StrategyEntity> getStrategies() {
+        return Collections.unmodifiableCollection(strategies);
     }
 
-    public void setStrategies(Set<StrategyEntity> strategies) {
+    public void setStrategies(Collection<StrategyEntity> strategies) {
         if (strategies == null) {
             throw new IllegalArgumentException("Strategies must not be null");
         }
-        this.strategies = strategies;
+        this.strategies.clear();
+        this.strategies.addAll(strategies);
     }
 
     public void addStrategy(StrategyEntity strategy) {
@@ -112,6 +117,28 @@ public class UserEntity implements Serializable {
             throw new IllegalArgumentException("Strategy must not be assigned to another User");
         }
         strategies.add(strategy);
+    }
+
+    public Collection<TournamentResultEntity> getTournamentResults() {
+        return Collections.unmodifiableCollection(tournamentResults);
+    }
+
+    public void setTournamentResults(Collection<TournamentResultEntity> tournamentResults) {
+        if (tournamentResults == null) {
+            throw new IllegalArgumentException("Tournament results must not be null");
+        }
+        this.tournamentResults.clear();
+        this.tournamentResults.addAll(tournamentResults);
+    }
+
+    public void addTournamentResult(TournamentResultEntity tournamentResult) {
+        if (tournamentResult == null) {
+            throw new IllegalArgumentException("Tournament result must not be null");
+        }
+        if (!equals(tournamentResult.getPlayer())) {
+            throw new IllegalArgumentException("Tournament result is already assigned");
+        }
+        tournamentResults.add(tournamentResult);
     }
 
     @Override

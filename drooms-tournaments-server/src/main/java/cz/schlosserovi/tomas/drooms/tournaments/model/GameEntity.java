@@ -1,9 +1,8 @@
 package cz.schlosserovi.tomas.drooms.tournaments.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -12,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import cz.schlosserovi.tomas.drooms.tournaments.util.NullForbiddingSet;
 
 /**
  * Entity implementation class for Entity: Game
@@ -27,17 +28,17 @@ public class GameEntity implements Serializable {
     private boolean finished = false;
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
     private PlaygroundEntity playground;
+    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+    private TournamentEntity tournament;
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
-    private Set<GameResultEntity> gameResults = new HashSet<>();
+    private Collection<GameResultEntity> gameResults = new NullForbiddingSet<>();
 
     public GameEntity() {
     }
 
-    public GameEntity(PlaygroundEntity playground) {
-        if (playground == null) {
-            throw new IllegalArgumentException("Playground must not be null");
-        }
-        this.playground = playground;
+    public GameEntity(PlaygroundEntity playground, TournamentEntity tournament) {
+        setPlayground(playground);
+        setTournament(tournament);
     }
 
     public UUID getId() {
@@ -79,15 +80,31 @@ public class GameEntity implements Serializable {
         this.finished = finished;
     }
 
-    public Set<GameResultEntity> getGameResults() {
-        return Collections.unmodifiableSet(gameResults);
+    public TournamentEntity getTournament() {
+        return tournament;
     }
 
-    public void setGameResults(Set<GameResultEntity> gameResults) {
+    public void setTournament(TournamentEntity tournament) {
+        if (this.tournament != null) {
+            throw new IllegalStateException("Tournament is already set");
+        }
+        if (tournament == null) {
+            throw new IllegalArgumentException("Tournament must not be null");
+        }
+        this.tournament = tournament;
+        tournament.addGame(this);
+    }
+
+    public Collection<GameResultEntity> getGameResults() {
+        return Collections.unmodifiableCollection(gameResults);
+    }
+
+    public void setGameResults(Collection<GameResultEntity> gameResults) {
         if (gameResults == null) {
             throw new IllegalArgumentException("GameResults must not be null");
         }
-        this.gameResults = gameResults;
+        this.gameResults.clear();
+        this.gameResults.addAll(gameResults);
     }
 
     public void addGameResult(GameResultEntity gameResult) {
