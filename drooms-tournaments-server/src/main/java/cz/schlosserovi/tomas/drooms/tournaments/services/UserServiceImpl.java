@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     public Response register(String userName, byte[] password) {
         ResponseBuilder builder;
         try {
-            users.insertUser(userName, password);
+            users.insertUser(userName, new String(password));
             builder = Response.ok();
         } catch (EntityExistsException ex) {
             builder = Response.status(400).entity(ex.getMessage());
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     public Response login(String userName, byte[] password) {
         ResponseBuilder builder;
         try {
-            if (users.loginUser(userName, password)) {
+            if (users.loginUser(userName, new String(password))) {
                 String token = UUID.randomUUID().toString();
                 loggedInUsers.put(token, userName);
                 builder = Response.ok(token);

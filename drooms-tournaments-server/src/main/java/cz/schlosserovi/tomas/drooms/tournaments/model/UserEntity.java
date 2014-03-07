@@ -18,8 +18,8 @@ public class UserEntity implements Serializable {
 
     @Id
     private String name;
-    private byte[] password;
-    private byte[] salt;
+    private String password;
+    private String salt;
     @OneToMany(mappedBy = "author")
     private Collection<PlaygroundEntity> playgrounds = new NullForbiddingSet<>();
     @OneToMany(mappedBy = "author")
@@ -30,7 +30,7 @@ public class UserEntity implements Serializable {
     public UserEntity() {
     }
 
-    public UserEntity(String name, byte[] salt, byte[] password) {
+    public UserEntity(String name, String salt, String password) {
         if (name == null || salt == null || password == null) {
             throw new IllegalArgumentException("Name, Salt and Password must not be null");
         }
@@ -53,22 +53,22 @@ public class UserEntity implements Serializable {
         this.name = name;
     }
 
-    public byte[] getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(byte[] password) {
+    public void setPassword(String password) {
         if (password == null) {
             throw new IllegalArgumentException("Password must not be null");
         }
         this.password = password;
     }
 
-    public byte[] getSalt() {
+    public String getSalt() {
         return salt;
     }
 
-    public void setSalt(byte[] salt) {
+    public void setSalt(String salt) {
         if (salt == null) {
             throw new IllegalArgumentException("Salt must not be null");
         }
