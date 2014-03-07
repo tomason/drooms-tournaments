@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -71,20 +70,13 @@ public class UserServiceImpl implements UserService {
         return builder.build();
     }
 
-
     @Override
-    public Response logout(String userName) {
+    public Response logout(String token) {
         ResponseBuilder builder;
-        if (userName == null || userName.length() == 0) {
-            builder = Response.status(Status.BAD_REQUEST).entity("User mus not be null nor empty");
-        } else {
-            
-            for (Entry<String, String> entry : loggedInUsers.entrySet()) {
-                if (entry.getValue().equals(userName)) {
-                    loggedInUsers.remove(entry.getKey());
-                }
-            }
+        if (loggedInUsers.remove(token) != null) {
             builder = Response.ok();
+        } else {
+            builder = Response.status(Status.UNAUTHORIZED).entity("Invalid token");
         }
 
         return builder.build();

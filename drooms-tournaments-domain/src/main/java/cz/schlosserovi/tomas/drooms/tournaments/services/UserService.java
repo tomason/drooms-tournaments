@@ -33,9 +33,9 @@ public interface UserService {
     public Response login(@PathParam("username") String userName, byte[] password);
 
     @POST
-    @Path("/{username}")
+    @Path("/")
     @ClientResponseType(entityType = String.class)
-    public Response logout(@PathParam("username") String userName);
+    public Response logout(@HeaderParam("Auth-Token") String token);
 
     @GET
     @Path("/strategies")
