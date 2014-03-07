@@ -77,7 +77,7 @@ public class UserDAO extends AbstractDAO {
 
     private String encryptPassword(String password, String salt) {
         String base = password + salt;
-        byte[] bytes = base.getBytes(StandardCharsets.UTF_8);
+        byte[] bytes = base.getBytes(StandardCharsets.US_ASCII);
         try {
             return new String(MessageDigest.getInstance("MD5").digest(bytes));
         } catch (NoSuchAlgorithmException ex) {
