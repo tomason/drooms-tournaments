@@ -20,9 +20,9 @@ public class HttpsInterceptor implements PreProcessInterceptor {
         if (!UserService.class.isAssignableFrom(method.getResourceClass())) {
             return null;
         }
-        String protocol = request.getUri().getRequestUri().toString();
-        protocol = protocol.substring(0, protocol.indexOf(':'));
-        if (!"https".equalsIgnoreCase(protocol)) {
+        String uri = request.getUri().getRequestUri().toString();
+        String protocol = uri.substring(0, uri.indexOf(':'));
+        if (!uri.contains("localhost") && !"https".equalsIgnoreCase(protocol)) {
             return new ServerResponse("Use HTTPS for user modification", 403, new Headers<Object>());
         }
 
