@@ -4,16 +4,20 @@ import java.io.Console;
 
 import cz.schlosserovi.tomas.drooms.tournaments.client.UserServiceClient;
 
-class NewStrategyMenu extends Menu {
+class NewStrategyMenu extends FormMenu {
 
     protected NewStrategyMenu(Console console, UserServiceClient client) {
         super(console, client);
     }
 
     @Override
-    public Menu show() {
-        printHeader(client, console, "- strategies");
-        //TODO some information about new strategies
+    protected String getHeadline() {
+        return "new strategy";
+    }
+
+    @Override
+    protected Menu execute(int choice) {
+        // TODO some information about new strategies
         String groupId = console.readLine("Strategy groupId: ");
         String artifactId = console.readLine("Strategy artifactId: ");
         String version = console.readLine("Strategy version: ");

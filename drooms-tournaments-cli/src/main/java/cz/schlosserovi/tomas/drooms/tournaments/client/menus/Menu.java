@@ -26,9 +26,53 @@ public abstract class Menu {
         this.client = client;
     }
 
-    public abstract Menu show();
+    public final Menu show() {
+        printHeader(getHeadline());
 
-    protected static void printHeader(UserServiceClient client, Console console, String header) {
+        if (showMenu()) {
+            printMenu();
+            console.format("%n");
+            if (allowMainMenu()) {
+                console.format("7. return to main menu%n");
+            }
+            if (client.isLoggedIn()) {
+                console.format("8. logout%n");
+            }
+            console.format("9. exit%n");
+
+            int choice = parseChoice("Choose an action: ");
+            if (allowMainMenu() && choice == 7) {
+                return new MainMenu(console, client);
+            }
+            if (client.isLoggedIn() && choice == 8) {
+                return logout();
+            }
+            if (choice == 9) {
+                return exit();
+            }
+
+            return execute(choice);
+        }
+
+        return execute(-1);
+    }
+
+    protected abstract String getHeadline();
+
+    protected abstract void printMenu();
+
+    protected abstract Menu execute(int choice);
+
+    protected abstract boolean allowMainMenu();
+
+    protected boolean showMenu() {
+        return true;
+    }
+
+    protected void printHeader(String header) {
+        if (header.length() > 0) {
+            header = " - " + header;
+        }
         console.format("Drooms tournaments client %-24s %29s%n", header, client.getLoogedInUser());
         console.format("%s%n", SINGLE_LINE);
     }
@@ -48,5 +92,14 @@ public abstract class Menu {
 
     protected Menu exit() {
         return null;
+    }
+
+    protected int parseChoice(String line) {
+        try {
+            int choice = Integer.parseInt(console.readLine(line));
+            return choice;
+        } catch (NumberFormatException ex) {
+            return -1;
+        }
     }
 }

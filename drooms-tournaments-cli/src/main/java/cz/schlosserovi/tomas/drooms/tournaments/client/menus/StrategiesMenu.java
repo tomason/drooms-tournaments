@@ -8,20 +8,29 @@ import cz.schlosserovi.tomas.drooms.tournaments.client.UserServiceClient;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Strategy;
 
 class StrategiesMenu extends Menu {
+    private List<Strategy> strategies;
 
     public StrategiesMenu(Console console, UserServiceClient client) {
         super(console, client);
     }
 
     @Override
-    public Menu show() {
-        printHeader(client, console, "- strategies");
+    protected String getHeadline() {
+        return "strategies";
+    }
 
+    @Override
+    protected boolean allowMainMenu() {
+        return true;
+    }
+
+    @Override
+    protected void printMenu() {
         console.format("List of %s's strategies:%n", client.getLoogedInUser());
         console.format("%s%n", SINGLE_LINE);
         console.format("|   |   |                   groupId | artifactId               |    version    |%n");
         console.format("%s%n", SINGLE_LINE);
-        List<Strategy> strategies = new LinkedList<>(client.getStrategies());
+        strategies = new LinkedList<>(client.getStrategies());
         for (int i = 1; i <= strategies.size(); i++) {
             Strategy s = strategies.get(i - 1);
             console.format("|%3s", i);
@@ -33,36 +42,22 @@ class StrategiesMenu extends Menu {
         console.format("%s%n", SINGLE_LINE);
         console.format("1. new Strategy%n");
         console.format("2. set active Strategy%n");
-        console.format("%n");
-        console.format("8. logout%n");
-        console.format("9. exit%n");
+    }
 
-        char res = console.readLine().charAt(0);
-        switch (res) {
-            case '9':
-                return exit();
-            case '8':
-                return logout();
-            case '2':
-                setActiveStrategy(strategies);
-                break;
-            case '1':
-                return new NewStrategyMenu(console, client);
+    @Override
+    public Menu execute(int choice) {
+        switch (choice) {
+        case 1:
+            return new NewStrategyMenu(console, client);
+        case 2:
+            int index = parseChoice("Strategy index (see above table): ") - 1;
+            if (index >= 0 && index < strategies.size()) {
+                client.setActiveStrategy(strategies.get(index));
+            }
+            break;
         }
 
         return new StrategiesMenu(console, client);
     }
 
-    private void setActiveStrategy(List<Strategy> strategies) {
-        String lineNumber = console.readLine("Strategy index (see above table): ");
-        try {
-            int index = Integer.parseInt(lineNumber) - 1;
-            if (index >= 0 && index < strategies.size()) {
-                client.setActiveStrategy(strategies.get(index));
-            }
-        } catch (NumberFormatException ex) {
-            // TODO error handling
-            // let it be for now
-        }
-    }
 }

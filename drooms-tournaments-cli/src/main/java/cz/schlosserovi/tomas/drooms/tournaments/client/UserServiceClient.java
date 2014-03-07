@@ -1,6 +1,7 @@
 package cz.schlosserovi.tomas.drooms.tournaments.client;
 
 import java.util.Collection;
+import java.util.Properties;
 
 import javax.ws.rs.core.Response.Status;
 
@@ -162,6 +163,34 @@ public class UserServiceClient {
             }
             return response.getEntity(new GenericType<Collection<Playground>>() {
             });
+        } finally {
+            if (response != null) {
+                response.releaseConnection();
+            }
+        }
+    }
+
+    public void newPlayground(String name, String source) {
+        ClientResponse<?> response = null;
+        try {
+            response = (ClientResponse<?>) service.insertOrUpdatePlayground(authToken, name, source);
+            if (response.getStatus() != Status.OK.getStatusCode()) {
+                throw new RuntimeException(response.getEntity(String.class));
+            }
+        } finally {
+            if (response != null) {
+                response.releaseConnection();
+            }
+        }
+    }
+
+    public void configurePlayground(String name, Properties configuration) {
+        ClientResponse<?> response = null;
+        try {
+            response = (ClientResponse<?>) service.configurePlayground(authToken, name, configuration);
+            if (response.getStatus() != Status.OK.getStatusCode()) {
+                throw new RuntimeException(response.getEntity(String.class));
+            }
         } finally {
             if (response != null) {
                 response.releaseConnection();

@@ -5,16 +5,19 @@ import java.nio.charset.StandardCharsets;
 
 import cz.schlosserovi.tomas.drooms.tournaments.client.UserServiceClient;
 
-class RegisterMenu extends Menu {
+class RegisterMenu extends FormMenu {
 
     public RegisterMenu(Console console, UserServiceClient client) {
         super(console, client);
     }
 
     @Override
-    public Menu show() {
-        printHeader(client, console, "- registration");
-        // TODO some information for new users
+    protected String getHeadline() {
+        return "registration";
+    }
+
+    @Override
+    protected Menu execute(int choice) {
         String username = console.readLine("User name: ");
         String password = new String(console.readPassword("Password: "));
 
