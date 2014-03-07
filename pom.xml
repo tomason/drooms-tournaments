@@ -13,6 +13,7 @@
     <module>drooms-tournaments-domain</module>
     <module>drooms-tournaments-server</module>
     <module>drooms-tournaments-execution-client</module>
+    <module>drooms-tournaments-cli</module>
   </modules>
 
   <properties>
@@ -80,6 +81,11 @@
           <groupId>org.jboss.as.plugins</groupId>
           <artifactId>jboss-as-maven-plugin</artifactId>
           <version>7.4.Final</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.2.1</version>
         </plugin>
       </plugins>
     </pluginManagement>
