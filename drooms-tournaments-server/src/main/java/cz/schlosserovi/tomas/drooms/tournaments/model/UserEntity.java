@@ -31,12 +31,9 @@ public class UserEntity implements Serializable {
     }
 
     public UserEntity(String name, String salt, String password) {
-        if (name == null || salt == null || password == null) {
-            throw new IllegalArgumentException("Name, Salt and Password must not be null");
-        }
-        this.name = name;
-        this.salt = salt;
-        this.password = password;
+        setName(name);
+        setSalt(salt);
+        setPassword(password);
     }
 
     public String getName() {

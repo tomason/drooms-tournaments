@@ -1,8 +1,5 @@
 package cz.schlosserovi.tomas.drooms.tournaments.data;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
@@ -11,6 +8,8 @@ import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,16 +18,11 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 @Stateless
 public class UserDAO extends AbstractDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDAO.class);
-    private static final char[] SALT_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890=%?,.:-_§!".toCharArray();
-    private static final int PASSWORD_SIZE = 128;
 
     public UserEntity insertUser(String name, String password) {
-        String salt = getSalt(password);
+        String salt = generateSaltString();
         String dbPassword = encryptPassword(password, salt);
-        UserEntity entity = new UserEntity();
-        entity.setName(name);
-        entity.setSalt(salt);
-        entity.setPassword(dbPassword);
+        UserEntity entity = new UserEntity(name, salt, dbPassword);
 
         em.persist(entity);
         em.flush();
@@ -64,25 +58,24 @@ public class UserDAO extends AbstractDAO {
         return em.createQuery(query).getResultList();
     }
 
-    private String getSalt(String password) {
-        StringBuilder sb = new StringBuilder();
-
-        Random random = new SecureRandom();
-        while (sb.length() - password.length() < PASSWORD_SIZE) {
-            sb.append(SALT_CHARS[random.nextInt(SALT_CHARS.length)]);
-        }
-        
-        return sb.toString();
+    private String generateSaltString() {
+        Random r = new SecureRandom();
+        byte[] salt = new byte[32];
+        r.nextBytes(salt);
+        return Base64.encodeBase64String(salt);
     }
-
+    
     private String encryptPassword(String password, String salt) {
-        String base = password + salt;
-        byte[] bytes = base.getBytes(StandardCharsets.US_ASCII);
-        try {
-            return new String(MessageDigest.getInstance("MD5").digest(bytes));
-        } catch (NoSuchAlgorithmException ex) {
-            LoggerFactory.getLogger(UserDAO.class).error("Unable to find MD5 algorithm", ex);
-            return null;
+        byte[] pwd = Base64.decodeBase64(password);
+        byte[] slt = Base64.decodeBase64(salt);
+        byte[] base = new byte[pwd.length + slt.length];
+        int index = 0;
+        for (byte b : pwd) {
+            base[index++] = b;
         }
+        for (byte b : slt) {
+            base[index++] = b;
+        }
+        return Base64.encodeBase64String(DigestUtils.md5(base));
     }
 }

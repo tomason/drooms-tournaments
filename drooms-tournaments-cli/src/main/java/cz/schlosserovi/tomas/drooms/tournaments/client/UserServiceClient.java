@@ -1,10 +1,12 @@
 package cz.schlosserovi.tomas.drooms.tournaments.client;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Properties;
 
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.codec.binary.Base64;
 import org.jboss.resteasy.client.ClientResponse;
 import org.jboss.resteasy.client.ProxyFactory;
 import org.jboss.resteasy.util.GenericType;
@@ -34,13 +36,14 @@ public class UserServiceClient {
         service = ProxyFactory.create(UserService.class, sb.toString());
     }
 
-    public void register(String userName, byte[] password) {
+    public void register(String userName, String password) {
         if (authToken != null) {
             logout();
         }
         ClientResponse<?> response = null;
         try {
-            response = (ClientResponse<?>) service.register(userName, password);
+            byte[] encoded = Base64.encodeBase64(password.getBytes(StandardCharsets.UTF_8));
+            response = (ClientResponse<?>) service.register(userName, encoded);
             if (response.getStatus() != Status.OK.getStatusCode()) {
                 throw new RuntimeException(response.getEntity(String.class));
             }
@@ -53,13 +56,14 @@ public class UserServiceClient {
         login(userName, password);
     }
 
-    public boolean login(String userName, byte[] password) {
+    public boolean login(String userName, String password) {
         if (authToken != null) {
             logout();
         }
         ClientResponse<?> response = null;
         try {
-            response = (ClientResponse<?>) service.login(userName, password);
+            byte[] encoded = Base64.encodeBase64(password.getBytes(StandardCharsets.UTF_8));
+            response = (ClientResponse<?>) service.login(userName, encoded);
             switch (response.getStatus()) {
             case 200:
                 this.userName = userName;
