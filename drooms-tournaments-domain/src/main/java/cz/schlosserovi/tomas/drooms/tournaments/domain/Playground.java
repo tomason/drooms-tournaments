@@ -11,6 +11,11 @@ public class Playground {
     public Playground() {
     }
 
+    public Playground(String name, String source) {
+        this.name = name;
+        this.source = source;
+    }
+
     public Playground(String name, String source, int maxPlayers, Properties configuration) {
         this.name = name;
         this.source = source;

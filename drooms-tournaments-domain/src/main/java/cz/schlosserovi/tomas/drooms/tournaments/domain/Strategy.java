@@ -7,6 +7,10 @@ public class Strategy {
     public Strategy() {
     }
 
+    public Strategy(String groupId, String artifactId, String version) {
+        gav = new GAV(groupId, artifactId, version);
+    }
+
     public Strategy(GAV gav, boolean active) {
         this.gav = gav;
         this.active = active;
