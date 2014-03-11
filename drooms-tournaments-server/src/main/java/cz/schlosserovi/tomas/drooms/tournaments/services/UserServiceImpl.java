@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -21,9 +20,9 @@ import javax.ws.rs.core.Response.Status;
 import cz.schlosserovi.tomas.drooms.tournaments.data.PlaygroundDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.data.StrategyDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.data.UserDAO;
-import cz.schlosserovi.tomas.drooms.tournaments.domain.GAV;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Strategy;
+import cz.schlosserovi.tomas.drooms.tournaments.domain.User;
 import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.StrategyEntity;
 
@@ -40,10 +39,10 @@ public class UserServiceImpl implements UserService {
     private PlaygroundDAO playgrounds;
 
     @Override
-    public Response register(String userName, byte[] password) {
+    public Response register(User user) {
         ResponseBuilder builder;
         try {
-            users.insertUser(userName, new String(password));
+            users.insertUser(user.getName(), new String(user.getPassword()));
             builder = Response.ok();
         } catch (EntityExistsException ex) {
             builder = Response.status(400).entity(ex.getMessage());
@@ -53,12 +52,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response login(String userName, byte[] password) {
+    public Response login(User user) {
         ResponseBuilder builder;
         try {
-            if (users.loginUser(userName, new String(password))) {
+            if (users.loginUser(user.getName(), new String(user.getPassword()))) {
                 String token = UUID.randomUUID().toString();
-                loggedInUsers.put(token, userName);
+                loggedInUsers.put(token, user.getName());
                 builder = Response.ok(token);
             } else {
                 builder = Response.status(Status.UNAUTHORIZED);
@@ -100,12 +99,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response newStrategy(String token, GAV gav) {
+    public Response newStrategy(String token, Strategy strategy) {
         ResponseBuilder builder;
         String userName = loggedInUsers.get(token);
 
         if (userName != null) {
-            strategies.insertStrategy(userName, gav);
+            strategies.insertStrategy(userName, strategy.getGav());
             builder = Response.ok();
         } else {
             builder = Response.status(Status.UNAUTHORIZED);
@@ -114,13 +113,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response activateStrategy(String token, GAV gav) {
+    public Response activateStrategy(String token, Strategy strategy) {
         ResponseBuilder builder;
         String userName = loggedInUsers.get(token);
 
         if (userName != null) {
-            strategies.setDefaultStrategy(gav);
-            builder = Response.ok();
+            strategies.setDefaultStrategy(strategy.getGav());
+            builder = Response.status(Status.ACCEPTED);
         } else {
             builder = Response.status(Status.UNAUTHORIZED);
         }
@@ -145,17 +144,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response insertOrUpdatePlayground(String token, String playgroundName, String source) {
+    public Response newPlayground(String token, Playground playground) {
         ResponseBuilder builder;
         String userName = loggedInUsers.get(token);
 
         if (userName != null) {
-            PlaygroundEntity playground = playgrounds.getPlayground(playgroundName);
-            if (playground != null) {
-                playgrounds.setPlaygroundSource(playgroundName, source);
-            } else {
-                playgrounds.insertPlayground(userName, playgroundName, source);
-            }
+            playgrounds.insertPlayground(userName, playground.getName(), playground.getSource());
             builder = Response.ok();
         } else {
             builder = Response.status(Status.UNAUTHORIZED);
@@ -164,12 +158,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response configurePlayground(String token, String playgroundName, Properties config) {
+    public Response configurePlayground(String token, Playground playground) {
         ResponseBuilder builder;
         String userName = loggedInUsers.get(token);
 
         if (userName != null) {
-            playgrounds.setPlaygroundConfiguration(playgroundName, config);
+            playgrounds.setPlaygroundConfiguration(playground.getName(), playground.getConfiguration());
             builder = Response.ok();
         } else {
             builder = Response.status(Status.UNAUTHORIZED);

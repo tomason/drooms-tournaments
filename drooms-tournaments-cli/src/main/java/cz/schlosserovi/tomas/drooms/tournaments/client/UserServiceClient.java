@@ -2,7 +2,6 @@ package cz.schlosserovi.tomas.drooms.tournaments.client;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.Properties;
 
 import javax.ws.rs.core.Response.Status;
 
@@ -11,9 +10,9 @@ import org.jboss.resteasy.client.ClientResponse;
 import org.jboss.resteasy.client.ProxyFactory;
 import org.jboss.resteasy.util.GenericType;
 
-import cz.schlosserovi.tomas.drooms.tournaments.domain.GAV;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Strategy;
+import cz.schlosserovi.tomas.drooms.tournaments.domain.User;
 import cz.schlosserovi.tomas.drooms.tournaments.services.UserService;
 
 public class UserServiceClient {
@@ -43,7 +42,7 @@ public class UserServiceClient {
         ClientResponse<?> response = null;
         try {
             byte[] encoded = Base64.encodeBase64(password.getBytes(StandardCharsets.UTF_8));
-            response = (ClientResponse<?>) service.register(userName, encoded);
+            response = (ClientResponse<?>) service.register(new User(userName, encoded));
             if (response.getStatus() != Status.OK.getStatusCode()) {
                 throw new RuntimeException(response.getEntity(String.class));
             }
@@ -63,7 +62,7 @@ public class UserServiceClient {
         ClientResponse<?> response = null;
         try {
             byte[] encoded = Base64.encodeBase64(password.getBytes(StandardCharsets.UTF_8));
-            response = (ClientResponse<?>) service.login(userName, encoded);
+            response = (ClientResponse<?>) service.login(new User(userName, encoded));
             switch (response.getStatus()) {
             case 200:
                 this.userName = userName;
@@ -132,7 +131,7 @@ public class UserServiceClient {
     public void setActiveStrategy(Strategy strategy) {
         ClientResponse<?> response = null;
         try {
-            response = (ClientResponse<?>) service.activateStrategy(authToken, strategy.getGav());
+            response = (ClientResponse<?>) service.activateStrategy(authToken, strategy);
             if (response.getStatus() != Status.OK.getStatusCode()) {
                 throw new RuntimeException(response.getEntity(String.class));
             }
@@ -146,8 +145,7 @@ public class UserServiceClient {
     public void newStrategy(String groupId, String artifactId, String version) {
         ClientResponse<?> response = null;
         try {
-            GAV gav = new GAV(groupId, artifactId, version);
-            response = (ClientResponse<?>) service.newStrategy(authToken, gav);
+            response = (ClientResponse<?>) service.newStrategy(authToken, new Strategy(groupId, artifactId, version));
             if (response.getStatus() != Status.OK.getStatusCode()) {
                 throw new RuntimeException(response.getEntity(String.class));
             }
@@ -174,10 +172,10 @@ public class UserServiceClient {
         }
     }
 
-    public void newPlayground(String name, String source) {
+    public void newPlayground(Playground playground) {
         ClientResponse<?> response = null;
         try {
-            response = (ClientResponse<?>) service.insertOrUpdatePlayground(authToken, name, source);
+            response = (ClientResponse<?>) service.newPlayground(authToken, playground);
             if (response.getStatus() != Status.OK.getStatusCode()) {
                 throw new RuntimeException(response.getEntity(String.class));
             }
@@ -188,10 +186,10 @@ public class UserServiceClient {
         }
     }
 
-    public void configurePlayground(String name, Properties configuration) {
+    public void configurePlayground(Playground playground) {
         ClientResponse<?> response = null;
         try {
-            response = (ClientResponse<?>) service.configurePlayground(authToken, name, configuration);
+            response = (ClientResponse<?>) service.configurePlayground(authToken, playground);
             if (response.getStatus() != Status.OK.getStatusCode()) {
                 throw new RuntimeException(response.getEntity(String.class));
             }

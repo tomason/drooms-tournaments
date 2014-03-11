@@ -6,22 +6,24 @@ import java.util.List;
 import java.util.Properties;
 
 import cz.schlosserovi.tomas.drooms.tournaments.client.UserServiceClient;
+import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 
 public class ConfigurePlaygroundMenu extends Menu {
-    private String playgroundName;
-    private Properties configuration;
+    private Playground playground;
     private List<String> keys = new LinkedList<>();
 
-    protected ConfigurePlaygroundMenu(Console console, UserServiceClient client, String playgroundName, Properties configuration) {
+    protected ConfigurePlaygroundMenu(Console console, UserServiceClient client, Playground playground) {
         super(console, client);
-        this.playgroundName = playgroundName;
-        this.configuration = configuration;
-        keys.addAll(configuration.stringPropertyNames());
+        this.playground = playground;
+        if (playground.getConfiguration() == null) {
+            playground.setConfiguration(new Properties());
+        }
+        keys.addAll(playground.getConfiguration().stringPropertyNames());
     }
 
     @Override
     protected String getHeadline() {
-        return "configure " + playgroundName;
+        return "configure " + playground.getName();
     }
 
     @Override
@@ -39,7 +41,7 @@ public class ConfigurePlaygroundMenu extends Menu {
         for (String key : keys) {
             console.format("|%3s", i++);
             console.format("|%35s ", key);
-            console.format("| %-36s|%n", configuration.getProperty(key));
+            console.format("| %-36s|%n", playground.getConfiguration().getProperty(key));
         }
         console.format("%s%n", SINGLE_LINE);
         console.format("1. Add configuration%n");
@@ -73,14 +75,14 @@ public class ConfigurePlaygroundMenu extends Menu {
     private void newProperty() {
         String key = console.readLine("Configuration key: ");
         String value = console.readLine("Configuration value: ");
-        configuration.setProperty(key, value);
+        playground.getConfiguration().setProperty(key, value);
         keys.add(key);
     }
 
     private void removeConfiguration() {
         int choice = parseChoice("Configuration index (see above table): ") - 1;
         if (choice >= 0 && choice < keys.size()) {
-            configuration.remove(keys.get(choice));
+            playground.getConfiguration().remove(keys.get(choice));
             keys.remove(choice);
         }
     }
@@ -89,7 +91,7 @@ public class ConfigurePlaygroundMenu extends Menu {
         int choice = parseChoice("Configuration index (see above table): ") - 1;
         if (choice >= 0 && choice < keys.size()) {
             String value = console.readLine("New value (%s): ", keys.get(choice));
-            configuration.setProperty(keys.get(choice), value);
+            playground.getConfiguration().setProperty(keys.get(choice), value);
         }
     }
 
@@ -98,7 +100,7 @@ public class ConfigurePlaygroundMenu extends Menu {
     }
 
     private Menu saveConfiguration() {
-        client.configurePlayground(playgroundName, configuration);
+        client.configurePlayground(playground);
         return new PlaygroundsMenu(console, client);
     }
 }
