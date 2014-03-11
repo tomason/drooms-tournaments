@@ -44,7 +44,7 @@ public class UserServiceClient {
             byte[] encoded = Base64.encodeBase64(password.getBytes(StandardCharsets.UTF_8));
             response = (ClientResponse<?>) service.register(new User(userName, encoded));
             if (response.getStatus() != Status.OK.getStatusCode()) {
-                throw new RuntimeException(response.getEntity(String.class));
+                throw new ResponseException(response.getEntity(String.class));
             }
         } finally {
             if (response != null) {
@@ -71,7 +71,7 @@ public class UserServiceClient {
             case 401:
                 return false;
             default:
-                throw new RuntimeException(response.getEntity(String.class));
+                throw new ResponseException(response.getEntity(String.class));
             }
         } finally {
             if (response != null) {
@@ -88,7 +88,7 @@ public class UserServiceClient {
         try {
             response = (ClientResponse<?>) service.logout(authToken);
             if (response.getStatus() != Status.OK.getStatusCode()) {
-                throw new RuntimeException(response.getEntity(String.class));
+                throw new ResponseException(response.getEntity(String.class));
             }
             authToken = null;
             userName = null;
@@ -117,7 +117,7 @@ public class UserServiceClient {
         try {
             response = (ClientResponse<?>) service.getStrategies(authToken);
             if (response.getStatus() != Status.OK.getStatusCode()) {
-                throw new RuntimeException(response.getEntity(String.class));
+                throw new ResponseException(response.getEntity(String.class));
             }
             return response.getEntity(new GenericType<Collection<Strategy>>() {
             });
@@ -133,7 +133,7 @@ public class UserServiceClient {
         try {
             response = (ClientResponse<?>) service.activateStrategy(authToken, strategy);
             if (response.getStatus() != Status.OK.getStatusCode()) {
-                throw new RuntimeException(response.getEntity(String.class));
+                throw new ResponseException(response.getEntity(String.class));
             }
         } finally {
             if (response != null) {
@@ -147,7 +147,7 @@ public class UserServiceClient {
         try {
             response = (ClientResponse<?>) service.newStrategy(authToken, new Strategy(groupId, artifactId, version));
             if (response.getStatus() != Status.OK.getStatusCode()) {
-                throw new RuntimeException(response.getEntity(String.class));
+                throw new ResponseException(response.getEntity(String.class));
             }
         } finally {
             if (response != null) {
@@ -161,7 +161,7 @@ public class UserServiceClient {
         try {
             response = (ClientResponse<?>) service.getPlaygrounds(authToken);
             if (response.getStatus() != Status.OK.getStatusCode()) {
-                throw new RuntimeException(response.getEntity(String.class));
+                throw new ResponseException(response.getEntity(String.class));
             }
             return response.getEntity(new GenericType<Collection<Playground>>() {
             });
@@ -177,7 +177,7 @@ public class UserServiceClient {
         try {
             response = (ClientResponse<?>) service.newPlayground(authToken, playground);
             if (response.getStatus() != Status.OK.getStatusCode()) {
-                throw new RuntimeException(response.getEntity(String.class));
+                throw new ResponseException(response.getEntity(String.class));
             }
         } finally {
             if (response != null) {
@@ -191,7 +191,7 @@ public class UserServiceClient {
         try {
             response = (ClientResponse<?>) service.configurePlayground(authToken, playground);
             if (response.getStatus() != Status.OK.getStatusCode()) {
-                throw new RuntimeException(response.getEntity(String.class));
+                throw new ResponseException(response.getEntity(String.class));
             }
         } finally {
             if (response != null) {

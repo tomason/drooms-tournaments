@@ -30,8 +30,11 @@ public class DroomsCLI {
         while (menu != null) {
             try {
                 menu = menu.show();
+            } catch (IllegalStateException | ResponseException ex) {
+                // my exception with message from the webapp
+                console.format("%n%s%n%n", ex.getMessage());
             } catch (Exception ex) {
-                // TODO error handling
+                // any other exception
                 console.format("Error in application:%n %s%n%n", ex);
                 menu = Menu.getMainMenu(console, client);
             }
