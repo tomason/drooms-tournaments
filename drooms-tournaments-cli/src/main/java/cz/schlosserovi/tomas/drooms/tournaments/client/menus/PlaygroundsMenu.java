@@ -39,8 +39,7 @@ public class PlaygroundsMenu extends Menu {
         }
         console.format("%s%n", SINGLE_LINE);
         console.format("1. new Playground%n");
-        console.format("2. edit Playground%n");
-        console.format("3. configure Playground%n");
+        console.format("2. configure Playground%n");
     }
 
     @Override
@@ -52,14 +51,7 @@ public class PlaygroundsMenu extends Menu {
             int index = parseChoice("Playground index (see above table): ") - 1;
             if (index >= 0 && index < playgrounds.size()) {
                 Playground p = playgrounds.get(index);
-                return new NewPlaygroundMenu(console, client, p);
-            }
-            break;
-        case 3:
-            index = parseChoice("Playground index (see above table): ") - 1;
-            if (index >= 0 && index < playgrounds.size()) {
-                Playground p = playgrounds.get(index);
-                return new ConfigurePlaygroundMenu(console, client, p.getName(), p.getConfiguration());
+                return new ConfigurePlaygroundMenu(console, client, p);
             }
             break;
         }
