@@ -21,7 +21,7 @@ class LoginMenu extends FormMenu {
         String password = new String(console.readPassword("Password: "));
 
         if (!client.login(username, password)) {
-            console.format("Unable to login %s, check your username and password", username);
+            console.format("Unable to login %s, check your username and password%n", username);
         }
 
         return new MainMenu(console, client);
