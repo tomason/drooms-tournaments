@@ -45,18 +45,6 @@ import cz.schlosserovi.tomas.drooms.tournaments.domain.User;
 public interface UserService {
 
     /**
-     * Registers a new User on a server.
-     * 
-     * @param user
-     *            User to be inserted.
-     * @return Nothing.
-     */
-    @POST
-    @Path("/")
-    @ClientResponseType(entityType = Void.class)
-    public Response register(User user);
-
-    /**
      * Logs in already registered User on the server.
      * 
      * @param user

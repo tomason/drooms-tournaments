@@ -39,19 +39,6 @@ public class UserServiceImpl implements UserService {
     private PlaygroundDAO playgrounds;
 
     @Override
-    public Response register(User user) {
-        ResponseBuilder builder;
-        try {
-            users.insertUser(user.getName(), new String(user.getPassword()));
-            builder = Response.ok();
-        } catch (EntityExistsException ex) {
-            builder = Response.status(400).entity(ex.getMessage());
-        }
-
-        return builder.build();
-    }
-
-    @Override
     public Response login(User user) {
         ResponseBuilder builder;
         try {
