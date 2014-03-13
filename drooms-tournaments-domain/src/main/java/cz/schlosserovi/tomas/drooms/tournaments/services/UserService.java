@@ -15,6 +15,7 @@ import org.jboss.resteasy.annotations.ClientResponseType;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Strategy;
+import cz.schlosserovi.tomas.drooms.tournaments.domain.Tournament;
 
 // FIXME add ScoreBoard service
 /**
@@ -122,5 +123,47 @@ public interface UserService {
     @Path("/playgrounds")
     @ClientResponseType(entityType = Void.class)
     public Response configurePlayground(Playground playground);
+
+    /**
+     * Lists tournaments. The resulting list contains tournaments User has
+     * joined or those that are not yet ended (allowing the User to join it).
+     * 
+     * @param token
+     *            Token received from <code>login</code> method.
+     * @return The {@link List} of {@link Tournament} User participates in or
+     *         the ones he can join.
+     */
+    @GET
+    @Path("/tournaments")
+    @ClientResponseType(entityType = List.class)
+    public Response getTournaments();
+
+    /**
+     * Starts a new tournament.
+     * 
+     * @param token
+     *            Token received from <code>login</code> method.
+     * @param tournament
+     *            Tournament to be started.
+     * @return Nothing.
+     */
+    @POST
+    @Path("/tournaments")
+    @ClientResponseType(entityType = Void.class)
+    public Response newTournament(Tournament tournament);
+
+    /**
+     * Enrolls User in the Tournament.
+     * 
+     * @param token
+     *            Token received from <code>login</code> method.
+     * @param tournament
+     *            Tournament to join.
+     * @return Nothing.
+     */
+    @PUT
+    @Path("/tournaments")
+    @ClientResponseType(entityType = Void.class)
+    public Response joinTournament(Tournament tournament);
 
 }

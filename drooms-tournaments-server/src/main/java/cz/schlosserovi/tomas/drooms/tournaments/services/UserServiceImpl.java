@@ -2,6 +2,7 @@ package cz.schlosserovi.tomas.drooms.tournaments.services;
 
 import static cz.schlosserovi.tomas.drooms.tournaments.util.ConversionUtil.entityToDomain;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,11 +15,16 @@ import javax.ws.rs.core.SecurityContext;
 
 import cz.schlosserovi.tomas.drooms.tournaments.data.PlaygroundDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.data.StrategyDAO;
+import cz.schlosserovi.tomas.drooms.tournaments.data.TournamentDAO;
+import cz.schlosserovi.tomas.drooms.tournaments.data.TournamentResultDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.data.UserDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Strategy;
+import cz.schlosserovi.tomas.drooms.tournaments.domain.Tournament;
 import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.StrategyEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.util.ConversionUtil;
 
 public class UserServiceImpl implements UserService {
     @Inject
@@ -27,6 +33,10 @@ public class UserServiceImpl implements UserService {
     private StrategyDAO strategies;
     @Inject
     private PlaygroundDAO playgrounds;
+    @Inject
+    private TournamentDAO tournaments;
+    @Inject
+    private TournamentResultDAO tournamentResults;
     @Context
     private SecurityContext security;
 
@@ -113,6 +123,66 @@ public class UserServiceImpl implements UserService {
 
         if (userName != null) {
             playgrounds.setPlaygroundConfiguration(playground.getName(), playground.getConfiguration());
+            builder = Response.ok();
+        } else {
+            builder = Response.status(Status.UNAUTHORIZED);
+        }
+        return builder.build();
+    }
+
+    @Override
+    public Response getTournaments() {
+        ResponseBuilder builder;
+        String userName = getUserName();
+
+        if (userName != null) {
+            List<Tournament> result = new LinkedList<>();
+
+            List<TournamentEntity> unfinished = tournaments.getUnfinishedTournaments();
+            List<TournamentEntity> enrolled = tournaments.getTournaments(users.getUser(userName));
+            unfinished.removeAll(enrolled);
+
+            for (TournamentEntity entity : unfinished) {
+                result.add(ConversionUtil.entityToDomain(entity, false));
+            }
+            for (TournamentEntity entity : enrolled) {
+                result.add(ConversionUtil.entityToDomain(entity, true));
+            }
+
+            builder = Response.ok(result);
+        } else {
+            builder = Response.status(Status.UNAUTHORIZED);
+        }
+        return builder.build();
+    }
+
+    @Override
+    public Response newTournament(Tournament tournament) {
+        ResponseBuilder builder;
+        String userName = getUserName();
+
+        if (userName != null) {
+            Collection<String> playgrounds = new LinkedList<>();
+            for (Playground playground : tournament.getPlaygrounds()) {
+                playgrounds.add(playground.getName());
+            }
+            tournaments.insertTournament(tournament.getName(), tournament.getStart(), tournament.getEnd(),
+                    tournament.getPeriod(), playgrounds);
+            builder = Response.ok();
+        } else {
+            builder = Response.status(Status.UNAUTHORIZED);
+        }
+        return builder.build();
+    }
+
+    @Override
+    public Response joinTournament(Tournament tournament) {
+        ResponseBuilder builder;
+        String userName = getUserName();
+
+        if (userName != null) {
+            tournamentResults.insertResult(userName, tournament.getName());
+
             builder = Response.ok();
         } else {
             builder = Response.status(Status.UNAUTHORIZED);

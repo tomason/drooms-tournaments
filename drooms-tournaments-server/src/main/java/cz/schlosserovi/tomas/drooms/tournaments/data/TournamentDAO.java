@@ -9,10 +9,13 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
 import cz.schlosserovi.tomas.drooms.tournaments.events.NewTournamentEvent;
 import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentResultEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 public class TournamentDAO extends AbstractDAO {
     @Inject
@@ -43,6 +46,17 @@ public class TournamentDAO extends AbstractDAO {
         CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
 
         query.select(query.from(TournamentEntity.class));
+
+        return em.createQuery(query).getResultList();
+    }
+
+    public List<TournamentEntity> getTournaments(UserEntity player) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
+        
+        Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
+        Join<TournamentEntity, TournamentResultEntity> join = tournament.join("results");
+        query.select(tournament).where(builder.equal(join.get("player"), player));
 
         return em.createQuery(query).getResultList();
     }
