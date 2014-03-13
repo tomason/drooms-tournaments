@@ -1,0 +1,3 @@
+<jboss-web>
+  <security-domain>drooms-rest-domain</security-domain>
+</jboss-web>

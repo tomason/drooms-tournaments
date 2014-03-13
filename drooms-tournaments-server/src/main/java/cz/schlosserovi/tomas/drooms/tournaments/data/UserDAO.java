@@ -1,8 +1,6 @@
 package cz.schlosserovi.tomas.drooms.tournaments.data;
 
-import java.security.SecureRandom;
 import java.util.List;
-import java.util.Random;
 
 import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -20,9 +18,8 @@ public class UserDAO extends AbstractDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDAO.class);
 
     public UserEntity insertUser(String name, String password) {
-        String salt = generateSaltString();
-        String dbPassword = encryptPassword(password, salt);
-        UserEntity entity = new UserEntity(name, salt, dbPassword);
+        String dbPassword = encryptPassword(password);
+        UserEntity entity = new UserEntity(name, dbPassword);
 
         em.persist(entity);
         em.flush();
@@ -36,7 +33,7 @@ public class UserDAO extends AbstractDAO {
             throw new IllegalArgumentException("Given user is not registered");
         }
         try {
-            String encryptedPwd = encryptPassword(password, entity.getSalt());
+            String encryptedPwd = encryptPassword(password);
 
             return encryptedPwd.equals(entity.getPassword());
         } catch (Exception ex) {
@@ -58,24 +55,7 @@ public class UserDAO extends AbstractDAO {
         return em.createQuery(query).getResultList();
     }
 
-    private String generateSaltString() {
-        Random r = new SecureRandom();
-        byte[] salt = new byte[32];
-        r.nextBytes(salt);
-        return Base64.encodeBase64String(salt);
-    }
-    
-    private String encryptPassword(String password, String salt) {
-        byte[] pwd = Base64.decodeBase64(password);
-        byte[] slt = Base64.decodeBase64(salt);
-        byte[] base = new byte[pwd.length + slt.length];
-        int index = 0;
-        for (byte b : pwd) {
-            base[index++] = b;
-        }
-        for (byte b : slt) {
-            base[index++] = b;
-        }
-        return Base64.encodeBase64String(DigestUtils.md5(base));
+    private String encryptPassword(String password) {
+        return new String(Base64.encodeBase64(DigestUtils.md5(password)));
     }
 }
