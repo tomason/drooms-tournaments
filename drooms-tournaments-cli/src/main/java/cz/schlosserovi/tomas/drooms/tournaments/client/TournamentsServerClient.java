@@ -1,48 +1,64 @@
 package cz.schlosserovi.tomas.drooms.tournaments.client;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
+import java.util.List;
 
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.jboss.resteasy.client.ClientExecutor;
+import org.jboss.resteasy.client.ClientRequest;
 import org.jboss.resteasy.client.ClientResponse;
 import org.jboss.resteasy.client.ProxyFactory;
+import org.jboss.resteasy.client.core.executors.ApacheHttpClient4Executor;
 import org.jboss.resteasy.util.GenericType;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Strategy;
+import cz.schlosserovi.tomas.drooms.tournaments.domain.Tournament;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.User;
+import cz.schlosserovi.tomas.drooms.tournaments.services.RegistrationService;
 import cz.schlosserovi.tomas.drooms.tournaments.services.UserService;
 
-public class UserServiceClient {
-    private UserService service;
-    private String authToken;
+public class TournamentsServerClient {
+    private UserService userService;
+    private RegistrationService registrationService;
     private String userName;
+    private String hash;
 
-    public UserServiceClient(String server) {
+    public TournamentsServerClient(String server) {
         StringBuilder sb = new StringBuilder();
         if (!server.startsWith("http")) {
             sb.append("https://");
         }
         sb.append(server);
-        if (!server.endsWith("/services/users")) {
-            if (!server.endsWith("/")) {
-                sb.append("/");
+
+        HttpClient client = new DefaultHttpClient();
+
+        ClientExecutor executor = new ApacheHttpClient4Executor(client) {
+            @Override
+            public ClientResponse<?> execute(ClientRequest request) throws Exception {
+                if (hash != null) {
+                    request.header("Authorization", "BASIC " + hash);
+                }
+
+                return super.execute(request);
             }
-            sb.append("services/users");
-        }
-        service = ProxyFactory.create(UserService.class, sb.toString());
+        };
+
+        userService = ProxyFactory.create(UserService.class, sb.toString(), executor);
+        registrationService = ProxyFactory.create(RegistrationService.class, sb.toString());
     }
 
     public void register(String userName, String password) {
-        if (authToken != null) {
+        if (isLoggedIn()) {
             logout();
         }
         ClientResponse<?> response = null;
         try {
-            byte[] encoded = Base64.encodeBase64(password.getBytes(StandardCharsets.UTF_8));
-            response = (ClientResponse<?>) service.register(new User(userName, encoded));
+            response = (ClientResponse<?>) registrationService.register(new User(userName, password));
             if (response.getStatus() != Status.OK.getStatusCode()) {
                 throw new ResponseException(response.getEntity(String.class));
             }
@@ -56,52 +72,36 @@ public class UserServiceClient {
     }
 
     public boolean login(String userName, String password) {
-        if (authToken != null) {
-            logout();
-        }
+        this.userName = userName;
+        this.hash = new String(Base64.encodeBase64((userName + ":" + password).getBytes(StandardCharsets.US_ASCII)));
+
+        boolean result = false;
+
         ClientResponse<?> response = null;
         try {
-            byte[] encoded = Base64.encodeBase64(password.getBytes(StandardCharsets.UTF_8));
-            response = (ClientResponse<?>) service.login(new User(userName, encoded));
-            switch (response.getStatus()) {
-            case 200:
-                this.userName = userName;
-                authToken = response.getEntity(String.class);
-                return true;
-            case 401:
-                return false;
-            default:
-                throw new ResponseException(response.getEntity(String.class));
+            response = (ClientResponse<?>) userService.getPlaygrounds();
+            if (response.getStatus() == 200) {
+                result = true;
+            } else {
+                this.userName = null;
+                this.hash = null;
             }
         } finally {
             if (response != null) {
                 response.releaseConnection();
             }
         }
+
+        return result;
     }
 
     public void logout() {
-        if (authToken == null) {
-            throw new IllegalStateException("Nobody is logged in");
-        }
-        ClientResponse<?> response = null;
-        try {
-            response = (ClientResponse<?>) service.logout(authToken);
-            if (response.getStatus() != Status.OK.getStatusCode()) {
-                throw new ResponseException(response.getEntity(String.class));
-            }
-            authToken = null;
-            userName = null;
-        } finally {
-            if (response != null) {
-                response.releaseConnection();
-            }
-        }
-
+        userName = null;
+        hash = null;
     }
 
     public boolean isLoggedIn() {
-        return authToken != null;
+        return hash != null;
     }
 
     public Object getLoogedInUser() {
@@ -112,14 +112,14 @@ public class UserServiceClient {
         }
     }
 
-    public Collection<Strategy> getStrategies() {
+    public List<Strategy> getStrategies() {
         ClientResponse<?> response = null;
         try {
-            response = (ClientResponse<?>) service.getStrategies(authToken);
+            response = (ClientResponse<?>) userService.getStrategies();
             if (response.getStatus() != Status.OK.getStatusCode()) {
                 throw new ResponseException(response.getEntity(String.class));
             }
-            return response.getEntity(new GenericType<Collection<Strategy>>() {
+            return response.getEntity(new GenericType<List<Strategy>>() {
             });
         } finally {
             if (response != null) {
@@ -131,7 +131,7 @@ public class UserServiceClient {
     public void setActiveStrategy(Strategy strategy) {
         ClientResponse<?> response = null;
         try {
-            response = (ClientResponse<?>) service.activateStrategy(authToken, strategy);
+            response = (ClientResponse<?>) userService.activateStrategy(strategy);
             if (response.getStatus() != Status.OK.getStatusCode()) {
                 throw new ResponseException(response.getEntity(String.class));
             }
@@ -145,7 +145,7 @@ public class UserServiceClient {
     public void newStrategy(String groupId, String artifactId, String version) {
         ClientResponse<?> response = null;
         try {
-            response = (ClientResponse<?>) service.newStrategy(authToken, new Strategy(groupId, artifactId, version));
+            response = (ClientResponse<?>) userService.newStrategy(new Strategy(groupId, artifactId, version));
             if (response.getStatus() != Status.OK.getStatusCode()) {
                 throw new ResponseException(response.getEntity(String.class));
             }
@@ -156,14 +156,14 @@ public class UserServiceClient {
         }
     }
 
-    public Collection<Playground> getPlaygrounds() {
+    public List<Playground> getPlaygrounds() {
         ClientResponse<?> response = null;
         try {
-            response = (ClientResponse<?>) service.getPlaygrounds(authToken);
+            response = (ClientResponse<?>) userService.getPlaygrounds();
             if (response.getStatus() != Status.OK.getStatusCode()) {
                 throw new ResponseException(response.getEntity(String.class));
             }
-            return response.getEntity(new GenericType<Collection<Playground>>() {
+            return response.getEntity(new GenericType<List<Playground>>() {
             });
         } finally {
             if (response != null) {
@@ -175,7 +175,7 @@ public class UserServiceClient {
     public void newPlayground(Playground playground) {
         ClientResponse<?> response = null;
         try {
-            response = (ClientResponse<?>) service.newPlayground(authToken, playground);
+            response = (ClientResponse<?>) userService.newPlayground(playground);
             if (response.getStatus() != Status.OK.getStatusCode()) {
                 throw new ResponseException(response.getEntity(String.class));
             }
@@ -189,7 +189,7 @@ public class UserServiceClient {
     public void configurePlayground(Playground playground) {
         ClientResponse<?> response = null;
         try {
-            response = (ClientResponse<?>) service.configurePlayground(authToken, playground);
+            response = (ClientResponse<?>) userService.configurePlayground(playground);
             if (response.getStatus() != Status.OK.getStatusCode()) {
                 throw new ResponseException(response.getEntity(String.class));
             }
@@ -199,4 +199,22 @@ public class UserServiceClient {
             }
         }
     }
+
+    public List<Tournament> getTournaments() {
+        ClientResponse<?> response = null;
+        try {
+            response = (ClientResponse<?>) userService.getTournaments();
+            if (response.getStatus() != Status.OK.getStatusCode()) {
+                throw new ResponseException(response.getEntity(String.class));
+            }
+
+            return response.getEntity(new GenericType<List<Tournament>>() {
+            });
+        } finally {
+            if (response != null) {
+                response.releaseConnection();
+            }
+        }
+    }
+
 }

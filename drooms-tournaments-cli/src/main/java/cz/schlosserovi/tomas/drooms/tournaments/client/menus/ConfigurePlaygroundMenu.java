@@ -5,14 +5,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import cz.schlosserovi.tomas.drooms.tournaments.client.UserServiceClient;
+import cz.schlosserovi.tomas.drooms.tournaments.client.TournamentsServerClient;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 
 public class ConfigurePlaygroundMenu extends Menu {
     private Playground playground;
     private List<String> keys = new LinkedList<>();
 
-    protected ConfigurePlaygroundMenu(Console console, UserServiceClient client, Playground playground) {
+    protected ConfigurePlaygroundMenu(Console console, TournamentsServerClient client, Playground playground) {
         super(console, client);
         this.playground = playground;
         if (playground.getConfiguration() == null) {

@@ -1,16 +1,15 @@
 package cz.schlosserovi.tomas.drooms.tournaments.client.menus;
 
 import java.io.Console;
-import java.util.LinkedList;
 import java.util.List;
 
-import cz.schlosserovi.tomas.drooms.tournaments.client.UserServiceClient;
+import cz.schlosserovi.tomas.drooms.tournaments.client.TournamentsServerClient;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Strategy;
 
 class StrategiesMenu extends Menu {
     private List<Strategy> strategies;
 
-    public StrategiesMenu(Console console, UserServiceClient client) {
+    public StrategiesMenu(Console console, TournamentsServerClient client) {
         super(console, client);
     }
 
@@ -30,7 +29,7 @@ class StrategiesMenu extends Menu {
         console.format("%s%n", SINGLE_LINE);
         console.format("|   |   |                   groupId | artifactId               |    version    |%n");
         console.format("%s%n", SINGLE_LINE);
-        strategies = new LinkedList<>(client.getStrategies());
+        strategies = client.getStrategies();
         for (int i = 1; i <= strategies.size(); i++) {
             Strategy s = strategies.get(i - 1);
             console.format("|%3s", i);

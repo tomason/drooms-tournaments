@@ -3,7 +3,7 @@ package cz.schlosserovi.tomas.drooms.tournaments.client.menus;
 import java.io.Console;
 import java.util.Arrays;
 
-import cz.schlosserovi.tomas.drooms.tournaments.client.UserServiceClient;
+import cz.schlosserovi.tomas.drooms.tournaments.client.TournamentsServerClient;
 
 public abstract class Menu {
     protected static final String SINGLE_LINE;
@@ -15,13 +15,13 @@ public abstract class Menu {
     }
 
     protected final Console console;
-    protected final UserServiceClient client;
+    protected final TournamentsServerClient client;
 
-    public static Menu getMainMenu(Console console, UserServiceClient client) {
+    public static Menu getMainMenu(Console console, TournamentsServerClient client) {
         return new MainMenu(console, client);
     }
 
-    protected Menu(Console console, UserServiceClient client) {
+    protected Menu(Console console, TournamentsServerClient client) {
         this.console = console;
         this.client = client;
     }

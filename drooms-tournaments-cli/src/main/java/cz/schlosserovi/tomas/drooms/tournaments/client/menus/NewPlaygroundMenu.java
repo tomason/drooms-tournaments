@@ -2,12 +2,12 @@ package cz.schlosserovi.tomas.drooms.tournaments.client.menus;
 
 import java.io.Console;
 
-import cz.schlosserovi.tomas.drooms.tournaments.client.UserServiceClient;
+import cz.schlosserovi.tomas.drooms.tournaments.client.TournamentsServerClient;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 
 public class NewPlaygroundMenu extends FormMenu {
 
-    protected NewPlaygroundMenu(Console console, UserServiceClient client) {
+    protected NewPlaygroundMenu(Console console, TournamentsServerClient client) {
         super(console, client);
     }
 

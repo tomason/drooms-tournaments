@@ -2,11 +2,11 @@ package cz.schlosserovi.tomas.drooms.tournaments.client.menus;
 
 import java.io.Console;
 
-import cz.schlosserovi.tomas.drooms.tournaments.client.UserServiceClient;
+import cz.schlosserovi.tomas.drooms.tournaments.client.TournamentsServerClient;
 
 class RegisterMenu extends FormMenu {
 
-    public RegisterMenu(Console console, UserServiceClient client) {
+    public RegisterMenu(Console console, TournamentsServerClient client) {
         super(console, client);
     }
 

@@ -24,7 +24,7 @@ public class DroomsCLI {
         } else {
             serverName = args[0];
         }
-        UserServiceClient client = new UserServiceClient(serverName);
+        TournamentsServerClient client = new TournamentsServerClient(serverName);
 
         Menu menu = Menu.getMainMenu(console, client);
         while (menu != null) {

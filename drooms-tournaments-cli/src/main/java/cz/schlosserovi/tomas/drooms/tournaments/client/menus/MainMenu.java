@@ -2,11 +2,11 @@ package cz.schlosserovi.tomas.drooms.tournaments.client.menus;
 
 import java.io.Console;
 
-import cz.schlosserovi.tomas.drooms.tournaments.client.UserServiceClient;
+import cz.schlosserovi.tomas.drooms.tournaments.client.TournamentsServerClient;
 
 class MainMenu extends Menu {
 
-    public MainMenu(Console console, UserServiceClient client) {
+    public MainMenu(Console console, TournamentsServerClient client) {
         super(console, client);
     }
 
@@ -14,7 +14,7 @@ class MainMenu extends Menu {
     protected String getHeadline() {
         return "";
     }
-    
+
     @Override
     protected boolean allowMainMenu() {
         return false;
@@ -23,8 +23,9 @@ class MainMenu extends Menu {
     @Override
     protected void printMenu() {
         if (client.isLoggedIn()) {
-            console.format("1. list strategies%n");
-            console.format("2. list playgrounds%n");
+            console.format("1. Strategies menu%n");
+            console.format("2. Playgrounds menu%n");
+            console.format("3. Tournaments menu%n");
         } else {
             console.format("1. register new user%n");
             console.format("2. login%n");
@@ -38,6 +39,9 @@ class MainMenu extends Menu {
         }
         if (client.isLoggedIn() && choice == 2) {
             return new PlaygroundsMenu(console, client);
+        }
+        if (client.isLoggedIn() && choice == 3) {
+            return new TournamentsMenu(console, client);
         }
         if (!client.isLoggedIn() && choice == 1) {
             return new RegisterMenu(console, client);
