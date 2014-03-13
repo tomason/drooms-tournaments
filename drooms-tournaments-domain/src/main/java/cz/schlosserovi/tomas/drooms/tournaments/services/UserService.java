@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -16,7 +15,6 @@ import org.jboss.resteasy.annotations.ClientResponseType;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Strategy;
-import cz.schlosserovi.tomas.drooms.tournaments.domain.User;
 
 // FIXME add ScoreBoard service
 /**
@@ -40,34 +38,10 @@ import cz.schlosserovi.tomas.drooms.tournaments.domain.User;
  * every {@code period} hours with current active Strategies.</li>
  * </ul>
  */
+@Path("/services/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface UserService {
-
-    /**
-     * Logs in already registered User on the server.
-     * 
-     * @param user
-     *            User to be logged in.
-     * @return String authentication token used in all authenticated service
-     *         calls.
-     */
-    @POST
-    @Path("/login")
-    @ClientResponseType(entityType = String.class)
-    public Response login(User user);
-
-    /**
-     * Logs out a User.
-     * 
-     * @param token
-     *            Token received from <code>login</code> method.
-     * @return Nothing.
-     */
-    @POST
-    @Path("/logout")
-    @ClientResponseType(entityType = String.class)
-    public Response logout(@HeaderParam("Auth-Token") String token);
 
     /**
      * Lists all the User's strategies.
@@ -79,7 +53,7 @@ public interface UserService {
     @GET
     @Path("/strategies")
     @ClientResponseType(entityType = List.class)
-    public Response getStrategies(@HeaderParam("Auth-Token") String token);
+    public Response getStrategies();
 
     /**
      * Registers a new Strategy for User.
@@ -93,7 +67,7 @@ public interface UserService {
     @POST
     @Path("/strategies")
     @ClientResponseType(entityType = Void.class)
-    public Response newStrategy(@HeaderParam("Auth-Token") String token, Strategy strategy);
+    public Response newStrategy(Strategy strategy);
 
     /**
      * Sets the specified Strategy as User's active one.
@@ -107,7 +81,7 @@ public interface UserService {
     @PUT
     @Path("/strategies")
     @ClientResponseType(entityType = Void.class)
-    public Response activateStrategy(@HeaderParam("Auth-Token") String token, Strategy strategy);
+    public Response activateStrategy(Strategy strategy);
 
     /**
      * List all the User's Playgrounds.
@@ -119,7 +93,7 @@ public interface UserService {
     @GET
     @Path("/playgrounds")
     @ClientResponseType(entityType = List.class)
-    public Response getPlaygrounds(@HeaderParam("Auth-Token") String token);
+    public Response getPlaygrounds();
 
     /**
      * Register a new Playground for User.
@@ -133,7 +107,7 @@ public interface UserService {
     @POST
     @Path("/playgrounds")
     @ClientResponseType(entityType = Void.class)
-    public Response newPlayground(@HeaderParam("Auth-Token") String token, Playground playground);
+    public Response newPlayground(Playground playground);
 
     /**
      * Sets the Playground's configuration.
@@ -147,6 +121,6 @@ public interface UserService {
     @PUT
     @Path("/playgrounds")
     @ClientResponseType(entityType = Void.class)
-    public Response configurePlayground(@HeaderParam("Auth-Token") String token, Playground playground);
+    public Response configurePlayground(Playground playground);
 
 }
