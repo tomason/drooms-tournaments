@@ -1,8 +1,14 @@
 package cz.schlosserovi.tomas.drooms.tournaments.domain;
 
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Playground {
+    // Keep these two in sync
+    private static final Pattern TO_STRING_PATTERN = Pattern.compile("Playground\\[name='(.+)', maxPlayers='(\\d+)']");
+    private static final String TO_STRING_FORMAT = "Playground[name='%s', maxPlayers='%s']";
+
     private String name;
     private String source;
     private int maxPlayers;
@@ -55,8 +61,20 @@ public class Playground {
         this.configuration = configuration;
     }
 
+    public static Playground fromString(String playground) {
+        Playground result = new Playground();
+
+        Matcher m = TO_STRING_PATTERN.matcher(playground);
+        m.matches();
+
+        result.name = m.group(1);
+        result.maxPlayers = Integer.valueOf(m.group(2));
+
+        return result;
+    }
+
     @Override
     public String toString() {
-        return String.format("Playground[name='%s', maxPlayers='%s']", name);
+        return String.format(TO_STRING_FORMAT, name, maxPlayers);
     }
 }

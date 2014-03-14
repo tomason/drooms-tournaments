@@ -12,16 +12,6 @@ public class GAV implements Serializable {
     public GAV() {
     }
 
-    public GAV(String gav) {
-        final String[] gavParts = gav.split("\\Q:\\E");
-        if (gavParts.length != 3) {
-            throw new IllegalArgumentException("Wrong Maven GAV " + gav);
-        }
-        this.groupId = gavParts[0];
-        this.artifactId = gavParts[1];
-        this.version = gavParts[2];
-    }
-
     public GAV(String groupId, String artifactId, String version) {
         if (groupId == null || artifactId == null || version == null) {
             throw new IllegalArgumentException("groupId, artifactId and version must not be null");
@@ -62,6 +52,20 @@ public class GAV implements Serializable {
             throw new IllegalArgumentException("version must not be null");
         }
         this.version = version;
+    }
+
+    public static GAV fromString(String gav) {
+        GAV result = new GAV();
+
+        final String[] gavParts = gav.split("\\Q:\\E");
+        if (gavParts.length != 3) {
+            throw new IllegalArgumentException("Wrong Maven GAV " + gav);
+        }
+        result.groupId = gavParts[0];
+        result.artifactId = gavParts[1];
+        result.version = gavParts[2];
+
+        return result;
     }
 
     @Override

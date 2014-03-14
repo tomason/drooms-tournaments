@@ -1,6 +1,13 @@
 package cz.schlosserovi.tomas.drooms.tournaments.domain;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class User {
+    // Keep these two in sync
+    private static final String TO_STRING_FORMAT = "User[name='%s']";
+    private static final Pattern TO_STRING_PATTERN = Pattern.compile("User\\[name='(.+)'\\]");
+
     private String name;
     private String password;
 
@@ -32,8 +39,19 @@ public class User {
         this.password = password;
     }
 
+    public static User fromString(String user) {
+        User result = new User();
+
+        Matcher m = TO_STRING_PATTERN.matcher(user);
+        m.matches();
+
+        result.name = m.group(1);
+
+        return result;
+    }
+
     @Override
     public String toString() {
-        return String.format("User[name='%s']", name);
+        return String.format(TO_STRING_FORMAT, name);
     }
 }

@@ -2,8 +2,15 @@ package cz.schlosserovi.tomas.drooms.tournaments.domain;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Tournament {
+    // Keep these two in sync
+    private static final Pattern TO_STRING_PATTERN = Pattern
+            .compile("Tournament\\[name='(.+)', start='(\\d+)', end='(\\d+)', period='(\\d+)'\\]");
+    private static final String TO_STRING_FORMAT = "Tournament[name='%s', start='%s', end='%s', period='%s']";
+
     private String name;
     private Calendar start;
     private Calendar end;
@@ -68,5 +75,28 @@ public class Tournament {
 
     public void setEnrolled(boolean enrolled) {
         this.enrolled = enrolled;
+    }
+
+    public static Tournament fromString(String tournament) {
+        Matcher m = TO_STRING_PATTERN.matcher(tournament);
+        m.matches();
+
+        Tournament result = new Tournament();
+        result.name = m.group(1);
+
+        result.start = Calendar.getInstance();
+        result.start.setTimeInMillis(Long.valueOf(m.group(2)));
+
+        result.end = Calendar.getInstance();
+        result.end.setTimeInMillis(Long.valueOf(m.group(3)));
+
+        result.period = Integer.valueOf(m.group(4));
+
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(TO_STRING_FORMAT, name, start.getTimeInMillis(), end.getTimeInMillis(), period);
     }
 }
