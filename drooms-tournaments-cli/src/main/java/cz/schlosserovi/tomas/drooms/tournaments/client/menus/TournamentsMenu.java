@@ -7,7 +7,7 @@ import java.util.List;
 import cz.schlosserovi.tomas.drooms.tournaments.client.TournamentsServerClient;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Tournament;
 
-public class TournamentsMenu extends Menu {
+class TournamentsMenu extends Menu {
     private List<Tournament> tournaments;
 
     protected TournamentsMenu(Console console, TournamentsServerClient client) {
@@ -26,7 +26,7 @@ public class TournamentsMenu extends Menu {
 
     @Override
     protected void printMenu() {
-        console.format("List of %s's playgrounds:%n", client.getLoogedInUser());
+        console.format("List of %s's tournaments:%n", client.getLoogedInUser());
         console.format("%s%n", SINGLE_LINE);
         console.format("|   |                                  name |      start |        end | joined |%n");
         console.format("%s%n", SINGLE_LINE);
@@ -41,15 +41,28 @@ public class TournamentsMenu extends Menu {
         }
         console.format("%s%n", SINGLE_LINE);
         console.format("1. new tournament%n");
-        console.format("2. join tournament%n");
-        console.format("3. list playgrounds%n");
+        console.format("2. tournament detail%n");
+        console.format("3. join tournament%n");
     }
 
     @Override
     protected Menu execute(int choice) {
-//        switch (choice) {
-//        
-//        }
+        switch (choice) {
+        case 1:
+            return new NewTournamentMenu(console, client);
+        case 2: {
+            int index = parseChoice("Tournament index (see table above): ") - 1;
+            if (index >= 0 && index < tournaments.size()) {
+                return new TournamentDetailMenu(console, client, this, tournaments.get(index));
+            }
+        } break;
+        case 3: {
+            int index = parseChoice("Tournament index (see table above): ") - 1;
+            if (index >= 0 && index < tournaments.size() && !tournaments.get(index).isEnrolled()) {
+                client.joinTournament(tournaments.get(index));
+            }
+        } break;
+        }
 
         return new TournamentsMenu(console, client);
     }

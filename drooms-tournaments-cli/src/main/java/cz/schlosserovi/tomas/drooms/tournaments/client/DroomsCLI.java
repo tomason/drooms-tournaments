@@ -5,6 +5,7 @@ import java.io.Console;
 import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
+import cz.schlosserovi.tomas.drooms.tournaments.client.menus.ExitMenu;
 import cz.schlosserovi.tomas.drooms.tournaments.client.menus.Menu;
 
 public class DroomsCLI {
@@ -27,15 +28,18 @@ public class DroomsCLI {
         TournamentsServerClient client = new TournamentsServerClient(serverName);
 
         Menu menu = Menu.getMainMenu(console, client);
-        while (menu != null) {
+        while (!(menu instanceof ExitMenu)) {
             try {
                 menu = menu.show();
             } catch (IllegalStateException | ResponseException ex) {
                 // my exception with message from the webapp
                 console.format("%n%s%n%n", ex.getMessage());
+                menu = Menu.getMainMenu(console, client);
             } catch (Exception ex) {
                 // any other exception
-                console.format("Error in application:%n %s%n%n", ex);
+                console.format("Error in application:%n %s", ex);
+                ex.printStackTrace();
+                console.format("%n%n");
                 menu = Menu.getMainMenu(console, client);
             }
         }

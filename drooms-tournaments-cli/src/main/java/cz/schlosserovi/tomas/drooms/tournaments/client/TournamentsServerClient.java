@@ -19,12 +19,15 @@ import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Strategy;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Tournament;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.User;
+import cz.schlosserovi.tomas.drooms.tournaments.services.PlaygroundService;
 import cz.schlosserovi.tomas.drooms.tournaments.services.RegistrationService;
 import cz.schlosserovi.tomas.drooms.tournaments.services.UserService;
 
 public class TournamentsServerClient {
     private UserService userService;
     private RegistrationService registrationService;
+    private PlaygroundService playgroundService;
+
     private String userName;
     private String hash;
 
@@ -49,7 +52,8 @@ public class TournamentsServerClient {
         };
 
         userService = ProxyFactory.create(UserService.class, sb.toString(), executor);
-        registrationService = ProxyFactory.create(RegistrationService.class, sb.toString());
+        registrationService = ProxyFactory.create(RegistrationService.class, sb.toString(), executor);
+        playgroundService = ProxyFactory.create(PlaygroundService.class, sb.toString(), executor);
     }
 
     public void register(String userName, String password) {
@@ -108,7 +112,7 @@ public class TournamentsServerClient {
         if (isLoggedIn()) {
             return userName;
         } else {
-            return "";
+            return "not logged in";
         }
     }
 
@@ -171,6 +175,22 @@ public class TournamentsServerClient {
             }
         }
     }
+    
+//    public List<Playground> getPlaygrounds(Tournament tournament) {
+//        ClientResponse<?> response = null;
+//        try {
+//            response = (ClientResponse<?>) playgroundService.getPlaygrounds(tournament);
+//            if (response.getStatus() != Status.OK.getStatusCode()) {
+//                throw new ResponseException(response.getEntity(String.class));
+//            }
+//            return response.getEntity(new GenericType<List<Playground>>() {
+//            });
+//        } finally {
+//            if (response != null) {
+//                response.releaseConnection();
+//            }
+//        }
+//    }
 
     public void newPlayground(Playground playground) {
         ClientResponse<?> response = null;
@@ -200,6 +220,20 @@ public class TournamentsServerClient {
         }
     }
 
+    public void newTournament(Tournament tournament) {
+        ClientResponse<?> response = null;
+        try {
+            response = (ClientResponse<?>) userService.newTournament(tournament);
+            if (response.getStatus() != Status.OK.getStatusCode()) {
+                throw new ResponseException(response.getEntity(String.class));
+            }
+        } finally {
+            if (response != null) {
+                response.releaseConnection();
+            }
+        }
+    }
+    
     public List<Tournament> getTournaments() {
         ClientResponse<?> response = null;
         try {
@@ -217,4 +251,33 @@ public class TournamentsServerClient {
         }
     }
 
+    public void joinTournament(Tournament tournament) {
+        ClientResponse<?> response = null;
+        try {
+            response = (ClientResponse<?>) userService.joinTournament(tournament);
+            if (response.getStatus() != Status.OK.getStatusCode()) {
+                throw new ResponseException(response.getEntity(String.class));
+            }
+        } finally {
+            if (response != null) {
+                response.releaseConnection();
+            }
+        }
+    }
+
+    public List<Playground> getAllPlaygrounds() {
+        ClientResponse<?> response = null;
+        try {
+            response = (ClientResponse<?>) playgroundService.getPlaygrounds();
+            if (response.getStatus() != Status.OK.getStatusCode()) {
+                throw new ResponseException(response.getEntity(String.class));
+            }
+            return response.getEntity(new GenericType<List<Playground>>() {
+            });
+        } finally {
+            if (response != null) {
+                response.releaseConnection();
+            }
+        }
+    }
 }
