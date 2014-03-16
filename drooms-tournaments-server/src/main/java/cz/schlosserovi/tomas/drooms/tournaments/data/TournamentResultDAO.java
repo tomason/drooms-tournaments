@@ -15,8 +15,9 @@ public class TournamentResultDAO extends AbstractDAO {
     private TournamentDAO tournaments;
 
     public TournamentResultEntity insertResult(String userName, String tournamentName) {
-        TournamentResultEntity result = new TournamentResultEntity(users.getUser(userName),
-                tournaments.getTournament(tournamentName));
+        TournamentResultEntity result = new TournamentResultEntity();
+        result.setPlayer(users.getUserWithTournamentResults(userName));
+        result.setTournament(tournaments.getTournamentWithResults(tournamentName));
 
         em.persist(result);
         em.flush();

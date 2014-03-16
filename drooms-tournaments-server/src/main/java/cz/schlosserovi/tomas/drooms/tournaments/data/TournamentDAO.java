@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -17,6 +18,7 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentResultEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
+@Stateless
 public class TournamentDAO extends AbstractDAO {
     @Inject
     private PlaygroundDAO playgrounds;
@@ -41,6 +43,28 @@ public class TournamentDAO extends AbstractDAO {
         return em.find(TournamentEntity.class, name);
     }
 
+    public TournamentEntity getTournamentWithPlaygrounds(String name) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
+
+        Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
+        tournament.fetch("playgrounds");
+        query.select(query.from(TournamentEntity.class)).where(builder.equal(tournament.get("name"), name));
+
+        return em.createQuery(query).getSingleResult();
+    }
+
+    public TournamentEntity getTournamentWithResults(String name) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
+
+        Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
+        tournament.fetch("results");
+        query.select(query.from(TournamentEntity.class)).where(builder.equal(tournament.get("name"), name));
+
+        return em.createQuery(query).getSingleResult();
+    }
+
     public List<TournamentEntity> getTournaments() {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
@@ -53,10 +77,11 @@ public class TournamentDAO extends AbstractDAO {
     public List<TournamentEntity> getTournaments(UserEntity player) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
-        
+
         Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
+        tournament.fetch("playgrounds");
         Join<TournamentEntity, TournamentResultEntity> join = tournament.join("results");
-        query.select(tournament).where(builder.equal(join.get("player"), player));
+        query.select(tournament).distinct(true).where(builder.equal(join.get("player"), player));
 
         return em.createQuery(query).getResultList();
     }
@@ -66,8 +91,10 @@ public class TournamentDAO extends AbstractDAO {
         CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
 
         Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
-        query.select(tournament).where(
-                builder.and(builder.lessThan(tournament.<Date> get("start"), builder.currentDate()),
+        tournament.fetch("playgrounds");
+        query.select(tournament)
+                .distinct(true)
+                .where(builder.and(builder.lessThan(tournament.<Date> get("start"), builder.currentDate()),
                         builder.greaterThan(tournament.<Date> get("end"), builder.currentDate())));
 
         return em.createQuery(query).getResultList();
@@ -78,7 +105,8 @@ public class TournamentDAO extends AbstractDAO {
         CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
 
         Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
-        query.select(tournament).where(builder.greaterThan(tournament.<Date> get("end"), builder.currentDate()));
+        tournament.fetch("playgrounds");
+        query.select(tournament).distinct(true).where(builder.greaterThan(tournament.<Date> get("end"), builder.currentDate()));
 
         return em.createQuery(query).getResultList();
     }
