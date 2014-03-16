@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -25,10 +27,12 @@ public class TournamentDAO extends AbstractDAO {
     @Inject
     private Event<NewTournamentEvent> newTournament;
 
-    public TournamentEntity insertTournament(String name, Calendar start, Calendar end, int period, Collection<String> playgroundNames) {
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public TournamentEntity insertTournament(String name, Calendar start, Calendar end, int period,
+            Collection<String> playgroundNames) {
         TournamentEntity result = new TournamentEntity(name, start, end, period);
         for (String playgroudName : playgroundNames) {
-            result.addPlayground(playgrounds.getPlayground(playgroudName));
+            result.addPlayground(playgrounds.getPlaygroundWithTournaments(playgroudName));
         }
 
         em.persist(result);
