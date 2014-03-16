@@ -1,5 +1,8 @@
 package cz.schlosserovi.tomas.drooms.tournaments.util;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
@@ -44,6 +47,14 @@ public final class ConversionUtil {
         result.setEnd(entity.getEnd());
         result.setPeriod(entity.getPeriod());
         result.setEnrolled(enrolled);
+        Collection<PlaygroundEntity> playgroundEntities = entity.getPlaygrounds();
+        if (playgroundEntities != null) {
+            List<Playground> playgrounds = new LinkedList<>();
+            for (PlaygroundEntity playgroundEntity : playgroundEntities) {
+                playgrounds.add(entityToDomain(playgroundEntity));
+            }
+            result.setPlaygrounds(playgrounds);
+        }
 
         return result;
     }
