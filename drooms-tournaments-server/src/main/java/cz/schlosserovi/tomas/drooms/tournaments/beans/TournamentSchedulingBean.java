@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.schlosserovi.tomas.drooms.tournaments.data.GameDAO;
-import cz.schlosserovi.tomas.drooms.tournaments.data.PlaygroundDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.data.StrategyDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.data.TournamentDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.GAV;
@@ -37,8 +36,6 @@ public class TournamentSchedulingBean {
     @Inject
     private GameDAO games;
     @Inject
-    private PlaygroundDAO playgrounds;
-    @Inject
     private StrategyDAO strategies;
 
     @PostConstruct
@@ -54,10 +51,9 @@ public class TournamentSchedulingBean {
     }
 
     private void scheduleGameInsertion(TournamentEntity tournament) {
-        Calendar scheduled = (Calendar)tournament.getStart().clone();
+        Calendar scheduled = (Calendar) tournament.getStart().clone();
         while (scheduled.compareTo(Calendar.getInstance()) < 0) {
-            //FIXME scheduled.add(Calendar.HOUR_OF_DAY, tournament.getPeriod());
-            scheduled.add(Calendar.MINUTE, tournament.getPeriod());
+            scheduled.add(Calendar.HOUR_OF_DAY, tournament.getPeriod());
         }
         long delay = scheduled.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
 
@@ -67,9 +63,8 @@ public class TournamentSchedulingBean {
 
     private void insertGameRun(TournamentEntity tournament) {
         Collection<StrategyEntity> players = strategies.getActiveStrategies(tournament);
-        Collection<PlaygroundEntity> maps = playgrounds.getPlaygrounds(tournament);
 
-        for (PlaygroundEntity map : maps) {
+        for (PlaygroundEntity map : tournament.getPlaygrounds()) {
             try {
                 games.insertGame(map.getName(), tournament.getName(), toGavCollection(players));
             } catch (Exception ex) {
@@ -96,10 +91,9 @@ public class TournamentSchedulingBean {
         @Override
         public void run() {
             insertGameRun(tournament);
-            //FIXME scheduler.schedule(new GameInsertionRunnable(tournament), tournament.getPeriod(), TimeUnit.HOURS);
-            //FIXME LOGGER.info("Scheduled {} run in {} h", tournament.getName(), tournament.getPeriod());
-            scheduler.schedule(new GameInsertionRunnable(tournament), tournament.getPeriod(), TimeUnit.MINUTES);
-            LOGGER.info("Scheduled {} run in {} m", tournament.getName(), tournament.getPeriod());
+            scheduler.schedule(new GameInsertionRunnable(tournament), tournament.getPeriod(), TimeUnit.HOURS);
+            LOGGER.info("Scheduled {} run in {} h", tournament.getName(), tournament.getPeriod());
         }
     }
+
 }
