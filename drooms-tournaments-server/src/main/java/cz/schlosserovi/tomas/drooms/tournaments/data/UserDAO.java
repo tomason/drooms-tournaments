@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.codec.binary.Base64;
@@ -52,7 +53,7 @@ public class UserDAO extends AbstractDAO {
         CriteriaQuery<UserEntity> query = builder.createQuery(UserEntity.class);
 
         Root<UserEntity> user = query.from(UserEntity.class);
-        user.fetch("tournamentResults");
+        user.fetch("tournamentResults", JoinType.LEFT);
         query.select(user).where(builder.equal(user.get("name"), name));
 
         return em.createQuery(query).getSingleResult();

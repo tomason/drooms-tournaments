@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
 import cz.schlosserovi.tomas.drooms.tournaments.events.NewTournamentEvent;
@@ -52,8 +53,8 @@ public class TournamentDAO extends AbstractDAO {
         CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
 
         Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
-        tournament.fetch("playgrounds");
-        query.select(query.from(TournamentEntity.class)).where(builder.equal(tournament.get("name"), name));
+        tournament.fetch("playgrounds", JoinType.LEFT);
+        query.select(tournament).distinct(true).where(builder.equal(tournament.get("name"), name));
 
         return em.createQuery(query).getSingleResult();
     }
@@ -63,8 +64,8 @@ public class TournamentDAO extends AbstractDAO {
         CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
 
         Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
-        tournament.fetch("results");
-        query.select(query.from(TournamentEntity.class)).where(builder.equal(tournament.get("name"), name));
+        tournament.fetch("results", JoinType.LEFT);
+        query.select(tournament).distinct(true).where(builder.equal(tournament.get("name"), name));
 
         return em.createQuery(query).getSingleResult();
     }
