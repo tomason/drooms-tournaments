@@ -472,7 +472,7 @@
                             <module-option name="principalsQuery" value="select PASSWORD from PLAYER where NAME=?"/>
                             <!-- Use single role for every user (might be needed to change in the future) -->
                             <module-option name="rolesQuery" value="select 'drooms-user' as Role, 'Roles' as RoleGroup from PLAYER where NAME=?"/>
-                            <module-option name="hashAlgorithm" value="MD5"/>
+                            <module-option name="hashAlgorithm" value="SHA-256"/>
                             <module-option name="hashEncoding" value="base64"/>
                             <module-option name="hashUserPassword" value="true"/>
                         </login-module>

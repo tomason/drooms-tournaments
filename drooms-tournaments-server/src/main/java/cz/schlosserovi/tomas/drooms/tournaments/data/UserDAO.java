@@ -68,6 +68,6 @@ public class UserDAO extends AbstractDAO {
     }
 
     private String encryptPassword(String password) {
-        return new String(Base64.encodeBase64(DigestUtils.md5(password)));
+        return new String(Base64.encodeBase64(DigestUtils.sha256(password)));
     }
 }
