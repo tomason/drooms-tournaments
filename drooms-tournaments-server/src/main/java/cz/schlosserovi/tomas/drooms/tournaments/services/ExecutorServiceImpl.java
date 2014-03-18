@@ -3,7 +3,6 @@ package cz.schlosserovi.tomas.drooms.tournaments.services;
 import java.util.UUID;
 
 import javax.inject.Inject;
-import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -14,7 +13,6 @@ import cz.schlosserovi.tomas.drooms.tournaments.beans.GameRegistryBean;
 import cz.schlosserovi.tomas.drooms.tournaments.beans.UserRegistryBean;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.ExecutionResults;
 
-@Path("/execution")
 public class ExecutorServiceImpl implements ExecutorService {
     @Inject
     private UserRegistryBean userRegistry;

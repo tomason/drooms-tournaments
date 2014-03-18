@@ -15,6 +15,7 @@ import org.jboss.resteasy.annotations.ClientResponseType;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.ExecutionResults;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.ExecutionSetup;
 
+@Path("/services/execution")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface ExecutorService {
