@@ -25,7 +25,7 @@
     <web-resource-collection>
       <web-resource-name>Resteasy</web-resource-name>
       <url-pattern>/services/users/*</url-pattern>
-      <url-pattern>/services/execution/*</url-pattern>
+<!--       <url-pattern>/services/execution/*</url-pattern> -->
     </web-resource-collection>
     <auth-constraint>
       <role-name>drooms-user</role-name>
