@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response.Status;
 import cz.schlosserovi.tomas.drooms.tournaments.beans.GameRegistryBean;
 import cz.schlosserovi.tomas.drooms.tournaments.beans.UserRegistryBean;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.ExecutionResults;
+import cz.schlosserovi.tomas.drooms.tournaments.domain.ExecutionSetup;
 
 public class ExecutorServiceImpl implements ExecutorService {
     @Inject
@@ -26,7 +27,7 @@ public class ExecutorServiceImpl implements ExecutorService {
             builder = Response.ok(userRegistry.register().toString(), MediaType.TEXT_PLAIN);
         } catch (Exception ex) {
             builder = Response.status(Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN);
-            builder.entity(String.format("%s: %s", ex.getClass().getName(), ex.getMessage()));
+            builder.entity(ex);
         }
 
         return builder.build();
@@ -41,7 +42,7 @@ public class ExecutorServiceImpl implements ExecutorService {
             builder = Response.ok();
         } catch (Exception ex) {
             builder = Response.status(Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN);
-            builder.entity(String.format("%s: %s", ex.getClass().getName(), ex.getMessage()));
+            builder.entity(ex);
         }
 
         return builder.build();
@@ -52,10 +53,15 @@ public class ExecutorServiceImpl implements ExecutorService {
         ResponseBuilder builder;
         try {
             ping(id);
-            builder = Response.ok(gameRegistry.getNewGame(UUID.fromString(id)), MediaType.APPLICATION_JSON);
+            ExecutionSetup gameSetup = gameRegistry.getNewGame(UUID.fromString(id));
+            if (gameSetup == null) {
+                builder = Response.status(Status.NO_CONTENT);
+            } else {
+                builder = Response.ok(gameSetup);
+            }
         } catch (Exception ex) {
             builder = Response.status(Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN);
-            builder.entity(String.format("%s: %s", ex.getClass().getName(), ex.getMessage()));
+            builder.entity(ex);
         }
 
         return builder.build();
@@ -70,7 +76,7 @@ public class ExecutorServiceImpl implements ExecutorService {
             builder = Response.ok();
         } catch (Exception ex) {
             builder = Response.status(Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN);
-            builder.entity(String.format("%s: %s", ex.getClass().getName(), ex.getMessage()));
+            builder.entity(ex);
         }
 
         return builder.build();
