@@ -4,12 +4,13 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.resteasy.annotations.ClientResponseType;
+import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 
 @Path("/services/playgrounds")
 @Produces(MediaType.APPLICATION_JSON)
@@ -17,15 +18,30 @@ import org.jboss.resteasy.annotations.ClientResponseType;
 public interface PlaygroundService {
 
     @GET
-    @ClientResponseType(entityType = List.class)
     public Response getPlaygrounds();
 
-//    @GET
-//    @ClientResponseType(entityType = List.class)y
-//    public Response getPlaygrounds(@HeaderParam("user") User user);
+    /**
+     * List all the User's Playgrounds.
+     * 
+     * @param token
+     *            Token received from <code>login</code> method.
+     * @return {@link List} of {@link Playground} registered for this User.
+     */
+    @GET
+    @Path("/auth")
+    public Response getUserPlaygrounds();
 
-//    @GET
-//    @Path("/byTournament")
-//    @ClientResponseType(entityType = List.class)
-//    public Response getPlaygrounds(@HeaderParam("tournament") Tournament tournament);
+    /**
+     * Register a new Playground for User.
+     * 
+     * @param token
+     *            Token received from <code>login</code> method.
+     * @param playground
+     *            Playground to be registered.
+     * @return Nothing.
+     */
+    @POST
+    @Path("/auth")
+    public Response newPlayground(Playground playground);
+
 }
