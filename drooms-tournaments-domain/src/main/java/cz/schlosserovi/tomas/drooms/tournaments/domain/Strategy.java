@@ -10,6 +10,7 @@ public class Strategy {
 
     private GAV gav;
     private boolean active = false;
+    private User player;
 
     public Strategy() {
     }
@@ -37,6 +38,14 @@ public class Strategy {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public User getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(User player) {
+        this.player = player;
     }
 
     public static Strategy fromString(String strategy) {
