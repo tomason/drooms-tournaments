@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import cz.schlosserovi.tomas.drooms.tournaments.domain.Game;
+import cz.schlosserovi.tomas.drooms.tournaments.util.Converter;
+import cz.schlosserovi.tomas.drooms.tournaments.util.Convertible;
 import cz.schlosserovi.tomas.drooms.tournaments.util.NullForbiddingSet;
 
 /**
@@ -20,7 +23,7 @@ import cz.schlosserovi.tomas.drooms.tournaments.util.NullForbiddingSet;
  */
 @Entity
 @Table(name = "GAME")
-public class GameEntity implements Serializable {
+public class GameEntity implements Serializable, Convertible<Game> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -115,6 +118,22 @@ public class GameEntity implements Serializable {
             throw new IllegalArgumentException("GameResult must not be assigned to another Game");
         }
         gameResults.add(gameResult);
+    }
+
+    @Override
+    public Game convert(int depth) {
+        Game result = new Game();
+        result.setId(getId());
+        result.setFinished(isFinished());
+
+        result.setPlayground(Converter.forClass(PlaygroundEntity.class).setRecurseDepth(depth - 1).convert(getPlayground()));
+        result.setTournament(Converter.forClass(TournamentEntity.class).setRecurseDepth(depth - 1).convert(getTournament()));
+
+        if (depth > 0) {
+            result.setResults(Converter.forClass(GameResultEntity.class).setRecurseDepth(depth - 1).convert(getGameResults()));
+        }
+
+        return result;
     }
 
     @Override

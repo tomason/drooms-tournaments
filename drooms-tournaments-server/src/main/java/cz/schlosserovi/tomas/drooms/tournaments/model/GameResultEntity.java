@@ -9,9 +9,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import cz.schlosserovi.tomas.drooms.tournaments.domain.GameResult;
+import cz.schlosserovi.tomas.drooms.tournaments.util.Converter;
+import cz.schlosserovi.tomas.drooms.tournaments.util.Convertible;
+
 @Entity
 @Table(name = "GAME_RESULT")
-public class GameResultEntity implements Serializable, Comparable<GameResultEntity> {
+public class GameResultEntity implements Serializable, Comparable<GameResultEntity>, Convertible<GameResult> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -96,6 +100,16 @@ public class GameResultEntity implements Serializable, Comparable<GameResultEnti
         }
         this.game = game;
         game.addGameResult(this);
+    }
+
+    @Override
+    public GameResult convert(int depth) {
+        GameResult result = new GameResult();
+        result.setPoints(getPoints() == null ? -1 : getPoints());
+        result.setPosition(getPosition() == null ? -1 : getPosition());
+        result.setStrategy(Converter.forClass(StrategyEntity.class).setRecurseDepth(depth - 1).convert(getStrategy()));
+
+        return result;
     }
 
     @Override

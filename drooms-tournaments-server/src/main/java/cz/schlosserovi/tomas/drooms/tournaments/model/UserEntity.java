@@ -9,11 +9,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import cz.schlosserovi.tomas.drooms.tournaments.domain.User;
+import cz.schlosserovi.tomas.drooms.tournaments.util.Convertible;
 import cz.schlosserovi.tomas.drooms.tournaments.util.NullForbiddingSet;
 
 @Entity
 @Table(name = "PLAYER")
-public class UserEntity implements Serializable {
+public class UserEntity implements Serializable, Convertible<User> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -123,6 +125,15 @@ public class UserEntity implements Serializable {
             throw new IllegalArgumentException("Tournament result is already assigned");
         }
         tournamentResults.add(tournamentResult);
+    }
+
+    @Override
+    public User convert(int recurseDepth) {
+        User result = new User();
+        result.setName(getName());
+        // we are not giving password to anyone
+
+        return result;
     }
 
     @Override

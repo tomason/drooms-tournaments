@@ -13,12 +13,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.GAV;
+import cz.schlosserovi.tomas.drooms.tournaments.domain.Strategy;
+import cz.schlosserovi.tomas.drooms.tournaments.util.Converter;
+import cz.schlosserovi.tomas.drooms.tournaments.util.Convertible;
 import cz.schlosserovi.tomas.drooms.tournaments.util.NullForbiddingSet;
 
 @Entity
 @IdClass(GAV.class)
 @Table(name = "STRATEGY")
-public class StrategyEntity implements Serializable {
+public class StrategyEntity implements Serializable, Convertible<Strategy> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -97,6 +100,16 @@ public class StrategyEntity implements Serializable {
             throw new IllegalArgumentException("GameResult must not be null");
         }
         gameResults.add(gameResult);
+    }
+
+    @Override
+    public Strategy convert(int depth) {
+        Strategy result = new Strategy();
+        result.setActive(isActive());
+        result.setGav(getGav());
+        result.setPlayer(Converter.forClass(UserEntity.class).setRecurseDepth(depth - 1).convert(getAuthor()));
+
+        return result;
     }
 
     @Override

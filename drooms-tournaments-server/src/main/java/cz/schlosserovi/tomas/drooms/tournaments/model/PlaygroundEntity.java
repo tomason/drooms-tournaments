@@ -3,6 +3,7 @@ package cz.schlosserovi.tomas.drooms.tournaments.model;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Properties;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,11 +15,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
+import cz.schlosserovi.tomas.drooms.tournaments.util.Convertible;
 import cz.schlosserovi.tomas.drooms.tournaments.util.NullForbiddingSet;
 
 @Entity
 @Table(name = "PLAYGROUND")
-public class PlaygroundEntity implements Serializable {
+public class PlaygroundEntity implements Serializable, Convertible<Playground> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -164,6 +167,24 @@ public class PlaygroundEntity implements Serializable {
             throw new IllegalArgumentException("This playground is not registered in Tournament");
         }
         tournaments.add(tournament);
+    }
+
+    @Override
+    public Playground convert(int depth) {
+        Playground result = new Playground();
+        result.setName(getName());
+        result.setSource(getSource());
+        result.setMaxPlayers(getMaxPlayers());
+
+        if (depth > 0) {
+            Properties config = new Properties();
+            for (PlaygroundConfigEntity entity : getConfigurations()) {
+                config.setProperty(entity.getKey(), entity.getValue());
+            }
+            result.setConfiguration(config);
+        }
+
+        return result;
     }
 
     @Override

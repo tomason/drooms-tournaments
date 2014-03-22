@@ -13,11 +13,14 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import cz.schlosserovi.tomas.drooms.tournaments.domain.Tournament;
+import cz.schlosserovi.tomas.drooms.tournaments.util.Converter;
+import cz.schlosserovi.tomas.drooms.tournaments.util.Convertible;
 import cz.schlosserovi.tomas.drooms.tournaments.util.NullForbiddingSet;
 
 @Entity
 @Table(name = "TOURNAMENT")
-public class TournamentEntity implements Serializable {
+public class TournamentEntity implements Serializable, Convertible<Tournament> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -164,6 +167,22 @@ public class TournamentEntity implements Serializable {
         }
         playgrounds.add(playground);
         playground.addTournament(this);
+    }
+
+    @Override
+    public Tournament convert(int depth) {
+        Tournament result = new Tournament();
+        result.setName(getName());
+        result.setStart(getStart());
+        result.setEnd(getEnd());
+        result.setPeriod(getPeriod());
+
+        if (depth > 0) {
+            result.setPlaygrounds(Converter.forClass(PlaygroundEntity.class).setRecurseDepth(depth - 1)
+                    .convert(getPlaygrounds()));
+        }
+
+        return result;
     }
 
     @Override
