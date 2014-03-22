@@ -33,6 +33,6 @@ public interface GameService {
 
     @POST
     @Path("/auth/execution")
-    public Response deliverResults();
+    public Response deliverResults(Game game);
 
 }
