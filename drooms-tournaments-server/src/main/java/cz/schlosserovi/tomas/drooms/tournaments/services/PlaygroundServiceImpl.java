@@ -1,41 +1,50 @@
 package cz.schlosserovi.tomas.drooms.tournaments.services;
 
-import static cz.schlosserovi.tomas.drooms.tournaments.util.ConversionUtil.entityToDomain;
-
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import cz.schlosserovi.tomas.drooms.tournaments.data.PlaygroundDAO;
+import cz.schlosserovi.tomas.drooms.tournaments.data.UserDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.util.Converter;
 
 public class PlaygroundServiceImpl implements PlaygroundService {
     @Inject
+    private UserDAO users;
+    @Inject
     private PlaygroundDAO playgrounds;
-//    @Inject
-//    private TournamentDAO tournaments;
+    @Context
+    private SecurityContext security;
 
     @Override
     public Response getPlaygrounds() {
-        List<Playground> result = new LinkedList<>();
-        for (PlaygroundEntity entity : playgrounds.getPlaygrounds()) {
-            result.add(entityToDomain(entity));
-        }
+        return Response.ok(Converter.forClass(PlaygroundEntity.class).convert(playgrounds.getPlaygrounds())).build();
+    }
+
+    @Override
+    public Response getUserPlaygrounds() {
+        String userName = security.getUserPrincipal().getName();
+
+        UserEntity user = users.getUser(userName);
+        List<Playground> result = Converter.forClass(PlaygroundEntity.class).convert(playgrounds.getPlaygrounds(user));
 
         return Response.ok(result).build();
     }
 
-//    @Override
-//    public Response getPlaygrounds(Tournament tournament) {
-//        List<Playground> result = new LinkedList<>();
-//        for (PlaygroundEntity entity : playgrounds.getPlaygrounds(tournaments.getTournament(tournament.getName()))) {
-//            result.add(entityToDomain(entity));
-//        }
-//
-//        return Response.ok(result).build();
-//    }
+    @Override
+    public Response newPlayground(Playground playground) {
+        String userName = security.getUserPrincipal().getName();
+
+        playgrounds.insertPlayground(userName, playground.getName(), playground.getSource());
+        playgrounds.setPlaygroundConfiguration(playground.getName(), playground.getConfiguration());
+
+        return Response.ok().build();
+    }
 
 }
