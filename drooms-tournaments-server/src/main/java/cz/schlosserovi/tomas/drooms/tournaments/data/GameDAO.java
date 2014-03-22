@@ -66,7 +66,9 @@ public class GameDAO extends AbstractDAO {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<GameEntity> query = builder.createQuery(GameEntity.class);
 
-        query.select(query.from(GameEntity.class));
+        Root<GameEntity> game = query.from(GameEntity.class);
+        game.fetch("gameResults");
+        query.select(game);
 
         return em.createQuery(query).getResultList();
     }
