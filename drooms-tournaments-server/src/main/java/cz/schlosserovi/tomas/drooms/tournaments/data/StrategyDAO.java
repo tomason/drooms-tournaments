@@ -3,6 +3,8 @@ package cz.schlosserovi.tomas.drooms.tournaments.data;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -25,6 +27,7 @@ public class StrategyDAO extends AbstractDAO {
         return insertStrategy(user, gav, false);
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public StrategyEntity insertStrategy(String userName, GAV gav, boolean active) {
         UserEntity author = users.getUser(userName);
         StrategyEntity strategy = new StrategyEntity();
