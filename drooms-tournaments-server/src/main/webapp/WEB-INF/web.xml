@@ -24,8 +24,10 @@
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>Resteasy</web-resource-name>
-      <url-pattern>/services/users/*</url-pattern>
-<!--       <url-pattern>/services/execution/*</url-pattern> -->
+      <url-pattern>/services/users/auth/*</url-pattern>
+      <url-pattern>/services/strategies/auth/*</url-pattern>
+      <url-pattern>/services/playgrounds/auth/*</url-pattern>
+      <url-pattern>/services/tournaments/auth/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
       <role-name>drooms-user</role-name>
