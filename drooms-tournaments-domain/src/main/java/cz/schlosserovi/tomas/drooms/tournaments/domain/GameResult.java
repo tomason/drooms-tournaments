@@ -37,4 +37,8 @@ public class GameResult {
         this.position = position;
     }
 
+    @Override
+    public String toString() {
+        return String.format("GameResult[strategy='%s', points='%s', position='%s']", strategy, points, position);
+    }
 }

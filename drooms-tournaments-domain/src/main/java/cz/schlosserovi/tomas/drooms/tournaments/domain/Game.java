@@ -62,4 +62,9 @@ public class Game {
         this.finished = finished;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Game[id='%s', tournament='%s', playground='%s', finished='%s', results='%s']", id, tournament,
+                playground, finished, results);
+    }
 }
