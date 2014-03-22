@@ -85,7 +85,7 @@ public class GameEntity implements Serializable, Convertible<Game> {
         if (status == null) {
             throw new IllegalArgumentException("Status must not be null");
         }
-        if (this.status.compareTo(status) < 0) {
+        if (this.status.compareTo(status) > 0) {
             throw new IllegalArgumentException("Status can't go back.");
         }
         this.status = status;
