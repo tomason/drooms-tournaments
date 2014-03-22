@@ -1,6 +1,7 @@
 package cz.schlosserovi.tomas.drooms.tournaments.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -28,7 +29,8 @@ public class GameEntity implements Serializable, Convertible<Game> {
 
     @Id
     private UUID id;
-    private boolean finished = false;
+    private GameStatus status = GameStatus.NEW;
+    private Calendar lastModified;
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
     private PlaygroundEntity playground;
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
@@ -72,15 +74,36 @@ public class GameEntity implements Serializable, Convertible<Game> {
         this.playground = playground;
     }
 
-    public boolean isFinished() {
-        return finished;
+    public GameStatus getStatus() {
+        return status;
     }
 
-    public void setFinished(boolean finished) {
-        if (this.finished) {
+    public void setStatus(GameStatus status) {
+        if (this.status == GameStatus.FINISHED) {
             throw new IllegalStateException("Game is already finished");
         }
-        this.finished = finished;
+        if (status == null) {
+            throw new IllegalArgumentException("Status must not be null");
+        }
+        if (this.status.compareTo(status) < 0) {
+            throw new IllegalArgumentException("Status can't go back.");
+        }
+        this.status = status;
+        this.lastModified = Calendar.getInstance();
+    }
+
+    public Calendar getLastModified() {
+        return (Calendar)lastModified.clone();
+    }
+
+    public void setLastModified(Calendar lastModified) {
+        if (this.lastModified != null) {
+            throw new IllegalStateException("Last modification date is already set");
+        }
+        if (lastModified == null) {
+            throw new IllegalArgumentException("Last modification date must not be null");
+        }
+        this.lastModified = (Calendar)lastModified.clone();
     }
 
     public TournamentEntity getTournament() {
@@ -124,7 +147,7 @@ public class GameEntity implements Serializable, Convertible<Game> {
     public Game convert(int depth) {
         Game result = new Game();
         result.setId(getId());
-        result.setFinished(isFinished());
+        result.setFinished(getStatus() == GameStatus.FINISHED);
 
         result.setPlayground(Converter.forClass(PlaygroundEntity.class).setRecurseDepth(depth - 1).convert(getPlayground()));
         result.setTournament(Converter.forClass(TournamentEntity.class).setRecurseDepth(depth - 1).convert(getTournament()));
