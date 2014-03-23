@@ -105,8 +105,8 @@ public class GameResultEntity implements Serializable, Comparable<GameResultEnti
     @Override
     public GameResult convert(int depth) {
         GameResult result = new GameResult();
-        result.setPoints(getPoints() == null ? -1 : getPoints());
-        result.setPosition(getPosition() == null ? -1 : getPosition());
+        result.setPoints(getPoints() == null ? 0 : getPoints());
+        result.setPosition(getPosition() == null ? 0 : getPosition());
         result.setStrategy(Converter.forClass(StrategyEntity.class).setRecurseDepth(depth - 1).convert(getStrategy()));
 
         return result;
