@@ -8,12 +8,13 @@ public class Game {
     private Playground playground;
     private Collection<GameResult> results;
     private boolean finished;
+    private String gameLog;
+    private String gameReport;
 
     public Game() {
     }
 
     public Game(String id, Tournament tournament, Playground playground, Collection<GameResult> results, boolean finished) {
-        super();
         this.id = id;
         this.tournament = tournament;
         this.playground = playground;
@@ -59,6 +60,22 @@ public class Game {
 
     public void setFinished(boolean finished) {
         this.finished = finished;
+    }
+
+    public String getGameLog() {
+        return gameLog;
+    }
+
+    public void setGameLog(String gameLog) {
+        this.gameLog = gameLog;
+    }
+
+    public String getGameReport() {
+        return gameReport;
+    }
+
+    public void setGameReport(String gameReport) {
+        this.gameReport = gameReport;
     }
 
     @Override
