@@ -36,7 +36,7 @@ public class GameDAO extends AbstractDAO {
             throw new IllegalArgumentException("Can't play game with less than 2 players");
         }
         GameEntity result = new GameEntity();
-        result.setId(UUID.randomUUID());
+        result.setId(UUID.randomUUID().toString());
         result.setPlayground(playgrounds.getPlayground(playgroundName));
         result.setTournament(tournaments.getTournament(tounamentName));
 
@@ -50,7 +50,7 @@ public class GameDAO extends AbstractDAO {
         return result;
     }
 
-    public void setGameInProgress(UUID gameId) {
+    public void setGameInProgress(String gameId) {
         GameEntity managed = getGame(gameId);
         managed.setStatus(GameStatus.IN_PROGRESS);
 
@@ -58,7 +58,7 @@ public class GameDAO extends AbstractDAO {
         em.flush();
     }
 
-    public void setGameFinished(UUID gameId) {
+    public void setGameFinished(String gameId) {
         GameEntity managed = getGame(gameId);
         managed.setStatus(GameStatus.FINISHED);
 
@@ -66,11 +66,11 @@ public class GameDAO extends AbstractDAO {
         em.flush();
     }
 
-    public GameEntity getGame(UUID id) {
+    public GameEntity getGame(String id) {
         return em.find(GameEntity.class, id);
     }
 
-    public GameEntity getGameWithResults(UUID id) {
+    public GameEntity getGameWithResults(String id) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<GameEntity> query = builder.createQuery(GameEntity.class);
 

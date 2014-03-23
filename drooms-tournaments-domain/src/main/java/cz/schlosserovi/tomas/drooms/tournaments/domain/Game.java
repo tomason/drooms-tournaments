@@ -1,10 +1,9 @@
 package cz.schlosserovi.tomas.drooms.tournaments.domain;
 
 import java.util.Collection;
-import java.util.UUID;
 
 public class Game {
-    private UUID id;
+    private String id;
     private Tournament tournament;
     private Playground playground;
     private Collection<GameResult> results;
@@ -13,7 +12,7 @@ public class Game {
     public Game() {
     }
 
-    public Game(UUID id, Tournament tournament, Playground playground, Collection<GameResult> results, boolean finished) {
+    public Game(String id, Tournament tournament, Playground playground, Collection<GameResult> results, boolean finished) {
         super();
         this.id = id;
         this.tournament = tournament;
@@ -22,11 +21,11 @@ public class Game {
         this.finished = finished;
     }
 
-    public UUID getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -28,7 +27,7 @@ public class GameEntity implements Serializable, Convertible<Game> {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private UUID id;
+    private String id;
     private GameStatus status = GameStatus.NEW;
     private Calendar lastModified;
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
@@ -46,11 +45,11 @@ public class GameEntity implements Serializable, Convertible<Game> {
         setTournament(tournament);
     }
 
-    public UUID getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         if (this.id != null) {
             throw new IllegalStateException("Can't change Id in persisted Game");
         }
