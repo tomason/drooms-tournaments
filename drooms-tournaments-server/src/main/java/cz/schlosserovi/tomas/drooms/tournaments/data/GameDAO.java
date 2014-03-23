@@ -1,7 +1,16 @@
 package cz.schlosserovi.tomas.drooms.tournaments.data;
 
+import java.io.IOException;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,6 +21,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.GAV;
 import cz.schlosserovi.tomas.drooms.tournaments.model.GameEntity;
@@ -24,12 +36,29 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 @Stateless
 public class GameDAO extends AbstractDAO {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameDAO.class);
+    private static final Path artifactStorage;
     @Inject
     private PlaygroundDAO playgrounds;
     @Inject
     private TournamentDAO tournaments;
     @Inject
     private StrategyDAO strategies;
+
+    static {
+        String dataDir = System.getenv("OPENSHIFT_DATA_DIR");
+        if (dataDir == null) {
+            dataDir = System.getProperty("user.home");
+        }
+        artifactStorage = Paths.get(dataDir, "artifacts");
+        if (!Files.exists(artifactStorage)) {
+            try {
+                Files.createDirectory(artifactStorage);
+            } catch (IOException ex) {
+                LOGGER.error("Unable to create artifact storage", ex);
+            }
+        }
+    }
 
     public GameEntity insertGame(String playgroundName, String tounamentName, Collection<GAV> strategies) {
         if (strategies.size() < 2) {
@@ -61,6 +90,32 @@ public class GameDAO extends AbstractDAO {
     public void setGameFinished(String gameId) {
         GameEntity managed = getGame(gameId);
         managed.setStatus(GameStatus.FINISHED);
+
+        em.merge(managed);
+        em.flush();
+    }
+
+    public void setArtifacts(String gameId, String gameReport, String gameLog) {
+        if (gameReport == null && gameLog == null) {
+            // no logs
+            return;
+        }
+        GameEntity managed = getGame(gameId);
+        Path artifactFile = artifactStorage.resolve(gameId + ".zip").toAbsolutePath();
+        URI artifactUri = URI.create("jar:file:" + artifactFile.toString());
+        try (FileSystem fs = FileSystems.newFileSystem(artifactUri, Collections.singletonMap("create", "true"))) {
+            if (gameLog != null) {
+                Path gameLogFile = fs.getPath("/game.log");
+                Files.write(gameLogFile, gameLog.getBytes(StandardCharsets.UTF_8));
+            }
+            if (gameReport != null) {
+                Path gameReportFile = fs.getPath("/report.xml");
+                Files.write(gameReportFile, gameReport.getBytes(StandardCharsets.UTF_8));
+            }
+        } catch (IOException ex) {
+            LOGGER.error("Unable to store game artifacts", ex);
+        }
+        managed.setArtifactPath(artifactFile.toString());
 
         em.merge(managed);
         em.flush();

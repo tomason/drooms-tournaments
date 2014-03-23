@@ -62,6 +62,7 @@ public class GameServiceImpl implements GameService {
                 }
             }
         }
+        games.setArtifacts(game.getId(), game.getGameReport(), game.getGameLog());
         games.setGameFinished(game.getId());
 
         return Response.ok().build();

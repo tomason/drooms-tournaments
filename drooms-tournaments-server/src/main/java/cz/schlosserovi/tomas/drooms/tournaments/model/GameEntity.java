@@ -30,6 +30,7 @@ public class GameEntity implements Serializable, Convertible<Game> {
     private String id;
     private GameStatus status = GameStatus.NEW;
     private Calendar lastModified;
+    private String artifactPath;
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
     private PlaygroundEntity playground;
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
@@ -92,7 +93,7 @@ public class GameEntity implements Serializable, Convertible<Game> {
     }
 
     public Calendar getLastModified() {
-        return (Calendar)lastModified.clone();
+        return (Calendar) lastModified.clone();
     }
 
     public void setLastModified(Calendar lastModified) {
@@ -102,7 +103,15 @@ public class GameEntity implements Serializable, Convertible<Game> {
         if (lastModified == null) {
             throw new IllegalArgumentException("Last modification date must not be null");
         }
-        this.lastModified = (Calendar)lastModified.clone();
+        this.lastModified = (Calendar) lastModified.clone();
+    }
+
+    public String getArtifactPath() {
+        return artifactPath;
+    }
+
+    public void setArtifactPath(String artifactPath) {
+        this.artifactPath = artifactPath;
     }
 
     public TournamentEntity getTournament() {
