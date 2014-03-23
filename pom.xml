@@ -12,7 +12,7 @@
   <modules>
     <module>drooms-tournaments-domain</module>
     <module>drooms-tournaments-server</module>
-<!--     <module>drooms-tournaments-execution-client</module> -->
+    <module>drooms-tournaments-client</module>
 <!--     <module>drooms-tournaments-cli</module> -->
   </modules>
 
