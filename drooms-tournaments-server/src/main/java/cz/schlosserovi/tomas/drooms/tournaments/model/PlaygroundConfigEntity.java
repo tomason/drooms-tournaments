@@ -5,10 +5,12 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "PLAYGROUND_CONFIGURATION")
+@Table(name = "PLAYGROUND_CONFIGURATION", uniqueConstraints = { @UniqueConstraint(columnNames = { "playground", "key" }) })
 public class PlaygroundConfigEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -17,6 +19,8 @@ public class PlaygroundConfigEntity implements Serializable {
     private Long id;
     private String key;
     private String value;
+    @ManyToOne(optional = false)
+    private PlaygroundEntity playground;
 
     public PlaygroundConfigEntity() {
     }

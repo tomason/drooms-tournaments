@@ -33,7 +33,7 @@ public class PlaygroundEntity implements Serializable, Convertible<Playground> {
     private UserEntity author;
     @OneToMany(mappedBy = "playground")
     private Collection<GameEntity> games = new NullForbiddingSet<>();
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "playground", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Collection<PlaygroundConfigEntity> configurations = new NullForbiddingSet<>();
     @ManyToMany(mappedBy = "playgrounds")
     private Collection<TournamentEntity> tournaments = new NullForbiddingSet<>();
