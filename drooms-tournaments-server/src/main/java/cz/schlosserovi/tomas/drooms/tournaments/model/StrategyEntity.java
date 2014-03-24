@@ -39,6 +39,14 @@ public class StrategyEntity implements Serializable, Convertible<Strategy> {
     public StrategyEntity() {
     }
 
+    public StrategyEntity(String groupId, String artifactId, String version) {
+        this(new GAV(groupId, artifactId, version));
+    }
+
+    public StrategyEntity(GAV gav) {
+        setGav(gav);
+    }
+
     public StrategyEntity(UserEntity author, GAV gav) {
         setAuthor(author);
         setGav(gav);

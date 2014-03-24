@@ -41,6 +41,10 @@ public class GameEntity implements Serializable, Convertible<Game> {
     public GameEntity() {
     }
 
+    public GameEntity(String gameId) {
+        setId(gameId);
+    }
+
     public GameEntity(PlaygroundEntity playground, TournamentEntity tournament) {
         setPlayground(playground);
         setTournament(tournament);

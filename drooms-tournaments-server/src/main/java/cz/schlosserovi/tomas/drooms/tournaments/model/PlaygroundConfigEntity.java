@@ -21,6 +21,10 @@ public class PlaygroundConfigEntity implements Serializable {
     public PlaygroundConfigEntity() {
     }
 
+    public PlaygroundConfigEntity(long id) {
+        setId(id);
+    }
+
     public PlaygroundConfigEntity(String key, String value) {
         setKey(key);
         setValue(value);

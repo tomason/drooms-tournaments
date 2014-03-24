@@ -31,6 +31,10 @@ public class UserEntity implements Serializable, Convertible<User> {
     public UserEntity() {
     }
 
+    public UserEntity(String name) {
+        setName(name);
+    }
+    
     public UserEntity(String name, String password) {
         setName(name);
         setPassword(password);

@@ -26,6 +26,10 @@ public class TournamentResultEntity implements Serializable {
     public TournamentResultEntity() {
     }
 
+    public TournamentResultEntity(long id) {
+        setId(id);
+    }
+
     public TournamentResultEntity(UserEntity player, TournamentEntity tournament) {
         setPlayer(player);
         setTournament(tournament);

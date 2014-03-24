@@ -40,6 +40,10 @@ public class TournamentEntity implements Serializable, Convertible<Tournament> {
     public TournamentEntity() {
     }
 
+    public TournamentEntity(String name) {
+        setName(name);
+    }
+
     public TournamentEntity(String name, Calendar start, Calendar end, int period) {
         setName(name);
         setStart(start);

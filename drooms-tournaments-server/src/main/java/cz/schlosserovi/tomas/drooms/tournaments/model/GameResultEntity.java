@@ -31,6 +31,10 @@ public class GameResultEntity implements Serializable, Comparable<GameResultEnti
     public GameResultEntity() {
     }
 
+    public GameResultEntity(Long id) {
+        setId(id);
+    }
+
     public GameResultEntity(StrategyEntity strategy, GameEntity game) {
         setStrategy(strategy);
         setGame(game);

@@ -41,6 +41,10 @@ public class PlaygroundEntity implements Serializable, Convertible<Playground> {
     public PlaygroundEntity() {
     }
 
+    public PlaygroundEntity(String name) {
+        setName(name);
+    }
+
     public PlaygroundEntity(UserEntity author, String name, String source) {
         setAuthor(author);
         setName(name);
