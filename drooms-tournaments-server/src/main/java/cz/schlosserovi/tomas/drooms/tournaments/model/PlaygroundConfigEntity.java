@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "PLAYGROUND_CONFIGURATION", uniqueConstraints = { @UniqueConstraint(columnNames = { "playground", "key" }) })
+@Table(name = "PLAYGROUND_CONFIGURATION", uniqueConstraints = { @UniqueConstraint(columnNames = { "playground_name", "key" }) })
 public class PlaygroundConfigEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
