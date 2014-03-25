@@ -2,7 +2,7 @@ package cz.schlosserovi.tomas.drooms.tournaments.domain;
 
 import java.io.Serializable;
 
-public class GAV implements Serializable {
+public class GAV implements Serializable, Comparable<GAV> {
     private static final long serialVersionUID = 1L;
 
     private String groupId;
@@ -80,6 +80,20 @@ public class GAV implements Serializable {
         result = prime * result + ((artifactId == null) ? 0 : artifactId.hashCode());
         result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
         result = prime * result + ((version == null) ? 0 : version.hashCode());
+        return result;
+    }
+
+    @Override
+    public int compareTo(GAV o) {
+        int result = 0;
+        result = groupId.compareTo(o.groupId);
+        if (result == 0) {
+            result = artifactId.compareTo(o.artifactId);
+        }
+        if (result == 0) {
+            result = version.compareTo(o.version);
+        }
+
         return result;
     }
 
