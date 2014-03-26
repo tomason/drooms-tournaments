@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -19,9 +20,18 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentResultEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 @Stateless
-public class StrategyDAO extends AbstractDAO {
-    @Inject
+public class StrategyDAO {
+    private EntityManager em;
     private UserDAO users;
+
+    public StrategyDAO() {
+    }
+
+    @Inject
+    public StrategyDAO(EntityManager em, UserDAO users) {
+        this.em = em;
+        this.users = users;
+    }
 
     public StrategyEntity insertStrategy(String user, GAV gav) {
         return insertStrategy(user, gav, false);
@@ -100,11 +110,11 @@ public class StrategyDAO extends AbstractDAO {
         CriteriaQuery<StrategyEntity> query = builder.createQuery(StrategyEntity.class);
 
         Root<StrategyEntity> strategy = query.from(StrategyEntity.class);
-        Join<StrategyEntity, TournamentResultEntity> join = strategy.<StrategyEntity, UserEntity>join("author").join("tournamentResults");
+        Join<StrategyEntity, TournamentResultEntity> join = strategy.<StrategyEntity, UserEntity> join("author").join(
+                "tournamentResults");
 
         query.select(strategy).where(
-                builder.and(builder.equal(join.get("tournament"), tournament),
-                        builder.equal(strategy.get("active"), true)));
+                builder.and(builder.equal(join.get("tournament"), tournament), builder.equal(strategy.get("active"), true)));
 
         return em.createQuery(query).getResultList();
     }

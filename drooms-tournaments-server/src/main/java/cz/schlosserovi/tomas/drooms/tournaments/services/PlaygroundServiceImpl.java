@@ -15,12 +15,24 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.util.Converter;
 
 public class PlaygroundServiceImpl implements PlaygroundService {
-    @Inject
     private UserDAO users;
-    @Inject
     private PlaygroundDAO playgrounds;
     @Context
     private SecurityContext security;
+
+    public PlaygroundServiceImpl() {
+    }
+
+    @Inject
+    public PlaygroundServiceImpl(UserDAO users, PlaygroundDAO playgrounds) {
+        this(users, playgrounds, null);
+    }
+
+    public PlaygroundServiceImpl(UserDAO users, PlaygroundDAO playgrounds, SecurityContext security) {
+        this.users = users;
+        this.playgrounds = playgrounds;
+        this.security = security;
+    }
 
     @Override
     public Response getPlaygrounds() {

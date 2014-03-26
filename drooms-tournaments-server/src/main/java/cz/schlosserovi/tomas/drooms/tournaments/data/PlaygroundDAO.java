@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.JoinType;
@@ -17,9 +18,18 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 @Stateless
-public class PlaygroundDAO extends AbstractDAO {
-    @Inject
+public class PlaygroundDAO {
+    private EntityManager em;
     private UserDAO users;
+
+    public PlaygroundDAO() {
+    }
+
+    @Inject
+    public PlaygroundDAO(EntityManager em, UserDAO users) {
+        this.em = em;
+        this.users = users;
+    }
 
     public PlaygroundEntity insertPlayground(String userName, String name, String source) {
         PlaygroundEntity result = new PlaygroundEntity();
@@ -94,7 +104,8 @@ public class PlaygroundDAO extends AbstractDAO {
         CriteriaQuery<PlaygroundEntity> query = builder.createQuery(PlaygroundEntity.class);
 
         Root<PlaygroundEntity> playground = query.from(PlaygroundEntity.class);
-        query.select(playground).where(builder.isMember(tournament, playground.<Collection<TournamentEntity>>get("tournaments")));
+        query.select(playground).where(
+                builder.isMember(tournament, playground.<Collection<TournamentEntity>> get("tournaments")));
 
         return em.createQuery(query).getResultList();
     }

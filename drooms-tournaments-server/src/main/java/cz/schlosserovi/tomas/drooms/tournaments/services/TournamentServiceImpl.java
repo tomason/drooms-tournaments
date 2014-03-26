@@ -18,14 +18,27 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.util.Converter;
 
 public class TournamentServiceImpl implements TournamentService {
-    @Inject
     private UserDAO users;
-    @Inject
     private TournamentDAO tournaments;
-    @Inject
     private TournamentResultDAO tournamentResults;
     @Context
     private SecurityContext security;
+
+    public TournamentServiceImpl() {
+    }
+
+    @Inject
+    public TournamentServiceImpl(UserDAO users, TournamentDAO tournaments, TournamentResultDAO tournamentResults) {
+        this(users, tournaments, tournamentResults, null);
+    }
+
+    public TournamentServiceImpl(UserDAO users, TournamentDAO tournaments, TournamentResultDAO tournamentResults,
+            SecurityContext security) {
+        this.users = users;
+        this.tournaments = tournaments;
+        this.tournamentResults = tournamentResults;
+        this.security = security;
+    }
 
     @Override
     public Response getTournaments() {

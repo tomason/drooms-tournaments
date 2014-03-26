@@ -16,12 +16,24 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.util.Converter;
 
 public class StrategyServiceImpl implements StrategyService {
-    @Inject
     private UserDAO users;
-    @Inject
     private StrategyDAO strategies;
     @Context
     private SecurityContext security;
+
+    public StrategyServiceImpl() {
+    }
+
+    @Inject
+    public StrategyServiceImpl(UserDAO users, StrategyDAO strategies) {
+        this(users, strategies, null);
+    }
+
+    public StrategyServiceImpl(UserDAO users, StrategyDAO strategies, SecurityContext security) {
+        this.users = users;
+        this.strategies = strategies;
+        this.security = security;
+    }
 
     @Override
     public Response getStrategies(boolean onlyActive) {

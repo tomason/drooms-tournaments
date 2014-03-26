@@ -10,6 +10,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -22,11 +23,20 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentResultEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 @Stateless
-public class TournamentDAO extends AbstractDAO {
-    @Inject
+public class TournamentDAO {
+    private EntityManager em;
     private PlaygroundDAO playgrounds;
-    @Inject
     private Event<NewTournamentEvent> newTournament;
+
+    public TournamentDAO() {
+    }
+
+    @Inject
+    public TournamentDAO(EntityManager em, PlaygroundDAO playgrounds, Event<NewTournamentEvent> newTournament) {
+        this.em = em;
+        this.playgrounds = playgrounds;
+        this.newTournament = newTournament;
+    }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public TournamentEntity insertTournament(String name, Calendar start, Calendar end, int period,

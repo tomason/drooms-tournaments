@@ -6,17 +6,27 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
 import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentResultEntity;
 
 @Stateless
-public class TournamentResultDAO extends AbstractDAO {
-    @Inject
+public class TournamentResultDAO {
+    private EntityManager em;
     private UserDAO users;
-    @Inject
     private TournamentDAO tournaments;
+
+    public TournamentResultDAO() {
+    }
+
+    @Inject
+    public TournamentResultDAO(EntityManager em, UserDAO users, TournamentDAO tournaments) {
+        this.em = em;
+        this.users = users;
+        this.tournaments = tournaments;
+    }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public TournamentResultEntity insertResult(String userName, String tournamentName) {

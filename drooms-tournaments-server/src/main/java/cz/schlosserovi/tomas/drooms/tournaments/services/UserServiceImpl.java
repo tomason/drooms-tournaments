@@ -16,6 +16,18 @@ public class UserServiceImpl implements UserService {
     @Context
     private SecurityContext security;
 
+    public UserServiceImpl() {
+    }
+
+    @Inject
+    public UserServiceImpl(UserDAO users) {
+        this(users, null);
+    }
+
+    public UserServiceImpl(UserDAO users, SecurityContext security) {
+        this.users = users;
+        this.security = security;
+    }
 
     @Override
     public Response register(User user) {

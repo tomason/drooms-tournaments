@@ -3,6 +3,8 @@ package cz.schlosserovi.tomas.drooms.tournaments.data;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.JoinType;
@@ -16,8 +18,17 @@ import org.slf4j.LoggerFactory;
 import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 @Stateless
-public class UserDAO extends AbstractDAO {
+public class UserDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDAO.class);
+    private EntityManager em;
+
+    public UserDAO() {
+    }
+
+    @Inject
+    public UserDAO(EntityManager em) {
+        this.em = em;
+    }
 
     public UserEntity insertUser(String name, String password) {
         String dbPassword = encryptPassword(password);

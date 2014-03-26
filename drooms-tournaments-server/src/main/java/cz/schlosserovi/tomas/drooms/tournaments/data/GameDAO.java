@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -35,14 +36,13 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 @Stateless
-public class GameDAO extends AbstractDAO {
+public class GameDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameDAO.class);
     private static final Path artifactStorage;
-    @Inject
+
+    private EntityManager em;
     private PlaygroundDAO playgrounds;
-    @Inject
     private TournamentDAO tournaments;
-    @Inject
     private StrategyDAO strategies;
 
     static {
@@ -60,6 +60,16 @@ public class GameDAO extends AbstractDAO {
         }
     }
 
+    public GameDAO() {
+    }
+
+    @Inject
+    public GameDAO(EntityManager em, PlaygroundDAO playgrounds, StrategyDAO strategies, TournamentDAO tournaments) {
+        this.em = em;
+        this.playgrounds = playgrounds;
+        this.tournaments = tournaments;
+    }
+    
     public GameEntity insertGame(String playgroundName, String tounamentName, Collection<GAV> strategies) {
         if (strategies.size() < 2) {
             throw new IllegalArgumentException("Can't play game with less than 2 players");

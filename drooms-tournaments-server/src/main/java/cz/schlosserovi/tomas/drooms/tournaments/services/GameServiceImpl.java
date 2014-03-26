@@ -22,14 +22,26 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.util.Converter;
 
 public class GameServiceImpl implements GameService {
-    @Inject
     private UserDAO users;
-    @Inject
     private GameDAO games;
-    @Inject
     private GameResultDAO results;
     @Context
     private SecurityContext security;
+
+    public GameServiceImpl() {
+    }
+
+    @Inject
+    public GameServiceImpl(UserDAO users, GameDAO games, GameResultDAO results) {
+        this(users, games, results, null);
+    }
+
+    public GameServiceImpl(UserDAO users, GameDAO games, GameResultDAO results, SecurityContext security) {
+        this.users = users;
+        this.games = games;
+        this.results = results;
+        this.security = security;
+    }
 
     @Override
     public Response getGames() {

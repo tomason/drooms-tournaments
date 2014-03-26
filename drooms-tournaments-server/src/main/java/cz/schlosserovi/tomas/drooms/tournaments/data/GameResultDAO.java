@@ -3,6 +3,8 @@ package cz.schlosserovi.tomas.drooms.tournaments.data;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -15,7 +17,16 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.StrategyEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 @Stateless
-public class GameResultDAO extends AbstractDAO {
+public class GameResultDAO {
+    private EntityManager em;
+
+    public GameResultDAO() {
+    }
+
+    @Inject
+    public GameResultDAO(EntityManager em) {
+        this.em = em;
+    }
 
     public void setPoints(Long id, int points) {
         GameResultEntity entity = getGameResult(id);

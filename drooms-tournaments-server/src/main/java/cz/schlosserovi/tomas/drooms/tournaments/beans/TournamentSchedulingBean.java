@@ -29,14 +29,23 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
 @Startup
 public class TournamentSchedulingBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(TournamentSchedulingBean.class);
-    @Inject
+
     private ScheduledExecutorService scheduler;
-    @Inject
     private TournamentDAO tournaments;
-    @Inject
     private GameDAO games;
-    @Inject
     private StrategyDAO strategies;
+
+    public TournamentSchedulingBean() {
+    }
+
+    @Inject
+    public TournamentSchedulingBean(ScheduledExecutorService scheduler, TournamentDAO tournaments, GameDAO games,
+            StrategyDAO strategies) {
+        this.scheduler = scheduler;
+        this.tournaments = tournaments;
+        this.games = games;
+        this.strategies = strategies;
+    }
 
     @PostConstruct
     public void scheduleAlreadyExistingTournaments() {
