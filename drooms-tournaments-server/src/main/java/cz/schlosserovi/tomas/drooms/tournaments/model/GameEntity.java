@@ -31,9 +31,9 @@ public class GameEntity implements Serializable, Convertible<Game> {
     private GameStatus status = GameStatus.NEW;
     private Calendar lastModified;
     private String artifactPath;
-    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+    @ManyToOne(optional = false)
     private PlaygroundEntity playground;
-    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+    @ManyToOne(optional = false)
     private TournamentEntity tournament;
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private Collection<GameResultEntity> gameResults = new NullForbiddingSet<>();

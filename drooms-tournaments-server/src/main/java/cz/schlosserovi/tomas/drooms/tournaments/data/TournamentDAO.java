@@ -1,13 +1,9 @@
 package cz.schlosserovi.tomas.drooms.tournaments.data;
 
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -25,33 +21,29 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 @Stateless
 public class TournamentDAO {
     private EntityManager em;
-    private PlaygroundDAO playgrounds;
     private Event<NewTournamentEvent> newTournament;
 
     public TournamentDAO() {
     }
 
     @Inject
-    public TournamentDAO(EntityManager em, PlaygroundDAO playgrounds, Event<NewTournamentEvent> newTournament) {
+    public TournamentDAO(EntityManager em, Event<NewTournamentEvent> newTournament) {
         this.em = em;
-        this.playgrounds = playgrounds;
         this.newTournament = newTournament;
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public TournamentEntity insertTournament(String name, Calendar start, Calendar end, int period,
-            Collection<String> playgroundNames) {
-        TournamentEntity result = new TournamentEntity(name, start, end, period);
-        for (String playgroudName : playgroundNames) {
-            result.addPlayground(playgrounds.getPlaygroundWithTournaments(playgroudName));
-        }
+    public void insertTournament(TournamentEntity tournament) {
+        em.persist(tournament);
 
-        em.persist(result);
-        em.flush();
+        newTournament.fire(new NewTournamentEvent(tournament));
+    }
 
-        newTournament.fire(new NewTournamentEvent(result));
+    public void updateTournament(TournamentEntity tournament) {
+        em.merge(tournament);
+    }
 
-        return result;
+    public void deleteTournament(TournamentEntity tournament) {
+        em.remove(tournament);
     }
 
     public TournamentEntity getTournament(String name) {
@@ -64,6 +56,18 @@ public class TournamentDAO {
 
         Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
         tournament.fetch("playgrounds", JoinType.LEFT);
+        query.select(tournament).distinct(true).where(builder.equal(tournament.get("name"), name));
+
+        return em.createQuery(query).getSingleResult();
+    }
+
+    public TournamentEntity getTournamentWithPlaygroundsAndGames(String name) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
+
+        Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
+        tournament.fetch("playgrounds", JoinType.LEFT);
+        tournament.fetch("games", JoinType.LEFT);
         query.select(tournament).distinct(true).where(builder.equal(tournament.get("name"), name));
 
         return em.createQuery(query).getSingleResult();
@@ -120,7 +124,7 @@ public class TournamentDAO {
         CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
 
         Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
-        tournament.fetch("playgrounds");
+        tournament.fetch("games", JoinType.LEFT);
         query.select(tournament).distinct(true).where(builder.greaterThan(tournament.<Date> get("end"), builder.currentDate()));
 
         return em.createQuery(query).getResultList();
