@@ -99,7 +99,7 @@ public class TournamentLogic {
     void createGameRun(TournamentEntity entity) {
         List<StrategyEntity> strategyEntities = strategies.getActiveStrategies(entity);
 
-        for (PlaygroundEntity playgroundEntity : playgrounds.getPlaygrounds(entity)) {
+        for (PlaygroundEntity playgroundEntity : entity.getPlaygrounds()) {
             GameEntity gameEntity = new GameEntity();
             gameEntity.setPlayground(playgroundEntity);
             gameEntity.setTournament(entity);

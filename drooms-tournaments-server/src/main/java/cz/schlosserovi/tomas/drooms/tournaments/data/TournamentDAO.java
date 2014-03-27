@@ -124,6 +124,7 @@ public class TournamentDAO {
         CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
 
         Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
+        tournament.fetch("playgrounds");
         tournament.fetch("games", JoinType.LEFT);
         query.select(tournament).distinct(true).where(builder.greaterThan(tournament.<Date> get("end"), builder.currentDate()));
 
