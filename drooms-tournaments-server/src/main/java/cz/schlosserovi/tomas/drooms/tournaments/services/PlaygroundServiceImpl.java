@@ -1,10 +1,9 @@
 package cz.schlosserovi.tomas.drooms.tournaments.services;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import cz.schlosserovi.tomas.drooms.tournaments.data.PlaygroundDAO;
@@ -35,28 +34,24 @@ public class PlaygroundServiceImpl implements PlaygroundService {
     }
 
     @Override
-    public Response getPlaygrounds() {
-        return Response.ok(Converter.forClass(PlaygroundEntity.class).convert(playgrounds.getPlaygrounds())).build();
+    public Collection<Playground> getPlaygrounds() {
+        return Converter.forClass(PlaygroundEntity.class).convert(playgrounds.getPlaygrounds());
     }
 
     @Override
-    public Response getUserPlaygrounds() {
+    public Collection<Playground> getUserPlaygrounds() {
         String userName = security.getUserPrincipal().getName();
-
         UserEntity user = users.getUser(userName);
-        List<Playground> result = Converter.forClass(PlaygroundEntity.class).convert(playgrounds.getPlaygrounds(user));
 
-        return Response.ok(result).build();
+        return Converter.forClass(PlaygroundEntity.class).convert(playgrounds.getPlaygrounds(user));
     }
 
     @Override
-    public Response newPlayground(Playground playground) {
+    public void newPlayground(Playground playground) {
         String userName = security.getUserPrincipal().getName();
 
         playgrounds.insertPlayground(userName, playground.getName(), playground.getSource());
         playgrounds.setPlaygroundConfiguration(playground.getName(), playground.getConfiguration());
-
-        return Response.ok().build();
     }
 
 }

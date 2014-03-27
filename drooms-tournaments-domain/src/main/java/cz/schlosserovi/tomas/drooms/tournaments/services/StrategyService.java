@@ -1,38 +1,61 @@
 package cz.schlosserovi.tomas.drooms.tournaments.services;
 
-import javax.annotation.security.PermitAll;
+import java.util.Collection;
+
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Strategy;
 
-@Path("/services/strategies")
+/**
+ * This service provides access to Strategies on the server.
+ */
+@Path("/services")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface StrategyService {
 
-    @PermitAll
+    /**
+     * Retrieves all strategies on the server.
+     * 
+     * @return Collection of strategies on the server.
+     */
     @GET
-    public Response getStrategies(@QueryParam("only-active") @DefaultValue("false") boolean onlyActive);
+    @Path("/strategies")
+    public Collection<Strategy> getStrategies();
 
+    /**
+     * Retrieves all the strategies beloging to authenticated user.
+     * 
+     * @return Collection of user's strategies.
+     */
     @GET
-    //@Path("/auth")
-    public Response getUserStrategies();
+    @Path("/auth/strategies")
+    public Collection<Strategy> getUserStrategies();
 
+    /**
+     * Adds a new strategy to the authenticated user.
+     * 
+     * @param strategy
+     *            New strategy.
+     */
     @POST
-    //@Path("/auth")
-    public Response newStrategy(Strategy strategy);
+    @Path("/auth/strategies")
+    public void newStrategy(Strategy strategy);
 
+    /**
+     * Selects the strategy as user's active one.
+     * 
+     * @param strategy
+     *            Strategy to be set as active.
+     */
     @PUT
-    //@Path("/auth")
-    public Response setActiveStrategy(Strategy strategy);
+    @Path("/auth/strategies")
+    public void setActiveStrategy(Strategy strategy);
 
 }

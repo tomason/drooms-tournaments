@@ -1,12 +1,13 @@
 package cz.schlosserovi.tomas.drooms.tournaments.services;
 
+import java.util.Collection;
+
 import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
+
+import org.jboss.resteasy.spi.BadRequestException;
 
 import cz.schlosserovi.tomas.drooms.tournaments.data.StrategyDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.data.UserDAO;
@@ -36,37 +37,32 @@ public class StrategyServiceImpl implements StrategyService {
     }
 
     @Override
-    public Response getStrategies(boolean onlyActive) {
-        return Response.ok(Converter.forClass(StrategyEntity.class).convert(strategies.getStrategies())).build();
+    public Collection<Strategy> getStrategies() {
+        return Converter.forClass(StrategyEntity.class).convert(strategies.getStrategies());
     }
 
     @Override
-    public Response getUserStrategies() {
+    public Collection<Strategy> getUserStrategies() {
         String name = security.getUserPrincipal().getName();
         UserEntity user = users.getUser(name);
 
-        return Response.ok(Converter.forClass(StrategyEntity.class).convert(strategies.getStrategies(user))).build();
+        return Converter.forClass(StrategyEntity.class).convert(strategies.getStrategies(user));
     }
 
     @Override
-    public Response newStrategy(Strategy strategy) {
-        ResponseBuilder builder;
+    public void newStrategy(Strategy strategy) {
         String userName = security.getUserPrincipal().getName();
 
         try {
             strategies.insertStrategy(userName, strategy.getGav());
-            builder = Response.ok();
         } catch (EntityExistsException ex) {
-            builder = Response.status(Status.BAD_REQUEST).entity("Strategy with this GAV is already registered.");
+            throw new BadRequestException("Strategy with this GAV is already registered.");
         }
-
-        return builder.build();
     }
 
     @Override
-    public Response setActiveStrategy(Strategy strategy) {
+    public void setActiveStrategy(Strategy strategy) {
         strategies.setDefaultStrategy(strategy.getGav());
-        return Response.ok().build();
     }
 
 }

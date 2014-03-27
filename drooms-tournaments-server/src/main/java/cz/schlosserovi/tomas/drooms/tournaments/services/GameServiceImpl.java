@@ -1,8 +1,9 @@
 package cz.schlosserovi.tomas.drooms.tournaments.services;
 
+import java.util.Collection;
+
 import javax.inject.Inject;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Game;
@@ -27,31 +28,29 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Response getGames() {
-        return Response.ok(logic.getAllGames()).build();
+    public Collection<Game> getGames() {
+        return logic.getAllGames();
     }
 
     @Override
-    public Response getUserGames() {
+    public Collection<Game> getUserGames() {
         String userName = security.getUserPrincipal().getName();
-        return Response.ok(logic.getUserGames(userName)).build();
+        return logic.getUserGames(userName);
     }
 
     @Override
-    public Response getExecutionQueue() {
-        return Response.ok(logic.getExecutionQueue()).build();
+    public Collection<Game> getExecutionQueue() {
+        return logic.getExecutionQueue();
     }
 
     @Override
-    public Response reserveExecution(Game game) {
+    public void reserveExecution(Game game) {
         logic.reserveGameExecution(game);
-        return Response.ok().build();
     }
 
     @Override
-    public Response deliverResults(Game game) {
+    public void deliverResults(Game game) {
         logic.deliverGameResults(game);
-        return Response.ok().build();
     }
 
 }

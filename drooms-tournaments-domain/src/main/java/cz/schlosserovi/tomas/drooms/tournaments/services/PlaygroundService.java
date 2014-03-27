@@ -1,6 +1,6 @@
 package cz.schlosserovi.tomas.drooms.tournaments.services;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -8,40 +8,43 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 
-@Path("/services/playgrounds")
+/**
+ * This service provides access to Playgrounds on the server.
+ */
+@Path("/services")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface PlaygroundService {
 
-    @GET
-    public Response getPlaygrounds();
-
     /**
-     * List all the User's Playgrounds.
+     * Retrieves all the playgrounds on server.
      * 
-     * @param token
-     *            Token received from <code>login</code> method.
-     * @return {@link List} of {@link Playground} registered for this User.
+     * @return Collection of games on the server.
      */
     @GET
-    @Path("/auth")
-    public Response getUserPlaygrounds();
+    @Path("/playgrounds")
+    public Collection<Playground> getPlaygrounds();
 
     /**
-     * Register a new Playground for User.
+     * Retrieves the playgrounds created by the authenticated user.
      * 
-     * @param token
-     *            Token received from <code>login</code> method.
+     * @return Collection of user's playgrounds.
+     */
+    @GET
+    @Path("/auth/playgrounds")
+    public Collection<Playground> getUserPlaygrounds();
+
+    /**
+     * Stores a new playground on the server.
+     * 
      * @param playground
-     *            Playground to be registered.
-     * @return Nothing.
+     *            New playground.
      */
     @POST
-    @Path("/auth")
-    public Response newPlayground(Playground playground);
+    @Path("/auth/playgrounds")
+    public void newPlayground(Playground playground);
 
 }

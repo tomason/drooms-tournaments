@@ -6,11 +6,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.User;
 
-// FIXME add ScoreBoard service
 /**
  * Provides User methods to manipulate his profile on the server. </p> The
  * current model is as follows:
@@ -32,7 +30,7 @@ import cz.schlosserovi.tomas.drooms.tournaments.domain.User;
  * every {@code period} hours with current active Strategies.</li>
  * </ul>
  */
-@Path("/services/users")
+@Path("/services")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface UserService {
@@ -42,13 +40,19 @@ public interface UserService {
      * 
      * @param user
      *            User to be inserted.
-     * @return Nothing.
      */
     @POST
-    public Response register(User user);
+    @Path("/users")
+    public void register(User user);
 
+    /**
+     * Chenges the password of already registered user.
+     * 
+     * @param user
+     *            User to change password to (including the new password).
+     */
     @PUT
-    @Path("/auth")
-    public Response changePassword(User user);
+    @Path("/auth/users")
+    public void changePassword(User user);
 
 }

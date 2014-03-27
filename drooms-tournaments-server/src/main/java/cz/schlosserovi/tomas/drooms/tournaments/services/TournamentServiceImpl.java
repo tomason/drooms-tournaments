@@ -1,8 +1,9 @@
 package cz.schlosserovi.tomas.drooms.tournaments.services;
 
+import java.util.Collection;
+
 import javax.inject.Inject;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Tournament;
@@ -27,31 +28,27 @@ public class TournamentServiceImpl implements TournamentService {
     }
 
     @Override
-    public Response getTournaments() {
-        return Response.ok(logic.getAllTournaments()).build();
+    public Collection<Tournament> getTournaments() {
+        return logic.getAllTournaments();
     }
 
     @Override
-    public Response getUserTournaments() {
+    public Collection<Tournament> getUserTournaments() {
         String userName = security.getUserPrincipal().getName();
 
-        return Response.ok(logic.getUserTournaments(userName)).build();
+        return logic.getUserTournaments(userName);
     }
 
     @Override
-    public Response newTournament(Tournament tournament) {
+    public void newTournament(Tournament tournament) {
         logic.newTournament(tournament);
-
-        return Response.ok().build();
     }
 
     @Override
-    public Response joinTournament(Tournament tournament) {
+    public void joinTournament(Tournament tournament) {
         String userName = security.getUserPrincipal().getName();
 
         logic.joinTournament(userName, tournament);
-
-        return Response.ok().build();
     }
 
 }
