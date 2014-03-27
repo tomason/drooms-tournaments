@@ -1,6 +1,7 @@
 package cz.schlosserovi.tomas.drooms.tournaments.logic;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -64,9 +65,20 @@ public class TournamentLogic {
         Collection<TournamentEntity> unfinished = tournaments.getUnfinishedTournaments();
         Collection<TournamentEntity> enrolled = tournaments.getTournaments(user);
         unfinished.removeAll(enrolled);
-        enrolled.addAll(unfinished);
 
-        return getConverter().convert(enrolled);
+        Collection<Tournament> results = new LinkedList<>();
+        for (TournamentEntity te : enrolled) {
+            Tournament result = te.convert(1);
+            result.setEnrolled(true);
+            results.add(result);
+        }
+        for (TournamentEntity te : unfinished) {
+            Tournament result = te.convert(1);
+            result.setEnrolled(false);
+            results.add(result);
+        }
+
+        return results;
     }
 
     public void joinTournament(String userName, Tournament tournament) {
