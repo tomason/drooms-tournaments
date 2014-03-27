@@ -115,7 +115,7 @@ public class StrategyDAO {
         Join<StrategyEntity, TournamentResultEntity> join = strategy.<StrategyEntity, UserEntity> join("author").join(
                 "tournamentResults");
 
-        query.select(strategy).where(
+        query.select(strategy).distinct(true).where(
                 builder.and(builder.equal(join.get("tournament"), tournament), builder.equal(strategy.get("active"), true)));
 
         return em.createQuery(query).getResultList();
