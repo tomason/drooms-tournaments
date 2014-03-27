@@ -181,13 +181,12 @@ public class PlaygroundEntity implements Serializable, Convertible<Playground> {
         result.setSource(getSource());
         result.setMaxPlayers(getMaxPlayers());
 
-        if (depth > 0) {
-            Properties config = new Properties();
-            for (PlaygroundConfigEntity entity : getConfigurations()) {
-                config.setProperty(entity.getKey(), entity.getValue());
-            }
-            result.setConfiguration(config);
+        // properties are eagerly fetched, no need to use depth
+        Properties config = new Properties();
+        for (PlaygroundConfigEntity entity : getConfigurations()) {
+            config.setProperty(entity.getKey(), entity.getValue());
         }
+        result.setConfiguration(config);
 
         return result;
     }
