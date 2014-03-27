@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -32,11 +33,11 @@ public class PlaygroundEntity implements Serializable, Convertible<Playground> {
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
     private UserEntity author;
     @OneToMany(mappedBy = "playground")
-    private Collection<GameEntity> games = new NullForbiddingSet<>();
+    private Set<GameEntity> games = new NullForbiddingSet<>();
     @OneToMany(mappedBy = "playground", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Collection<PlaygroundConfigEntity> configurations = new NullForbiddingSet<>();
+    private Set<PlaygroundConfigEntity> configurations = new NullForbiddingSet<>();
     @ManyToMany(mappedBy = "playgrounds")
-    private Collection<TournamentEntity> tournaments = new NullForbiddingSet<>();
+    private Set<TournamentEntity> tournaments = new NullForbiddingSet<>();
 
     public PlaygroundEntity() {
     }

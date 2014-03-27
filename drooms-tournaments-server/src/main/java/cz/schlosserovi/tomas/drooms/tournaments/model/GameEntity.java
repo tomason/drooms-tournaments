@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -36,7 +37,7 @@ public class GameEntity implements Serializable, Convertible<Game> {
     @ManyToOne(optional = false)
     private TournamentEntity tournament;
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
-    private Collection<GameResultEntity> gameResults = new NullForbiddingSet<>();
+    private Set<GameResultEntity> gameResults = new NullForbiddingSet<>();
 
     public GameEntity() {
     }

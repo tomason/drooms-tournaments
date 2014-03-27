@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -31,11 +32,11 @@ public class TournamentEntity implements Serializable, Convertible<Tournament> {
     private Calendar end;
     private int period = 24;
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
-    private Collection<GameEntity> games = new NullForbiddingSet<GameEntity>();
+    private Set<GameEntity> games = new NullForbiddingSet<GameEntity>();
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
-    private Collection<TournamentResultEntity> results = new NullForbiddingSet<>();
+    private Set<TournamentResultEntity> results = new NullForbiddingSet<>();
     @ManyToMany
-    private Collection<PlaygroundEntity> playgrounds = new NullForbiddingSet<>();
+    private Set<PlaygroundEntity> playgrounds = new NullForbiddingSet<>();
 
     public TournamentEntity() {
     }

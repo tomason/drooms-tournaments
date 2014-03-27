@@ -3,6 +3,7 @@ package cz.schlosserovi.tomas.drooms.tournaments.model;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -34,7 +35,7 @@ public class StrategyEntity implements Serializable, Convertible<Strategy> {
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
     private UserEntity author;
     @OneToMany(mappedBy = "strategy", cascade = CascadeType.ALL)
-    private Collection<GameResultEntity> gameResults = new NullForbiddingSet<>();
+    private Set<GameResultEntity> gameResults = new NullForbiddingSet<>();
 
     public StrategyEntity() {
     }

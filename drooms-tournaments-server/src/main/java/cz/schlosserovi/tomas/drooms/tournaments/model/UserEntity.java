@@ -3,6 +3,7 @@ package cz.schlosserovi.tomas.drooms.tournaments.model;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -22,11 +23,11 @@ public class UserEntity implements Serializable, Convertible<User> {
     private String name;
     private String password;
     @OneToMany(mappedBy = "author")
-    private Collection<PlaygroundEntity> playgrounds = new NullForbiddingSet<>();
+    private Set<PlaygroundEntity> playgrounds = new NullForbiddingSet<>();
     @OneToMany(mappedBy = "author")
-    private Collection<StrategyEntity> strategies = new NullForbiddingSet<>();
+    private Set<StrategyEntity> strategies = new NullForbiddingSet<>();
     @OneToMany(mappedBy = "player")
-    private Collection<TournamentResultEntity> tournamentResults = new NullForbiddingSet<>();
+    private Set<TournamentResultEntity> tournamentResults = new NullForbiddingSet<>();
 
     public UserEntity() {
     }
