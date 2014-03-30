@@ -1,5 +1,5 @@
 # Maven target dir
-/target
+target
 
 # Eclipse files
 .project
