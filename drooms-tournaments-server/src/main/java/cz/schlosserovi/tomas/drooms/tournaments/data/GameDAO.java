@@ -32,6 +32,7 @@ public class GameDAO {
         this.em = em;
     }
 
+    // CRUD operations
     public void insertGame(GameEntity entity) {
         entity.setId(UUID.randomUUID().toString());
 
@@ -61,6 +62,7 @@ public class GameDAO {
         em.remove(entity);
     }
 
+    // queries
     public List<GameEntity> getGames() {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<GameEntity> query = builder.createQuery(GameEntity.class);
@@ -125,4 +127,5 @@ public class GameDAO {
 
         return em.createQuery(query).getResultList();
     }
+
 }

@@ -3,8 +3,6 @@ package cz.schlosserovi.tomas.drooms.tournaments.data;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -15,47 +13,31 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentResultEntity;
 @Stateless
 public class TournamentResultDAO {
     private EntityManager em;
-    private UserDAO users;
-    private TournamentDAO tournaments;
 
     public TournamentResultDAO() {
     }
 
     @Inject
-    public TournamentResultDAO(EntityManager em, UserDAO users, TournamentDAO tournaments) {
+    public TournamentResultDAO(EntityManager em) {
         this.em = em;
-        this.users = users;
-        this.tournaments = tournaments;
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public TournamentResultEntity insertResult(String userName, String tournamentName) {
-        TournamentResultEntity result = new TournamentResultEntity();
-        result.setPlayer(users.getUserWithTournamentResults(userName));
-        result.setTournament(tournaments.getTournamentWithResults(tournamentName));
-
-        em.persist(result);
-        em.flush();
-
-        return result;
+    // CRUD operations
+    public void insertTournamentResult(TournamentResultEntity entity) {
+        em.persist(entity);
     }
-
     public TournamentResultEntity getTournamentResult(Long id) {
         return em.find(TournamentResultEntity.class, id);
     }
-
-    public void setPosition(Long id, int position) {
-        if (position < 1) {
-            throw new IllegalArgumentException("Invalid position");
-        }
-        TournamentResultEntity entity = getTournamentResult(id);
-        entity.setPosition(position);
-
+    public void updateTournamentResult(TournamentResultEntity entity) {
         em.merge(entity);
-        em.flush();
+    }
+    public void removeTournamentResult(TournamentResultEntity entity) {
+        em.remove(entity);
     }
 
-    public List<TournamentResultEntity> getResults() {
+    // queries
+    public List<TournamentResultEntity> getTournamentResults() {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<TournamentResultEntity> query = builder.createQuery(TournamentResultEntity.class);
 

@@ -6,16 +6,11 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
-import cz.schlosserovi.tomas.drooms.tournaments.data.PlaygroundDAO;
-import cz.schlosserovi.tomas.drooms.tournaments.data.UserDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
-import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.util.Converter;
+import cz.schlosserovi.tomas.drooms.tournaments.logic.PlaygroundLogic;
 
 public class PlaygroundServiceImpl implements PlaygroundService {
-    private UserDAO users;
-    private PlaygroundDAO playgrounds;
+    private PlaygroundLogic logic;
     @Context
     private SecurityContext security;
 
@@ -23,35 +18,28 @@ public class PlaygroundServiceImpl implements PlaygroundService {
     }
 
     @Inject
-    public PlaygroundServiceImpl(UserDAO users, PlaygroundDAO playgrounds) {
-        this(users, playgrounds, null);
+    public PlaygroundServiceImpl(PlaygroundLogic logic) {
+        this(logic, null);
     }
 
-    public PlaygroundServiceImpl(UserDAO users, PlaygroundDAO playgrounds, SecurityContext security) {
-        this.users = users;
-        this.playgrounds = playgrounds;
+    public PlaygroundServiceImpl(PlaygroundLogic logic, SecurityContext security) {
+        this.logic = logic;
         this.security = security;
     }
 
     @Override
     public Collection<Playground> getPlaygrounds() {
-        return Converter.forClass(PlaygroundEntity.class).convert(playgrounds.getPlaygrounds());
+        return logic.getAllPlaygrounds();
     }
 
     @Override
     public Collection<Playground> getUserPlaygrounds() {
-        String userName = security.getUserPrincipal().getName();
-        UserEntity user = users.getUser(userName);
-
-        return Converter.forClass(PlaygroundEntity.class).convert(playgrounds.getPlaygrounds(user));
+        return logic.getUserPlaygrounds(security.getUserPrincipal().getName());
     }
 
     @Override
     public void newPlayground(Playground playground) {
-        String userName = security.getUserPrincipal().getName();
-
-        playgrounds.insertPlayground(userName, playground.getName(), playground.getSource());
-        playgrounds.setPlaygroundConfiguration(playground.getName(), playground.getConfiguration());
+        logic.insertPlayground(security.getUserPrincipal().getName(), playground);
     }
 
 }

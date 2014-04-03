@@ -23,59 +23,52 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 @Stateless
 public class StrategyDAO {
     private EntityManager em;
-    private UserDAO users;
 
     public StrategyDAO() {
     }
 
     @Inject
-    public StrategyDAO(EntityManager em, UserDAO users) {
+    public StrategyDAO(EntityManager em) {
         this.em = em;
-        this.users = users;
     }
 
-    public StrategyEntity insertStrategy(String user, GAV gav) {
-        return insertStrategy(user, gav, false);
-    }
-
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public StrategyEntity insertStrategy(String userName, GAV gav, boolean active) {
-        UserEntity author = users.getUser(userName);
-        StrategyEntity strategy = new StrategyEntity();
-        strategy.setGav(gav);
-        strategy.setActive(active);
-        strategy.setAuthor(author);
-        try {
-            StrategyEntity prev = getActiveStrategy(author);
-            if (active) {
-                prev.setActive(!active);
-                em.merge(prev);
-            }
-        } catch (NoResultException ex) {
-            strategy.setActive(true);
+    // CRUD operations
+    public void insertStrategy(StrategyEntity entity) {
+        // set active strategy if none is present
+        if (getStrategies(entity.getAuthor()).size() == 0) {
+            entity.setActive(true);
         }
 
-        em.persist(strategy);
-        em.flush();
-
-        return strategy;
-    }
-
-    public void setDefaultStrategy(GAV gav) {
-        StrategyEntity current = getStrategy(gav);
-        StrategyEntity prev = getActiveStrategy(current.getAuthor());
-        prev.setActive(false);
-        current.setActive(true);
-
-        em.merge(prev);
-        em.merge(current);
-        em.flush();
+        em.persist(entity);
     }
 
     public StrategyEntity getStrategy(GAV gav) {
         return em.find(StrategyEntity.class, gav);
     }
 
+    public void updateStrategy(StrategyEntity entity) {
+        em.merge(entity);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void activateStrategy(StrategyEntity entity) {
+        try {
+            StrategyEntity prev = getActiveStrategy(entity.getAuthor());
+            prev.setActive(false);
+            updateStrategy(prev);
+        } catch (NoResultException ex) {
+            // no previous active strategy
+        }
+
+        entity.setActive(true);
+        updateStrategy(entity);
+    }
+
+    public void deleteStrategy(StrategyEntity entity) {
+        em.remove(entity);
+    }
+
+    // queries
     public List<StrategyEntity> getStrategies() {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<StrategyEntity> query = builder.createQuery(StrategyEntity.class);
@@ -115,8 +108,10 @@ public class StrategyDAO {
         Join<StrategyEntity, TournamentResultEntity> join = strategy.<StrategyEntity, UserEntity> join("author").join(
                 "tournamentResults");
 
-        query.select(strategy).distinct(true).where(
-                builder.and(builder.equal(join.get("tournament"), tournament), builder.equal(strategy.get("active"), true)));
+        query.select(strategy)
+                .distinct(true)
+                .where(builder.and(builder.equal(join.get("tournament"), tournament),
+                        builder.equal(strategy.get("active"), true)));
 
         return em.createQuery(query).getResultList();
     }

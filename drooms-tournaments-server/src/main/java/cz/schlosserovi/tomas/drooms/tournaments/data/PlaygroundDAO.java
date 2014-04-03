@@ -2,7 +2,6 @@ package cz.schlosserovi.tomas.drooms.tournaments.data;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -12,7 +11,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
-import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundConfigEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
@@ -20,49 +18,18 @@ import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 @Stateless
 public class PlaygroundDAO {
     private EntityManager em;
-    private UserDAO users;
 
     public PlaygroundDAO() {
     }
 
     @Inject
-    public PlaygroundDAO(EntityManager em, UserDAO users) {
+    public PlaygroundDAO(EntityManager em) {
         this.em = em;
-        this.users = users;
     }
 
-    public PlaygroundEntity insertPlayground(String userName, String name, String source) {
-        PlaygroundEntity result = new PlaygroundEntity();
-        result.setName(name);
-        result.setSource(source);
-        result.recountMaxPlayers();
-        result.setAuthor(users.getUser(userName));
-
-        em.persist(result);
-        em.flush();
-
-        return result;
-    }
-
-    public void setPlaygroundConfiguration(String playgroundName, Properties playgroundConfig) {
-        PlaygroundEntity playground = getPlayground(playgroundName);
-        for (String key : playgroundConfig.stringPropertyNames()) {
-            PlaygroundConfigEntity config = new PlaygroundConfigEntity(key, playgroundConfig.getProperty(key));
-            playground.addConfiguration(config);
-            em.persist(config);
-        }
-
-        em.merge(playground);
-        em.flush();
-    }
-
-    public void setPlaygroundSource(String name, String source) {
-        PlaygroundEntity entity = getPlayground(name);
-        entity.setSource(source);
-        entity.recountMaxPlayers();
-
-        em.merge(entity);
-        em.flush();
+    // CRUD operations
+    public void insertPlayground(PlaygroundEntity entity) {
+        em.persist(entity);
     }
 
     public PlaygroundEntity getPlayground(String name) {
@@ -80,6 +47,15 @@ public class PlaygroundDAO {
         return em.createQuery(query).getSingleResult();
     }
 
+    public void updatePlayground(PlaygroundEntity entity) {
+        em.merge(entity);
+    }
+
+    public void deletePlayground(PlaygroundEntity entity) {
+        em.remove(entity);
+    }
+
+    // queries
     public List<PlaygroundEntity> getPlaygrounds() {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<PlaygroundEntity> query = builder.createQuery(PlaygroundEntity.class);
@@ -109,4 +85,5 @@ public class PlaygroundDAO {
 
         return em.createQuery(query).getResultList();
     }
+
 }

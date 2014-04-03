@@ -28,18 +28,24 @@ public class GameResultDAO {
         this.em = em;
     }
 
-    public void setPoints(Long id, int points) {
-        GameResultEntity entity = getGameResult(id);
-        entity.setPoints(points);
-
-        em.merge(entity);
-        em.flush();
+    // CRUD operations
+    public void insertGameResult(GameResultEntity entity) {
+        em.persist(entity);
     }
 
     public GameResultEntity getGameResult(Long id) {
         return em.find(GameResultEntity.class, id);
     }
 
+    public void updateGameResult(GameResultEntity entity) {
+        em.merge(entity);
+    }
+
+    public void deleteGameResult(GameResultEntity entity) {
+        em.remove(entity);
+    }
+
+    // queries
     public List<GameResultEntity> getGameResults() {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<GameResultEntity> query = builder.createQuery(GameResultEntity.class);
@@ -90,4 +96,5 @@ public class GameResultDAO {
 
         return em.createQuery(query).getResultList();
     }
+
 }
