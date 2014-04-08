@@ -1,13 +1,20 @@
 package cz.schlosserovi.tomas.drooms.tournaments.model;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import cz.schlosserovi.tomas.drooms.tournaments.util.NullForbiddingSet;
 
 @Entity
 @Table(name = "TOURNAMENT_RESULT")
@@ -22,6 +29,8 @@ public class TournamentResultEntity implements Serializable {
     private UserEntity player;
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
     private TournamentEntity tournament;
+    @OneToMany(mappedBy = "tournamentResult", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<TournamentResultPartialEntity> partialResults = new NullForbiddingSet<>();
 
     public TournamentResultEntity() {
     }
@@ -85,6 +94,28 @@ public class TournamentResultEntity implements Serializable {
         }
         this.tournament = tournament;
         tournament.addResult(this);
+    }
+
+    public Collection<TournamentResultPartialEntity> getPartialResults() {
+        return Collections.unmodifiableCollection(partialResults);
+    }
+
+    public void setPartialResults(Set<TournamentResultPartialEntity> partialResults) {
+        if (partialResults == null) {
+            throw new IllegalArgumentException("Partial results must not be null");
+        }
+        this.partialResults.clear();
+        this.partialResults.addAll(partialResults);
+    }
+
+    public void addPartialResult(TournamentResultPartialEntity partialResult) {
+        if (partialResult == null) {
+            throw new IllegalArgumentException("Partial result must not be null");
+        }
+        if (!equals(partialResult.getTournamentResult())) {
+            throw new IllegalArgumentException("Partial result is already assigned to another tournament");
+        }
+        partialResults.add(partialResult);
     }
 
     @Override
