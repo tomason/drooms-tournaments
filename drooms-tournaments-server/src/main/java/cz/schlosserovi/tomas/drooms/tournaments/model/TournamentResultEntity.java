@@ -54,9 +54,6 @@ public class TournamentResultEntity implements Serializable {
     }
 
     public void setPosition(Integer position) {
-        if (this.position != null) {
-            throw new IllegalStateException("Position is already set");
-        }
         this.position = position;
     }
 
