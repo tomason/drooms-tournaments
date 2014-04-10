@@ -1,6 +1,7 @@
 package cz.schlosserovi.tomas.drooms.tournaments.domain;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,8 +16,10 @@ public class Tournament {
     private Calendar start;
     private Calendar end;
     private int period;
-    private List<Playground> playgrounds;
     private boolean enrolled;
+
+    private Collection<Playground> playgrounds;
+    private Collection<TournamentResult> results;
 
     public Tournament() {
     }
@@ -61,12 +64,20 @@ public class Tournament {
         this.period = period;
     }
 
-    public List<Playground> getPlaygrounds() {
+    public Collection<Playground> getPlaygrounds() {
         return playgrounds;
     }
 
-    public void setPlaygrounds(List<Playground> playgrounds) {
+    public void setPlaygrounds(Collection<Playground> playgrounds) {
         this.playgrounds = playgrounds;
+    }
+
+    public Collection<TournamentResult> getResults() {
+        return results;
+    }
+
+    public void setResults(Collection<TournamentResult> results) {
+        this.results = results;
     }
 
     public boolean isEnrolled() {
