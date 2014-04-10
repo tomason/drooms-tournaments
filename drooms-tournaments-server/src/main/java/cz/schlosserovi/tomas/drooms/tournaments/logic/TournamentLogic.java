@@ -93,8 +93,8 @@ public class TournamentLogic {
     }
 
     public void joinTournament(String userName, Tournament tournament) {
-        UserEntity user = users.getUser(userName);
-        TournamentEntity entity = tournaments.getTournament(tournament.getName());
+        UserEntity user = users.getUserWithTournamentResults(userName);
+        TournamentEntity entity = tournaments.getTournamentWithResults(tournament.getName());
 
         TournamentResultEntity result = new TournamentResultEntity();
         result.setPlayer(user);
