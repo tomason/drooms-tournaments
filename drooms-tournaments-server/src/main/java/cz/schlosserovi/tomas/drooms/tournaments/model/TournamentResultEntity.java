@@ -14,11 +14,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import cz.schlosserovi.tomas.drooms.tournaments.domain.TournamentResult;
+import cz.schlosserovi.tomas.drooms.tournaments.util.Convertible;
 import cz.schlosserovi.tomas.drooms.tournaments.util.NullForbiddingSet;
 
 @Entity
 @Table(name = "TOURNAMENT_RESULT")
-public class TournamentResultEntity implements Serializable {
+public class TournamentResultEntity implements Serializable, Convertible<TournamentResult> {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -116,6 +118,16 @@ public class TournamentResultEntity implements Serializable {
             throw new IllegalArgumentException("Partial result is already assigned to another tournament");
         }
         partialResults.add(partialResult);
+    }
+
+    @Override
+    public TournamentResult convert(int depth) {
+        TournamentResult result = new TournamentResult();
+
+        result.setPlayer(player.convert(depth - 1));
+        result.setPosition(position == null ? 0 : position);
+
+        return result;
     }
 
     @Override
