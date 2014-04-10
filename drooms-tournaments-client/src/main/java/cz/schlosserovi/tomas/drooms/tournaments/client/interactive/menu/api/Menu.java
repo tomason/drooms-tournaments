@@ -15,18 +15,6 @@ import cz.schlosserovi.tomas.drooms.tournaments.client.interactive.util.OutputDe
 import cz.schlosserovi.tomas.drooms.tournaments.client.services.TournamentsServerClient;
 
 public abstract class Menu {
-    protected static final String SINGLE_LINE;
-    protected static final String DOUBLE_LINE;
-
-    static {
-        char[] singleLine = new char[80];
-        Arrays.fill(singleLine, '-');
-        SINGLE_LINE = new String(singleLine);
-
-        char[] doubleLine = new char[80];
-        Arrays.fill(doubleLine, '=');
-        DOUBLE_LINE = new String(doubleLine);
-    }
 
     protected final OutputDevice console;
     protected final TournamentsServerClient client;
@@ -128,14 +116,37 @@ public abstract class Menu {
         }
     }
 
+    protected static String singleLine() {
+        return singleLine(80);
+    }
+
+    protected static String singleLine(int length) {
+        return fill('-', length);
+    }
+
+    protected static String doubleLine() {
+        return doubleLine(80);
+    }
+
+    protected static String doubleLine(int length) {
+        return fill('=', length);
+    }
+
+    protected static String fill(char character, int length) {
+        char[] buf = new char[length];
+        Arrays.fill(buf, character);
+
+        return new String(buf);
+    }
+
     private void printHeader(String header) {
         if (header.length() > 0) {
             header = " - " + header;
         }
-        console.printLine(DOUBLE_LINE);
+        console.printLine(doubleLine());
         console.printLine("| Drooms tournaments client%-51s |", header);
         console.printLine("| %76s |", "Logged in as: " + client.getLoogedInUser());
-        console.printLine(DOUBLE_LINE);
+        console.printLine(doubleLine());
         console.printLine();
     }
 
