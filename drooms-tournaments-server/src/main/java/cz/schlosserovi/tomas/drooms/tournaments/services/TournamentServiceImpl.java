@@ -33,6 +33,11 @@ public class TournamentServiceImpl implements TournamentService {
     }
 
     @Override
+    public Tournament getTournament(String tournamentName) {
+        return logic.getTournamentDetail(tournamentName);
+    }
+
+    @Override
     public Collection<Tournament> getUserTournaments() {
         String userName = security.getUserPrincipal().getName();
 

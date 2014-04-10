@@ -9,6 +9,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Tournament;
@@ -29,6 +30,17 @@ public interface TournamentService {
     @GET
     @Path("/tournaments")
     public Collection<Tournament> getTournaments();
+
+    /**
+     * Retrieves tournament's detail (i.e. playgrounds and players enrolled).
+     * 
+     * @param tournamentName
+     *            Name of the tournament to get details for.
+     * @return Tournament with Playgrounds and TournamentResults.
+     */
+    @GET
+    @Path("/tournaments/tournament")
+    public Tournament getTournament(@QueryParam("name") String tournamentName);
 
     /**
      * Lists tournaments. The resulting list contains tournaments User has
