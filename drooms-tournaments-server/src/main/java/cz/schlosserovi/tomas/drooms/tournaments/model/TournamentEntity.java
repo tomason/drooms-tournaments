@@ -32,7 +32,7 @@ public class TournamentEntity implements Serializable, Convertible<Tournament> {
     private Calendar end;
     private int period = 24;
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
-    private Set<GameEntity> games = new NullForbiddingSet<GameEntity>();
+    private Set<GameEntity> games = new NullForbiddingSet<>();
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
     private Set<TournamentResultEntity> results = new NullForbiddingSet<>();
     @ManyToMany
@@ -185,6 +185,10 @@ public class TournamentEntity implements Serializable, Convertible<Tournament> {
         if (depth > 0) {
             result.setPlaygrounds(Converter.forClass(PlaygroundEntity.class).setRecurseDepth(depth - 1)
                     .convert(getPlaygrounds()));
+        }
+        if (depth > 0) {
+            result.setResults(Converter.forClass(TournamentResultEntity.class).setRecurseDepth(depth - 1)
+                    .convert(getResults()));
         }
 
         return result;
