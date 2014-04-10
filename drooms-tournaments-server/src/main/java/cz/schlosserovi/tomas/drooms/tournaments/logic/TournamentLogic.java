@@ -56,7 +56,7 @@ public class TournamentLogic {
         entity.setPeriod(tournament.getPeriod());
 
         for (Playground playground : tournament.getPlaygrounds()) {
-            entity.addPlayground(playgrounds.getPlayground(playground.getName()));
+            entity.addPlayground(playgrounds.getPlaygroundWithTournaments(playground.getName()));
         }
 
         tournaments.insertTournament(entity);
@@ -64,6 +64,10 @@ public class TournamentLogic {
 
     public Collection<Tournament> getAllTournaments() {
         return getConverter().convert(tournaments.getTournaments());
+    }
+
+    public Tournament getTournamentDetail(String tournamentName) {
+        return getConverter(1).convert(tournaments.getTournamentDetail(tournamentName));
     }
 
     public Collection<Tournament> getUserTournaments(String userName) {
@@ -75,12 +79,12 @@ public class TournamentLogic {
 
         Collection<Tournament> results = new LinkedList<>();
         for (TournamentEntity te : enrolled) {
-            Tournament result = te.convert(1);
+            Tournament result = te.convert(0);
             result.setEnrolled(true);
             results.add(result);
         }
         for (TournamentEntity te : unfinished) {
-            Tournament result = te.convert(1);
+            Tournament result = te.convert(0);
             result.setEnrolled(false);
             results.add(result);
         }
