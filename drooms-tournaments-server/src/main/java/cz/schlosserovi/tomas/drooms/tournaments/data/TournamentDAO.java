@@ -43,6 +43,18 @@ public class TournamentDAO {
         return em.find(TournamentEntity.class, name);
     }
 
+    public TournamentEntity getTournamentDetail(String name) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
+
+        Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
+        tournament.fetch("playgrounds");
+        tournament.fetch("results", JoinType.LEFT);
+        query.select(tournament).distinct(true).where(builder.equal(tournament.get("name"), name));
+
+        return em.createQuery(query).getSingleResult();
+    }
+
     public TournamentEntity getTournamentWithPlaygrounds(String name) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
@@ -100,7 +112,6 @@ public class TournamentDAO {
         CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
 
         Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
-        tournament.fetch("playgrounds");
         Join<TournamentEntity, TournamentResultEntity> join = tournament.join("results");
         query.select(tournament).distinct(true).where(builder.equal(join.get("player"), player));
 
