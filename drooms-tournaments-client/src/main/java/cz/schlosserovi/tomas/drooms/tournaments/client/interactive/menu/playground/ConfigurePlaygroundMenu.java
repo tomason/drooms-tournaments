@@ -39,16 +39,16 @@ class ConfigurePlaygroundMenu extends BackReferrenceMenu {
     @Override
     protected void printInstructions() {
         console.printLine("Current configuration:");
-        console.printLine(SINGLE_LINE);
+        console.printLine(singleLine());
         console.printLine("|   |                                key | value                               |");
-        console.printLine(SINGLE_LINE);
+        console.printLine(singleLine());
         int i = 1;
         for (String key : keys) {
             console.print("|%3s", i++);
             console.print("|%35s ", key);
             console.printLine("| %-36s|", playground.getConfiguration().getProperty(key));
         }
-        console.print("%s%n", SINGLE_LINE);
+        console.printLine(singleLine());
     }
 
     @Override

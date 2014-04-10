@@ -30,10 +30,10 @@ public class StrategiesMenu extends Menu {
 
     @Override
     protected void printInstructions() {
-        console.print("List of %s's strategies:%n", client.getLoogedInUser());
-        console.print("%s%n", SINGLE_LINE);
-        console.print("|   |   |                   groupId | artifactId               |    version    |%n");
-        console.print("%s%n", SINGLE_LINE);
+        console.printLine("List of %s's strategies:", client.getLoogedInUser());
+        console.printLine(singleLine());
+        console.printLine("|   |   |                   groupId | artifactId               |    version    |");
+        console.printLine(singleLine());
         strategies = new LinkedList<>(client.getService(StrategyService.class).getUserStrategies());
         for (int i = 1; i <= strategies.size(); i++) {
             Strategy s = strategies.get(i - 1);
@@ -41,9 +41,9 @@ public class StrategiesMenu extends Menu {
             console.print("| %s ", s.isActive() ? "*" : " ");
             console.print("|%26s ", trimToSize(s.getGav().getGroupId(), 26));
             console.print("| %-25s", trimToSize(s.getGav().getArtifactId(), 25));
-            console.print("|%15s|%n", trimToSize(s.getGav().getVersion(), 14));
+            console.printLine("|%15s|", trimToSize(s.getGav().getVersion(), 14));
         }
-        console.print("%s%n", SINGLE_LINE);
+        console.printLine(singleLine());
     }
 
     @Override

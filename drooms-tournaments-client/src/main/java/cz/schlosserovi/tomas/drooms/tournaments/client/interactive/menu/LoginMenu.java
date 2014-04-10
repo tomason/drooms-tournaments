@@ -26,7 +26,7 @@ public class LoginMenu extends FormMenu {
             client.login(username, password);
             client.getService(StrategyService.class).getUserStrategies(); // make sure authentication works
         } catch (Exception ex) {
-            console.print("Unable to login %s, check your username and password%n", username);
+            console.printLine("Unable to login %s, check your username and password", username);
             client.logout(); // sets the credentials to null to not show user as logged in
         }
 

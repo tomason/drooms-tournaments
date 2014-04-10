@@ -49,17 +49,17 @@ public class PlaygroundsMenu extends Menu {
     protected void printInstructions() {
         playgrounds = loadPlaygrounds();
 
-        console.print("List of all playgrounds:%n");
-        console.print("%s%n", SINGLE_LINE);
-        console.print("|   |                           name                                 | players |%n");
-        console.print("%s%n", SINGLE_LINE);
+        console.printLine("List of all playgrounds:");
+        console.printLine(singleLine());
+        console.printLine("|   |                           name                                 | players |");
+        console.printLine(singleLine());
         for (int i = 1; i <= playgrounds.size(); i++) {
             Playground p = playgrounds.get(i - 1);
             console.print("|%3s", i);
             console.print("|%63s ", trimToSize(p.getName(), 64));
-            console.print("|%8s |%n", p.getMaxPlayers());
+            console.printLine("|%8s |", p.getMaxPlayers());
         }
-        console.print("%s%n", SINGLE_LINE);
+        console.printLine(singleLine());
     }
 
     @Override
