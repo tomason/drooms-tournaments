@@ -22,7 +22,6 @@ public class GameResultEntity implements Serializable, Comparable<GameResultEnti
     @GeneratedValue
     private Long id;
     private Integer points;
-    private Integer position;
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
     private StrategyEntity strategy;
     @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
@@ -65,17 +64,6 @@ public class GameResultEntity implements Serializable, Comparable<GameResultEnti
         this.points = points;
     }
 
-    public Integer getPosition() {
-        return position;
-    }
-
-    public void setPosition(Integer position) {
-        if (this.position != null) {
-            throw new IllegalStateException("Position is already set");
-        }
-        this.position = position;
-    }
-
     public StrategyEntity getStrategy() {
         return strategy;
     }
@@ -110,7 +98,6 @@ public class GameResultEntity implements Serializable, Comparable<GameResultEnti
     public GameResult convert(int depth) {
         GameResult result = new GameResult();
         result.setPoints(getPoints() == null ? 0 : getPoints());
-        result.setPosition(getPosition() == null ? 0 : getPosition());
         result.setStrategy(Converter.forClass(StrategyEntity.class).setRecurseDepth(depth - 1).convert(getStrategy()));
 
         return result;
