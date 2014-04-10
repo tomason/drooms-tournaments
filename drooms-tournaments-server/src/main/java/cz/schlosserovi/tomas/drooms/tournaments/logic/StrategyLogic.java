@@ -3,6 +3,7 @@ package cz.schlosserovi.tomas.drooms.tournaments.logic;
 import java.util.Collection;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 
 import cz.schlosserovi.tomas.drooms.tournaments.data.StrategyDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.data.UserDAO;
@@ -15,6 +16,15 @@ import cz.schlosserovi.tomas.drooms.tournaments.util.Converter;
 public class StrategyLogic {
     private UserDAO users;
     private StrategyDAO strategies;
+
+    public StrategyLogic() {
+    }
+
+    @Inject
+    public StrategyLogic(UserDAO users, StrategyDAO strategies) {
+        this.users = users;
+        this.strategies = strategies;
+    }
 
     public Collection<Strategy> getAllStrategies() {
         return getConverter().convert(strategies.getStrategies());
