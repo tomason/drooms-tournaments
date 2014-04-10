@@ -2,7 +2,7 @@ package cz.schlosserovi.tomas.drooms.tournaments.domain;
 
 import java.util.Collection;
 
-public class Game {
+public class Game implements Comparable<Game> {
     private String id;
     private Tournament tournament;
     private Playground playground;
@@ -76,6 +76,14 @@ public class Game {
 
     public void setGameReport(String gameReport) {
         this.gameReport = gameReport;
+    }
+
+    @Override
+    public int compareTo(Game o) {
+        if (id == null || o.id == null) {
+            throw new NullPointerException("Game id is not set");
+        }
+        return id.compareTo(o.id);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package cz.schlosserovi.tomas.drooms.tournaments.domain;
 
-public class GameResult {
+public class GameResult implements Comparable<GameResult> {
     private Strategy strategy;
     private int points;
 
@@ -25,6 +25,11 @@ public class GameResult {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    @Override
+    public int compareTo(GameResult o) {
+        return points - o.points;
     }
 
     @Override

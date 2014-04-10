@@ -3,7 +3,7 @@ package cz.schlosserovi.tomas.drooms.tournaments.domain;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Strategy {
+public class Strategy implements Comparable<Strategy> {
     // Keep these two in sync
     private static final Pattern TO_STRING_PATTERN = Pattern.compile("Strategy\\[gav='(.+)', active='(.+)'\\]");
     private static final String TO_STRING_FORMAT = "Strategy[gav='%s', active='%s']";
@@ -58,6 +58,14 @@ public class Strategy {
         result.active = Boolean.valueOf(m.group(2));
 
         return result;
+    }
+
+    @Override
+    public int compareTo(Strategy o) {
+        if (gav == null || o.gav == null) {
+            throw new NullPointerException("Strategy GAV is not set");
+        }
+        return gav.compareTo(o.gav);
     }
 
     @Override

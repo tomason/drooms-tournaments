@@ -3,7 +3,7 @@ package cz.schlosserovi.tomas.drooms.tournaments.domain;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class User {
+public class User implements Comparable<User>{
     // Keep these two in sync
     private static final String TO_STRING_FORMAT = "User[name='%s']";
     private static final Pattern TO_STRING_PATTERN = Pattern.compile("User\\[name='(.+)'\\]");
@@ -48,6 +48,15 @@ public class User {
         result.name = m.group(1);
 
         return result;
+    }
+
+    @Override
+    public int compareTo(User o) {
+        if (name == null || o.name == null) {
+            throw new NullPointerException("User name must not be null");
+        }
+
+        return name.compareTo(o.name);
     }
 
     @Override

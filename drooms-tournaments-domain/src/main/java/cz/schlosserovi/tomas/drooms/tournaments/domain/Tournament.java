@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Tournament {
+public class Tournament implements Comparable<Tournament> {
     // Keep these two in sync
     private static final Pattern TO_STRING_PATTERN = Pattern
             .compile("Tournament\\[name='(.+)', start='(\\d+)', end='(\\d+)', period='(\\d+)'\\]");
@@ -104,6 +104,15 @@ public class Tournament {
         result.period = Integer.valueOf(m.group(4));
 
         return result;
+    }
+
+    @Override
+    public int compareTo(Tournament o) {
+        if (name == null || o.name == null) {
+            throw new NullPointerException("Tournament name is not set");
+        }
+
+        return name.compareTo(o.name);
     }
 
     @Override

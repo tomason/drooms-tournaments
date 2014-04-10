@@ -4,7 +4,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Playground {
+public class Playground implements Comparable<Playground> {
     // Keep these two in sync
     private static final Pattern TO_STRING_PATTERN = Pattern.compile("Playground\\[name='(.+)', maxPlayers='(\\d+)']");
     private static final String TO_STRING_FORMAT = "Playground[name='%s', maxPlayers='%s']";
@@ -71,6 +71,14 @@ public class Playground {
         result.maxPlayers = Integer.valueOf(m.group(2));
 
         return result;
+    }
+
+    @Override
+    public int compareTo(Playground o) {
+        if (name == null || o.name == null) {
+            throw new NullPointerException("Playground name is not set");
+        }
+        return name.compareTo(o.name);
     }
 
     @Override
