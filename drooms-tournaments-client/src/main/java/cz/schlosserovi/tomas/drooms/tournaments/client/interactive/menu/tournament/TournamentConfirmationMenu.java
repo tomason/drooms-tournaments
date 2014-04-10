@@ -30,9 +30,6 @@ class TournamentConfirmationMenu extends Menu {
     @Override
     protected void printInstructions() {
         TournamentDetailMenu.printTournamentDetail(console, tournament);
-        console.print("1. create tournament%n");
-        console.print("2. discard tournament%n");
-
     }
 
     @Override

@@ -37,21 +37,17 @@ class TournamentPlaygroundSelectionMenu extends Menu {
 
     @Override
     protected void printInstructions() {
-        console.print("%s%n", SINGLE_LINE);
-        console.print("|%3s|%3s| %54s | %11s |%n", "", "", "name", "max players");
-        console.print("%s%n", SINGLE_LINE);
+        console.printLine(singleLine());
+        console.printLine("|%3s|%3s| %54s | %11s |", "", "", "name", "max players");
+        console.printLine(singleLine());
         for (int i = 1; i <= playgrounds.size(); i++) {
             PlaygroundSelection selection = playgrounds.get(i - 1);
             console.print("|%3s", i);
             console.print("| %s ", selection.isAdded() ? "*" : " ");
             console.print("| %54s ", trimToSize(selection.getPlayground().getName(), 54));
-            console.print("| %-11s |%n", selection.getPlayground().getMaxPlayers());
+            console.printLine("| %-11s |", selection.getPlayground().getMaxPlayers());
         }
-        console.print("%s%n", SINGLE_LINE);
-
-        console.print("1. add playground%n");
-        console.print("2. remove playground%n");
-        console.print("3. done%n");
+        console.printLine(singleLine());
     }
 
     @Override
