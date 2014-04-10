@@ -28,11 +28,11 @@ public class MainMenu extends Menu {
         choices.remove(Choice.MAIN_MENU);
 
         // add generally available menus
-        concatChoices(choices, Choice.PLAYGROUNDS);
+        concatChoices(choices, Choice.PLAYGROUNDS, Choice.TOURNAMENTS);
 
         // add specific menus
         if (client.isLoggedIn()) {
-            concatChoices(choices, Choice.STRATEGIES, Choice.TOURNAMENTS);
+            concatChoices(choices, Choice.STRATEGIES);
         } else {
             concatChoices(choices, Choice.REGISTER);
         }

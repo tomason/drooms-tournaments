@@ -1,5 +1,8 @@
 package cz.schlosserovi.tomas.drooms.tournaments.client.interactive.menu.tournament;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import cz.schlosserovi.tomas.drooms.tournaments.client.interactive.menu.Choice;
@@ -9,6 +12,7 @@ import cz.schlosserovi.tomas.drooms.tournaments.client.interactive.util.OutputDe
 import cz.schlosserovi.tomas.drooms.tournaments.client.services.TournamentsServerClient;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Tournament;
+import cz.schlosserovi.tomas.drooms.tournaments.domain.TournamentResult;
 import cz.schlosserovi.tomas.drooms.tournaments.services.TournamentService;
 
 class TournamentDetailMenu extends BackReferrenceMenu {
@@ -16,7 +20,7 @@ class TournamentDetailMenu extends BackReferrenceMenu {
 
     protected TournamentDetailMenu(OutputDevice console, TournamentsServerClient client, Menu previous, Tournament tournament) {
         super(console, client, previous);
-        this.tournament = tournament;
+        this.tournament = client.getService(TournamentService.class).getTournament(tournament.getName());
     }
 
     @Override
@@ -48,20 +52,34 @@ class TournamentDetailMenu extends BackReferrenceMenu {
         }
     }
 
-    static void printTournamentDetail(OutputDevice console, Tournament tournament) {
-        console.print("%s%n", SINGLE_LINE);
-        console.print("| Name           | %-59s |%n", trimToSize(tournament.getName(), 59));
-        console.print("| Start date     | %1$tY-%1$tm-%1$td%2$49s |%n", tournament.getStart(), "");
-        console.print("| End date       | %1$tY-%1$tm-%1$td%2$49s |%n", tournament.getEnd(), "");
-        console.print("| Period (hours) | %-59s |%n", tournament.getPeriod());
-        console.print("| Enrolled       | %-59s |%n", tournament.isEnrolled() ? "yes" : "no");
-        console.print("|------------------------------------------------------------------------------|%n");
-        console.print("| Playgrounds    |   | Name                                          | players |%n");
-        console.print("|                |-------------------------------------------------------------|%n");
-        for (int i = 1; i <= tournament.getPlaygrounds().size(); i++) {
-            Playground p = tournament.getPlaygrounds().get(i - 1);
-            console.print("|                |%3s| %45s | %-7s |%n", i, trimToSize(p.getName(), 45), p.getMaxPlayers());
+    static void printTournamentDetail(OutputDevice out, Tournament tournament) {
+        out.printLine(singleLine());
+        out.printLine("| Name           | %-59s |", trimToSize(tournament.getName(), 59));
+        out.printLine("| Start date     | %1$tY-%1$tm-%1$td%2$49s |", tournament.getStart(), "");
+        out.printLine("| End date       | %1$tY-%1$tm-%1$td%2$49s |", tournament.getEnd(), "");
+        out.printLine("| Period (hours) | %-59s |", tournament.getPeriod());
+        out.printLine("|%s|", singleLine(78));
+        out.printLine("| Playgrounds    |   | %45s | Players |", "Name");
+        out.printLine("|                |%s|", singleLine(61));
+
+        List<Playground> playgrounds = new LinkedList<>(tournament.getPlaygrounds());
+        for (int i = 1; i <= playgrounds.size(); i++) {
+            Playground p = playgrounds.get(i - 1);
+            out.printLine("|                |%3s| %45s | %-7s |", i, trimToSize(p.getName(), 45), p.getMaxPlayers());
         }
-        console.print("%s%n", SINGLE_LINE);
+
+        if (tournament.getResults() != null) {
+            out.printLine("|%s|", singleLine(78));
+            out.printLine("| Players        |   | %55s |", "Name");
+            out.printLine("|                |%s|", singleLine(61));
+
+            List<TournamentResult> results = new LinkedList<>(tournament.getResults());
+            Collections.sort(results);
+            for (TournamentResult result : results) {
+                out.printLine("|                |%3s| %-55s |", result.getPosition(), result.getPlayer().getName());
+            }
+        }
+
+        out.printLine("%s", singleLine());
     }
 }

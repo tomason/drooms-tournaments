@@ -25,25 +25,46 @@ public class TournamentsMenu extends Menu {
 
     @Override
     protected Set<Choice> getChoices() {
-        return concatChoices(super.getChoices(), Choice.TOURNAMENT_NEW, Choice.TOURNAMENT_DETAIL, Choice.TOURNAMENT_JOIN);
+        if (client.isLoggedIn()) {
+            return concatChoices(super.getChoices(), Choice.TOURNAMENT_NEW, Choice.TOURNAMENT_DETAIL, Choice.TOURNAMENT_JOIN);
+        } else {
+            return concatChoices(super.getChoices(), Choice.TOURNAMENT_DETAIL);
+        }
     }
 
     @Override
     protected void printInstructions() {
-        console.print("List of %s's tournaments:%n", client.getLoogedInUser());
-        console.print("%s%n", SINGLE_LINE);
-        console.print("|   |                                  name |      start |        end | joined |%n");
-        console.print("%s%n", SINGLE_LINE);
-        tournaments = new LinkedList<>(client.getService(TournamentService.class).getUserTournaments());
+        String caption, header;
+        int nameWidth;
+        if (client.isLoggedIn()) {
+            caption = String.format("List of %s's tournaments:", client.getLoogedInUser());
+            header = String.format("|   | %37s |      start |        end | joined |", "name");
+            nameWidth = 38;
+            tournaments = new LinkedList<>(client.getService(TournamentService.class).getUserTournaments()); 
+        } else {
+            caption = "List of tournaments:";
+            header = String.format("|   | %46s |      start |        end |", "name");
+            nameWidth = 47;
+            tournaments = new LinkedList<>(client.getService(TournamentService.class).getTournaments());
+        }
+
+        console.printLine(caption);
+        console.printLine(singleLine());
+        console.printLine(header);
+        console.printLine(singleLine());
         for (int i = 1; i <= tournaments.size(); i++) {
             Tournament t = tournaments.get(i - 1);
             console.print("|%3s", i);
-            console.print("| %38s", trimToSize(t.getName(), 38));
+            console.print("| %" + nameWidth + "s", trimToSize(t.getName(), 47));
             console.print("| %1$tY-%1$tm-%1$td ", t.getStart());
             console.print("| %1$tY-%1$tm-%1$td ", t.getEnd());
-            console.print("| %6s |%n", t.isEnrolled() ? "yes" : "no");
+            if (client.isLoggedIn()) {
+                console.printLine("| %6s |", t.isEnrolled() ? "yes" : "no");
+            } else {
+                console.printLine("|");
+            }
         }
-        console.print("%s%n", SINGLE_LINE);
+        console.printLine(singleLine());
     }
 
     @Override
