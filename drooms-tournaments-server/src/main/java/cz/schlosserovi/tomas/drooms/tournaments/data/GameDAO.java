@@ -60,6 +60,7 @@ public class GameDAO {
 
     public void updateGame(GameEntity entity) {
         em.merge(entity);
+        em.flush();
 
         if (entity.getStatus() == GameStatus.FINISHED) {
             finishedGames.fire(new GameFinishedEvent(entity));
