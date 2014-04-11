@@ -1,5 +1,6 @@
 package cz.schlosserovi.tomas.drooms.tournaments.client.interactive.menu.playground;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -16,8 +17,8 @@ public class PlaygroundsMenu extends Menu {
     private boolean ownedOnly;
 
     public PlaygroundsMenu(OutputDevice console, TournamentsServerClient client) {
-        this(console, client, false);
         // by default show all the playgrounds available
+        this(console, client, false);
     }
 
     public PlaygroundsMenu(OutputDevice console, TournamentsServerClient client, boolean ownedOnly) {
@@ -94,6 +95,7 @@ public class PlaygroundsMenu extends Menu {
         } else {
             playgrounds.addAll(service.getPlaygrounds());
         }
+        Collections.sort(playgrounds);
 
         return playgrounds;
     }

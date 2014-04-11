@@ -1,5 +1,6 @@
 package cz.schlosserovi.tomas.drooms.tournaments.client.interactive.menu.strategy;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -30,11 +31,12 @@ public class StrategiesMenu extends Menu {
 
     @Override
     protected void printInstructions() {
+        strategies = loadStrategies();
+
         console.printLine("List of %s's strategies:", client.getLoogedInUser());
         console.printLine(singleLine());
         console.printLine("|   |   |                   groupId | artifactId               |    version    |");
         console.printLine(singleLine());
-        strategies = new LinkedList<>(client.getService(StrategyService.class).getUserStrategies());
         for (int i = 1; i <= strategies.size(); i++) {
             Strategy s = strategies.get(i - 1);
             console.print("|%3s", i);
@@ -61,4 +63,11 @@ public class StrategiesMenu extends Menu {
         }
     }
 
+    private List<Strategy> loadStrategies() {
+        List<Strategy> strategies = new LinkedList<>();
+        strategies.addAll(client.getService(StrategyService.class).getUserStrategies());
+        Collections.sort(strategies);
+
+        return strategies;
+    }
 }
