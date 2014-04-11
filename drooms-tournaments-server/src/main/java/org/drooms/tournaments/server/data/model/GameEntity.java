@@ -39,18 +39,6 @@ public class GameEntity implements Serializable, Convertible<Game> {
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private Set<GameResultEntity> gameResults = new NullForbiddingSet<>();
 
-    public GameEntity() {
-    }
-
-    public GameEntity(String gameId) {
-        setId(gameId);
-    }
-
-    public GameEntity(PlaygroundEntity playground, TournamentEntity tournament) {
-        setPlayground(playground);
-        setTournament(tournament);
-    }
-
     public String getId() {
         return this.id;
     }
@@ -162,8 +150,12 @@ public class GameEntity implements Serializable, Convertible<Game> {
         result.setId(getId());
         result.setFinished(getStatus() == GameStatus.FINISHED);
 
-        result.setPlayground(Converter.forClass(PlaygroundEntity.class).setRecurseDepth(depth - 1).convert(getPlayground()));
-        result.setTournament(Converter.forClass(TournamentEntity.class).setRecurseDepth(depth - 1).convert(getTournament()));
+        if (getPlayground() != null) {
+            result.setPlayground(getPlayground().convert(depth - 1));
+        }
+        if (getTournament() != null) {
+            result.setTournament(getTournament().convert(depth - 1));
+        }
 
         if (depth > 0) {
             result.setResults(Converter.forClass(GameResultEntity.class).setRecurseDepth(depth - 1).convert(getGameResults()));
