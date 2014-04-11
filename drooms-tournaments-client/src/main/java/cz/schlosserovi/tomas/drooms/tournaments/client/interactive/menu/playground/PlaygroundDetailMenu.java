@@ -38,5 +38,9 @@ class PlaygroundDetailMenu extends BackReferrenceMenu {
             console.printLine(" %29s |", trimToSize(playground.getConfiguration().getProperty(key), 29));
         }
         console.printLine(singleLine());
+
+        if (playground.getSource() != null) {
+            console.printLine(playground.getSource());
+        }
     }
 }
