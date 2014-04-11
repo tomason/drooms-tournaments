@@ -14,19 +14,19 @@ import cz.schlosserovi.tomas.drooms.tournaments.data.StrategyDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.data.TournamentDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.data.TournamentResultDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.data.UserDAO;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.GameEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.GameResultEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.PlaygroundEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.StrategyEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.TournamentEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.TournamentResultEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.UserEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Playground;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Tournament;
 import cz.schlosserovi.tomas.drooms.tournaments.events.GameFinishedEvent;
 import cz.schlosserovi.tomas.drooms.tournaments.events.UpdatedTournamentEvent;
 import cz.schlosserovi.tomas.drooms.tournaments.logic.task.GameResultUpdateTask;
 import cz.schlosserovi.tomas.drooms.tournaments.logic.task.TournamentResultUpdateTask;
-import cz.schlosserovi.tomas.drooms.tournaments.model.GameEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.GameResultEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.StrategyEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentResultEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.util.Converter;
 
 public class TournamentLogic {

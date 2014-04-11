@@ -14,14 +14,14 @@ import java.util.TreeMap;
 
 import cz.schlosserovi.tomas.drooms.tournaments.data.GameDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.data.TournamentResultDAO;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.GameEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.GameResultEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.PlaygroundEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.TournamentEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.TournamentResultEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.TournamentResultPartialEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.UserEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.events.GameFinishedEvent;
-import cz.schlosserovi.tomas.drooms.tournaments.model.GameEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.GameResultEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentResultPartialEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentResultEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 public class GameResultUpdateTask implements Runnable {
     private final GameDAO games;

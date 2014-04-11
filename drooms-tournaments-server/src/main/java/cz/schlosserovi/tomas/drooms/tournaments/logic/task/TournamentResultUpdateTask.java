@@ -8,9 +8,9 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import cz.schlosserovi.tomas.drooms.tournaments.data.TournamentResultDAO;
-import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentResultPartialEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentResultEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.TournamentEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.TournamentResultEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.TournamentResultPartialEntity;
 
 public class TournamentResultUpdateTask implements Runnable {
     private static final BigInteger TWO = new BigInteger("2");

@@ -22,11 +22,11 @@ import org.slf4j.LoggerFactory;
 
 import cz.schlosserovi.tomas.drooms.tournaments.data.GameDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.data.UserDAO;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.GameEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.GameResultEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.GameStatus;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Game;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.GameResult;
-import cz.schlosserovi.tomas.drooms.tournaments.model.GameEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.GameResultEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.GameStatus;
 import cz.schlosserovi.tomas.drooms.tournaments.util.Converter;
 
 @RequestScoped

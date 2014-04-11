@@ -7,9 +7,9 @@ import javax.inject.Inject;
 
 import cz.schlosserovi.tomas.drooms.tournaments.data.StrategyDAO;
 import cz.schlosserovi.tomas.drooms.tournaments.data.UserDAO;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.StrategyEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.UserEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.Strategy;
-import cz.schlosserovi.tomas.drooms.tournaments.model.StrategyEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.util.Converter;
 
 @RequestScoped

@@ -1,4 +1,4 @@
-package cz.schlosserovi.tomas.drooms.tournaments.model;
+package cz.schlosserovi.tomas.drooms.tournaments.data.model;
 
 import java.io.Serializable;
 

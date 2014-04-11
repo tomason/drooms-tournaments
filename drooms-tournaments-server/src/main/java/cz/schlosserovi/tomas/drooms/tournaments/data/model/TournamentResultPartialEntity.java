@@ -1,4 +1,4 @@
-package cz.schlosserovi.tomas.drooms.tournaments.model;
+package cz.schlosserovi.tomas.drooms.tournaments.data.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

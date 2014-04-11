@@ -15,8 +15,8 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.TournamentEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.events.NewTournamentEvent;
-import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
 
 @Singleton
 @Startup

@@ -4,8 +4,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import cz.schlosserovi.tomas.drooms.tournaments.data.UserDAO;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.UserEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.User;
-import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 public class UserLogic {
     private UserDAO users;

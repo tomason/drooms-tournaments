@@ -10,11 +10,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
-import cz.schlosserovi.tomas.drooms.tournaments.model.GameEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.GameResultEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.PlaygroundEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.StrategyEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.GameEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.GameResultEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.PlaygroundEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.StrategyEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.UserEntity;
 
 @Stateless
 public class GameResultDAO {

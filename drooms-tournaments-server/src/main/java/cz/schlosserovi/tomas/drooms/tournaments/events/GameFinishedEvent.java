@@ -1,6 +1,6 @@
 package cz.schlosserovi.tomas.drooms.tournaments.events;
 
-import cz.schlosserovi.tomas.drooms.tournaments.model.GameEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.GameEntity;
 
 public class GameFinishedEvent {
     private final GameEntity game;

@@ -10,7 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
-import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.UserEntity;
 
 @Stateless
 public class UserDAO {

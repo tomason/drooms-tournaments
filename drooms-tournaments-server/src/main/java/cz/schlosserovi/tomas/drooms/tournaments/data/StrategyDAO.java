@@ -14,11 +14,11 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.StrategyEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.TournamentEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.TournamentResultEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.UserEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.domain.GAV;
-import cz.schlosserovi.tomas.drooms.tournaments.model.StrategyEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentResultEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.UserEntity;
 
 @Stateless
 public class StrategyDAO {

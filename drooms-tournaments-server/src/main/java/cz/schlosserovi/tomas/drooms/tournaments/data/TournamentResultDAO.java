@@ -12,9 +12,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.TournamentEntity;
+import cz.schlosserovi.tomas.drooms.tournaments.data.model.TournamentResultEntity;
 import cz.schlosserovi.tomas.drooms.tournaments.events.UpdatedTournamentEvent;
-import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentEntity;
-import cz.schlosserovi.tomas.drooms.tournaments.model.TournamentResultEntity;
 
 @Stateless
 public class TournamentResultDAO {
