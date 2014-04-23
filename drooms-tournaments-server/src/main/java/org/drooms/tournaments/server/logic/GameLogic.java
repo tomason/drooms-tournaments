@@ -66,7 +66,7 @@ public class GameLogic {
     }
 
     public void deliverGameResults(Game game) {
-        GameEntity entity = games.getGameWithResults(game.getId());
+        GameEntity entity = games.getGame(game.getId());
 
         List<GameResultEntity> resultEntities = new LinkedList<>(entity.getGameResults());
         List<GameResult> gameResults = new LinkedList<>(game.getResults());

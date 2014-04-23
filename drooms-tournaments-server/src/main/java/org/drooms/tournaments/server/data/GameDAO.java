@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -37,27 +39,19 @@ public class GameDAO {
     }
 
     // CRUD operations
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void insertGame(GameEntity entity) {
         entity.setId(UUID.randomUUID().toString());
 
         em.persist(entity);
+        em.flush();
     }
 
     public GameEntity getGame(String id) {
         return em.find(GameEntity.class, id);
     }
 
-    public GameEntity getGameWithResults(String id) {
-        CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<GameEntity> query = builder.createQuery(GameEntity.class);
-
-        Root<GameEntity> game = query.from(GameEntity.class);
-        game.fetch("gameResults");
-        query.select(game).where(builder.equal(game.get("id"), id));
-
-        return em.createQuery(query).getSingleResult();
-    }
-
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateGame(GameEntity entity) {
         em.merge(entity);
         em.flush();
@@ -67,8 +61,10 @@ public class GameDAO {
         }
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void deleteGame(GameEntity entity) {
-        em.remove(entity);
+        em.remove(getGame(entity.getId()));
+        em.flush();
     }
 
     // queries
@@ -77,8 +73,7 @@ public class GameDAO {
         CriteriaQuery<GameEntity> query = builder.createQuery(GameEntity.class);
 
         Root<GameEntity> game = query.from(GameEntity.class);
-        game.fetch("gameResults");
-        query.select(game);
+        query.select(game).distinct(true);
 
         return em.createQuery(query).getResultList();
     }
@@ -127,7 +122,6 @@ public class GameDAO {
         CriteriaQuery<GameEntity> query = builder.createQuery(GameEntity.class);
 
         Root<GameEntity> game = query.from(GameEntity.class);
-        game.fetch("gameResults");
 
         Predicate newGame = builder.equal(game.get("status"), GameStatus.NEW);
         Predicate inProgress = builder.and(builder.equal(game.get("status"), GameStatus.IN_PROGRESS),
@@ -142,7 +136,6 @@ public class GameDAO {
         CriteriaQuery<GameEntity> query = builder.createQuery(GameEntity.class);
 
         Root<GameEntity> game = query.from(GameEntity.class);
-        game.fetch("gameResults");
 
         Predicate t = builder.equal(game.get("tournament"), tournament);
         Predicate p = builder.equal(game.get("playground"), playground);
