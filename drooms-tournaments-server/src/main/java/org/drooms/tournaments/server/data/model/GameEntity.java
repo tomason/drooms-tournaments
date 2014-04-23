@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -36,7 +37,7 @@ public class GameEntity implements Serializable, Convertible<Game> {
     private PlaygroundEntity playground;
     @ManyToOne(optional = false)
     private TournamentEntity tournament;
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<GameResultEntity> gameResults = new NullForbiddingSet<>();
 
     public String getId() {
@@ -119,7 +120,6 @@ public class GameEntity implements Serializable, Convertible<Game> {
             throw new IllegalArgumentException("Tournament must not be null");
         }
         this.tournament = tournament;
-        tournament.addGame(this);
     }
 
     public Collection<GameResultEntity> getGameResults() {

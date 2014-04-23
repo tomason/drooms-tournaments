@@ -32,7 +32,7 @@ public class StrategyEntity implements Serializable, Convertible<Strategy> {
     @Id
     private String version;
     private boolean active = false;
-    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+    @ManyToOne(optional = false)
     private UserEntity author;
     @OneToMany(mappedBy = "strategy", cascade = CascadeType.ALL)
     private Set<GameResultEntity> gameResults = new NullForbiddingSet<>();
@@ -81,7 +81,6 @@ public class StrategyEntity implements Serializable, Convertible<Strategy> {
             throw new IllegalArgumentException("Author must not be null");
         }
         this.author = author;
-        author.addStrategy(this);
     }
 
     public boolean isActive() {

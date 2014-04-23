@@ -27,9 +27,9 @@ public class TournamentResultEntity implements Serializable, Convertible<Tournam
     @GeneratedValue
     private Long id;
     private Integer position;
-    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+    @ManyToOne(optional = false)
     private UserEntity player;
-    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+    @ManyToOne(optional = false)
     private TournamentEntity tournament;
     @OneToMany(mappedBy = "tournamentResult", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TournamentResultPartialEntity> partialResults = new NullForbiddingSet<>();
@@ -80,7 +80,6 @@ public class TournamentResultEntity implements Serializable, Convertible<Tournam
             throw new IllegalArgumentException("Player must not be null");
         }
         this.player = player;
-        player.addTournamentResult(this);
     }
 
     public TournamentEntity getTournament() {
@@ -95,7 +94,6 @@ public class TournamentResultEntity implements Serializable, Convertible<Tournam
             throw new IllegalArgumentException("Tournament must not be null");
         }
         this.tournament = tournament;
-        tournament.addResult(this);
     }
 
     public Collection<TournamentResultPartialEntity> getPartialResults() {

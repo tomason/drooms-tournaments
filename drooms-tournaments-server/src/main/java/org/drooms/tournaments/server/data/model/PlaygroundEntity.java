@@ -30,13 +30,13 @@ public class PlaygroundEntity implements Serializable, Convertible<Playground> {
     private int maxPlayers;
     @Column(length = 100_000)
     private String source;
-    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+    @ManyToOne(optional = false)
     private UserEntity author;
-    @OneToMany(mappedBy = "playground")
+    @OneToMany(mappedBy = "playground", cascade = CascadeType.ALL)
     private Set<GameEntity> games = new NullForbiddingSet<>();
     @OneToMany(mappedBy = "playground", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<PlaygroundConfigEntity> configurations = new NullForbiddingSet<>();
-    @ManyToMany(mappedBy = "playgrounds")
+    @ManyToMany(mappedBy = "playgrounds", cascade = CascadeType.ALL)
     private Set<TournamentEntity> tournaments = new NullForbiddingSet<>();
 
     public PlaygroundEntity() {
@@ -101,7 +101,6 @@ public class PlaygroundEntity implements Serializable, Convertible<Playground> {
             throw new IllegalArgumentException("Author must not be null");
         }
         this.author = author;
-        author.addPlayground(this);
     }
 
     public Collection<GameEntity> getGames() {

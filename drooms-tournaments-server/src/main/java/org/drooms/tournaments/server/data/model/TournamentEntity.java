@@ -171,7 +171,6 @@ public class TournamentEntity implements Serializable, Convertible<Tournament> {
             throw new IllegalArgumentException("Playground must not be null");
         }
         playgrounds.add(playground);
-        playground.addTournament(this);
     }
 
     @Override

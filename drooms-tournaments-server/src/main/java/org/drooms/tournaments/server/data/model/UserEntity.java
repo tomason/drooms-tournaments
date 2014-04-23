@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -22,11 +23,11 @@ public class UserEntity implements Serializable, Convertible<User> {
     @Id
     private String name;
     private String password;
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private Set<PlaygroundEntity> playgrounds = new NullForbiddingSet<>();
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private Set<StrategyEntity> strategies = new NullForbiddingSet<>();
-    @OneToMany(mappedBy = "player")
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
     private Set<TournamentResultEntity> tournamentResults = new NullForbiddingSet<>();
 
     public UserEntity() {

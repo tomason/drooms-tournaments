@@ -2,7 +2,6 @@ package org.drooms.tournaments.server.data.model;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,9 +21,9 @@ public class GameResultEntity implements Serializable, Comparable<GameResultEnti
     @GeneratedValue
     private Long id;
     private Integer points;
-    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+    @ManyToOne(optional = false)
     private StrategyEntity strategy;
-    @ManyToOne(optional = false, cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+    @ManyToOne(optional = false)
     private GameEntity game;
 
     public GameResultEntity() {
@@ -76,7 +75,6 @@ public class GameResultEntity implements Serializable, Comparable<GameResultEnti
             throw new IllegalArgumentException("Strategy must not be null");
         }
         this.strategy = strategy;
-        strategy.addGameResult(this);
     }
 
     public GameEntity getGame() {
