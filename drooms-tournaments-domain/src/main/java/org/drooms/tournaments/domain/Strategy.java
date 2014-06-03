@@ -1,5 +1,8 @@
 package org.drooms.tournaments.domain;
 
+import org.jboss.errai.common.client.api.annotations.Portable;
+
+@Portable
 public class Strategy implements Comparable<Strategy> {
     private GAV gav;
     private boolean active = false;

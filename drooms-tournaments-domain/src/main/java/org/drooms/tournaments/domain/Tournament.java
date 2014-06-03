@@ -1,9 +1,11 @@
 package org.drooms.tournaments.domain;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.jboss.errai.common.client.api.annotations.Portable;
+
+@Portable
 public class Tournament implements Comparable<Tournament> {
     private String name;
     private Date start;
@@ -11,8 +13,8 @@ public class Tournament implements Comparable<Tournament> {
     private int period;
     private boolean enrolled;
 
-    private Collection<Playground> playgrounds;
-    private Collection<TournamentResult> results;
+    private List<Playground> playgrounds;
+    private List<TournamentResult> results;
 
     public Tournament() {
     }
@@ -57,19 +59,19 @@ public class Tournament implements Comparable<Tournament> {
         this.period = period;
     }
 
-    public Collection<Playground> getPlaygrounds() {
+    public List<Playground> getPlaygrounds() {
         return playgrounds;
     }
 
-    public void setPlaygrounds(Collection<Playground> playgrounds) {
+    public void setPlaygrounds(List<Playground> playgrounds) {
         this.playgrounds = playgrounds;
     }
 
-    public Collection<TournamentResult> getResults() {
+    public List<TournamentResult> getResults() {
         return results;
     }
 
-    public void setResults(Collection<TournamentResult> results) {
+    public void setResults(List<TournamentResult> results) {
         this.results = results;
     }
 

@@ -1,12 +1,15 @@
 package org.drooms.tournaments.domain;
 
-import java.util.Collection;
+import java.util.List;
 
+import org.jboss.errai.common.client.api.annotations.Portable;
+
+@Portable
 public class Game implements Comparable<Game> {
     private String id;
     private Tournament tournament;
     private Playground playground;
-    private Collection<GameResult> results;
+    private List<GameResult> results;
     private boolean finished;
     private String gameLog;
     private String gameReport;
@@ -14,7 +17,7 @@ public class Game implements Comparable<Game> {
     public Game() {
     }
 
-    public Game(String id, Tournament tournament, Playground playground, Collection<GameResult> results, boolean finished) {
+    public Game(String id, Tournament tournament, Playground playground, List<GameResult> results, boolean finished) {
         this.id = id;
         this.tournament = tournament;
         this.playground = playground;
@@ -46,11 +49,11 @@ public class Game implements Comparable<Game> {
         this.playground = playground;
     }
 
-    public Collection<GameResult> getResults() {
+    public List<GameResult> getResults() {
         return this.results;
     }
 
-    public void setResults(Collection<GameResult> results) {
+    public void setResults(List<GameResult> results) {
         this.results = results;
     }
 

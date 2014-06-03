@@ -1,5 +1,8 @@
 package org.drooms.tournaments.domain;
 
+import org.jboss.errai.common.client.api.annotations.Portable;
+
+@Portable
 public class TournamentResult implements Comparable<TournamentResult> {
     private User player;
     private int position;

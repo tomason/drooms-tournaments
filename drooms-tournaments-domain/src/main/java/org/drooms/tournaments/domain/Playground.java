@@ -2,6 +2,9 @@ package org.drooms.tournaments.domain;
 
 import java.util.Map;
 
+import org.jboss.errai.common.client.api.annotations.Portable;
+
+@Portable
 public class Playground implements Comparable<Playground> {
     private String name;
     private String source;

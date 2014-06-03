@@ -1,5 +1,8 @@
 package org.drooms.tournaments.domain;
 
+import org.jboss.errai.common.client.api.annotations.Portable;
+
+@Portable
 public class User implements Comparable<User> {
     private String name;
     private String password;
