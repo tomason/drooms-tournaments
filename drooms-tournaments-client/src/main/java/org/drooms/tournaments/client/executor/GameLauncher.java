@@ -38,7 +38,7 @@ class GameLauncher {
 
     public GameLauncher(org.drooms.tournaments.domain.Game game) {
         this.domainObject = game;
-        setGameContext(game.getPlayground().getConfiguration());
+        setGameContext(getGameProperties(game));
         this.playground = buildPlayground(game.getPlayground().getSource());
         this.players = assemblePlayers(game.getResults());
     }
@@ -121,5 +121,12 @@ class GameLauncher {
         }
     }
 
-    //private
+    private Properties getGameProperties(Game game) {
+        Properties result = new Properties();
+        for (Entry<String, String> entry : game.getPlayground().getConfiguration().entrySet()) {
+            result.setProperty(entry.getKey(), entry.getValue());
+        }
+
+        return result;
+    }
 }

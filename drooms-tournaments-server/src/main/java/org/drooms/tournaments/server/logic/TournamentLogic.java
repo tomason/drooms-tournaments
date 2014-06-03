@@ -1,5 +1,6 @@
 package org.drooms.tournaments.server.logic;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,9 +52,15 @@ public class TournamentLogic {
     public void newTournament(Tournament tournament) {
         TournamentEntity entity = new TournamentEntity();
         entity.setName(tournament.getName());
-        entity.setStart(tournament.getStart());
-        entity.setEnd(tournament.getEnd());
         entity.setPeriod(tournament.getPeriod());
+
+        Calendar start = Calendar.getInstance();
+        start.setTime(tournament.getStart());
+        entity.setStart(start);
+
+        Calendar end = Calendar.getInstance();
+        end.setTime(tournament.getEnd());
+        entity.setEnd(end);
 
         for (Playground playground : tournament.getPlaygrounds()) {
             entity.addPlayground(playgrounds.getPlaygroundWithTournaments(playground.getName()));

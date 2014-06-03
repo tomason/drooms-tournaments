@@ -177,8 +177,8 @@ public class TournamentEntity implements Serializable, Convertible<Tournament> {
     public Tournament convert(int depth) {
         Tournament result = new Tournament();
         result.setName(getName());
-        result.setStart(getStart());
-        result.setEnd(getEnd());
+        result.setStart(getStart().getTime());
+        result.setEnd(getEnd().getTime());
         result.setPeriod(getPeriod());
 
         if (depth > 0) {

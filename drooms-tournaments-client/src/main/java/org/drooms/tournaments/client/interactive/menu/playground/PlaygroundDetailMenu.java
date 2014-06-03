@@ -1,5 +1,7 @@
 package org.drooms.tournaments.client.interactive.menu.playground;
 
+import java.util.Map.Entry;
+
 import org.drooms.tournaments.client.interactive.menu.api.BackReferrenceMenu;
 import org.drooms.tournaments.client.interactive.menu.api.Menu;
 import org.drooms.tournaments.client.interactive.util.OutputDevice;
@@ -32,10 +34,10 @@ class PlaygroundDetailMenu extends BackReferrenceMenu {
         console.printLine("|%s|", singleLine(78));
         console.printLine("| Configuration | %28s | %-29s |", "key", "value");
         console.printLine("|               |%s|", singleLine(62));
-        for (String key : playground.getConfiguration().stringPropertyNames()) {
+        for (Entry<String, String> entry : playground.getConfiguration().entrySet()) {
             console.print("|               |");
-            console.print(" %28s |", trimToSize(key, 28));
-            console.printLine(" %29s |", trimToSize(playground.getConfiguration().getProperty(key), 29));
+            console.print(" %28s |", trimToSize(entry.getKey(), 28));
+            console.printLine(" %29s |", trimToSize(entry.getValue(), 29));
         }
         console.printLine(singleLine());
 

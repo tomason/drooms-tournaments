@@ -1,6 +1,7 @@
 package org.drooms.tournaments.server.logic;
 
 import java.util.Collection;
+import java.util.Map.Entry;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -41,10 +42,10 @@ public class PlaygroundLogic {
         entity.setSource(playground.getSource());
         entity.recountMaxPlayers();
 
-        for (String key : playground.getConfiguration().stringPropertyNames()) {
+        for (Entry<String, String> entry : playground.getConfiguration().entrySet()) {
             PlaygroundConfigEntity config = new PlaygroundConfigEntity();
-            config.setKey(key);
-            config.setValue(playground.getConfiguration().getProperty(key));
+            config.setKey(entry.getKey());
+            config.setValue(entry.getValue());
             entity.addConfiguration(config);
         }
 

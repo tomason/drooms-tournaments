@@ -3,8 +3,9 @@ package org.drooms.tournaments.server.data.model;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Properties;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -181,9 +182,9 @@ public class PlaygroundEntity implements Serializable, Convertible<Playground> {
         result.setMaxPlayers(getMaxPlayers());
 
         // properties are eagerly fetched, no need to use depth
-        Properties config = new Properties();
+        Map<String, String> config = new TreeMap<>();
         for (PlaygroundConfigEntity entity : getConfigurations()) {
-            config.setProperty(entity.getKey(), entity.getValue());
+            config.put(entity.getKey(), entity.getValue());
         }
         result.setConfiguration(config);
 

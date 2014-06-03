@@ -2,8 +2,8 @@ package org.drooms.tournaments.client.interactive.menu.playground;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.drooms.tournaments.client.interactive.menu.Choice;
 import org.drooms.tournaments.client.interactive.menu.api.BackReferrenceMenu;
@@ -20,9 +20,9 @@ class ConfigurePlaygroundMenu extends BackReferrenceMenu {
         super(console, client, previous);
         this.playground = playground;
         if (playground.getConfiguration() == null) {
-            playground.setConfiguration(new Properties());
+            playground.setConfiguration(new TreeMap<String, String>());
         }
-        keys.addAll(playground.getConfiguration().stringPropertyNames());
+        keys.addAll(playground.getConfiguration().keySet());
     }
 
     @Override
@@ -46,7 +46,7 @@ class ConfigurePlaygroundMenu extends BackReferrenceMenu {
         for (String key : keys) {
             console.print("|%3s", i++);
             console.print("|%35s ", key);
-            console.printLine("| %-36s|", playground.getConfiguration().getProperty(key));
+            console.printLine("| %-36s|", playground.getConfiguration().get(key));
         }
         console.printLine(singleLine());
     }
@@ -99,7 +99,7 @@ class ConfigurePlaygroundMenu extends BackReferrenceMenu {
     }
 
     private void setProperty(String key, String value) {
-        playground.getConfiguration().setProperty(key, value);
+        playground.getConfiguration().put(key, value);
         if (!keys.contains(key)) {
             keys.add(key);
         }
@@ -107,7 +107,7 @@ class ConfigurePlaygroundMenu extends BackReferrenceMenu {
 
     private void createCollectible() {
         String collectibleName = console.readLine("Collectible id: ");
-        String collectibles = playground.getConfiguration().getProperty("collectibles");
+        String collectibles = playground.getConfiguration().get("collectibles");
         if (collectibles == null) {
             setProperty("collectibles", collectibleName);
         } else {

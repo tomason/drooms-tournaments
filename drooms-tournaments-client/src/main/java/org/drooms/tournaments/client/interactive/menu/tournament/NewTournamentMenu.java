@@ -3,7 +3,7 @@ package org.drooms.tournaments.client.interactive.menu.tournament;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 
 import org.drooms.tournaments.client.interactive.menu.Choice;
 import org.drooms.tournaments.client.interactive.menu.api.FormMenu;
@@ -35,12 +35,11 @@ class NewTournamentMenu extends FormMenu {
     protected Menu execute(Choice choice) {
         tournament.setName(console.readLine("Name: "));
 
-        Calendar start = Calendar.getInstance();
-        start.clear();
-        while(true) {
+        Date start;
+        while (true) {
             String startLine = console.readLine("Start date (yyyy-MM-dd): ");
             try {
-                start.setTime(FORMAT.parse(startLine));
+                start = FORMAT.parse(startLine);
                 break;
             } catch (ParseException ex) {
                 console.print("Wrong input (%s) use yyyy-MM-dd format.%n", startLine);
@@ -48,12 +47,11 @@ class NewTournamentMenu extends FormMenu {
         }
         tournament.setStart(start);
 
-        Calendar end = Calendar.getInstance();
-        end.clear();
+        Date end;
         while (true) {
             String endLine = console.readLine("End date (yyyy-MM-dd): ");
             try {
-                end.setTime(FORMAT.parse(endLine));
+                end = FORMAT.parse(endLine);
                 break;
             } catch (ParseException ex) {
                 console.print("Wrong input (%s) use yyyy-MM-dd format.%n", endLine);
