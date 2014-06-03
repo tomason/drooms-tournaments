@@ -1,18 +1,12 @@
 package org.drooms.tournaments.domain;
 
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 public class Playground implements Comparable<Playground> {
-    // Keep these two in sync
-    private static final Pattern TO_STRING_PATTERN = Pattern.compile("Playground\\[name='(.+)', maxPlayers='(\\d+)']");
-    private static final String TO_STRING_FORMAT = "Playground[name='%s', maxPlayers='%s']";
-
     private String name;
     private String source;
     private int maxPlayers;
-    private Properties configuration;
+    private Map<String, String> configuration;
 
     public Playground() {
     }
@@ -22,7 +16,7 @@ public class Playground implements Comparable<Playground> {
         this.source = source;
     }
 
-    public Playground(String name, String source, int maxPlayers, Properties configuration) {
+    public Playground(String name, String source, int maxPlayers, Map<String, String> configuration) {
         this.name = name;
         this.source = source;
         this.maxPlayers = maxPlayers;
@@ -53,24 +47,12 @@ public class Playground implements Comparable<Playground> {
         this.maxPlayers = maxPlayers;
     }
 
-    public Properties getConfiguration() {
+    public Map<String, String> getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(Properties configuration) {
+    public void setConfiguration(Map<String, String> configuration) {
         this.configuration = configuration;
-    }
-
-    public static Playground fromString(String playground) {
-        Playground result = new Playground();
-
-        Matcher m = TO_STRING_PATTERN.matcher(playground);
-        m.matches();
-
-        result.name = m.group(1);
-        result.maxPlayers = Integer.valueOf(m.group(2));
-
-        return result;
     }
 
     @Override
@@ -83,6 +65,7 @@ public class Playground implements Comparable<Playground> {
 
     @Override
     public String toString() {
-        return String.format(TO_STRING_FORMAT, name, maxPlayers);
+        return new StringBuilder("Playground[name='").append(name).append("', maxPlayers='").append(maxPlayers).append("']")
+                .toString();
     }
 }

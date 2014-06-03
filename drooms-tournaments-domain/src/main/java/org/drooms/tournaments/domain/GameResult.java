@@ -11,6 +11,7 @@ public class GameResult implements Comparable<GameResult> {
         this.strategy = strategy;
         this.points = points;
     }
+
     public Strategy getStrategy() {
         return this.strategy;
     }
@@ -34,6 +35,7 @@ public class GameResult implements Comparable<GameResult> {
 
     @Override
     public String toString() {
-        return String.format("GameResult[strategy='%s', points='%s']", strategy, points);
+        return new StringBuilder("GameResult[strategy='").append(strategy).append("', points='").append(points).append("']")
+                .toString();
     }
 }

@@ -1,20 +1,13 @@
 package org.drooms.tournaments.domain;
 
-import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Tournament implements Comparable<Tournament> {
-    // Keep these two in sync
-    private static final Pattern TO_STRING_PATTERN = Pattern
-            .compile("Tournament\\[name='(.+)', start='(\\d+)', end='(\\d+)', period='(\\d+)'\\]");
-    private static final String TO_STRING_FORMAT = "Tournament[name='%s', start='%s', end='%s', period='%s']";
-
     private String name;
-    private Calendar start;
-    private Calendar end;
+    private Date start;
+    private Date end;
     private int period;
     private boolean enrolled;
 
@@ -24,7 +17,7 @@ public class Tournament implements Comparable<Tournament> {
     public Tournament() {
     }
 
-    public Tournament(String name, Calendar start, Calendar end, int period, List<Playground> playgrounds) {
+    public Tournament(String name, Date start, Date end, int period, List<Playground> playgrounds) {
         this.name = name;
         this.start = start;
         this.end = end;
@@ -40,19 +33,19 @@ public class Tournament implements Comparable<Tournament> {
         this.name = name;
     }
 
-    public Calendar getStart() {
+    public Date getStart() {
         return start;
     }
 
-    public void setStart(Calendar start) {
+    public void setStart(Date start) {
         this.start = start;
     }
 
-    public Calendar getEnd() {
+    public Date getEnd() {
         return end;
     }
 
-    public void setEnd(Calendar end) {
+    public void setEnd(Date end) {
         this.end = end;
     }
 
@@ -88,24 +81,6 @@ public class Tournament implements Comparable<Tournament> {
         this.enrolled = enrolled;
     }
 
-    public static Tournament fromString(String tournament) {
-        Matcher m = TO_STRING_PATTERN.matcher(tournament);
-        m.matches();
-
-        Tournament result = new Tournament();
-        result.name = m.group(1);
-
-        result.start = Calendar.getInstance();
-        result.start.setTimeInMillis(Long.valueOf(m.group(2)));
-
-        result.end = Calendar.getInstance();
-        result.end.setTimeInMillis(Long.valueOf(m.group(3)));
-
-        result.period = Integer.valueOf(m.group(4));
-
-        return result;
-    }
-
     @Override
     public int compareTo(Tournament o) {
         if (name == null || o.name == null) {
@@ -117,6 +92,7 @@ public class Tournament implements Comparable<Tournament> {
 
     @Override
     public String toString() {
-        return String.format(TO_STRING_FORMAT, name, start.getTimeInMillis(), end.getTimeInMillis(), period);
+        return new StringBuilder("Tournament[name='").append(name).append("', start='").append(start).append("', end='")
+                .append(end).append("', period='").append(period).append("']").toString();
     }
 }

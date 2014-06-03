@@ -24,4 +24,10 @@ public class TournamentResult implements Comparable<TournamentResult> {
     public int compareTo(TournamentResult o) {
         return position - o.position;
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("TournamentResult[player='").append(player).append("', position='").append(position)
+                .append("']").toString();
+    }
 }

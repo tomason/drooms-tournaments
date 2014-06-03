@@ -70,7 +70,7 @@ public class GAV implements Serializable, Comparable<GAV> {
 
     @Override
     public String toString() {
-        return String.format("%s:%s:%s", groupId, artifactId, version);
+        return new StringBuilder().append(groupId).append(':').append(artifactId).append(':').append(version).toString();
     }
 
     @Override

@@ -1,13 +1,6 @@
 package org.drooms.tournaments.domain;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class User implements Comparable<User>{
-    // Keep these two in sync
-    private static final String TO_STRING_FORMAT = "User[name='%s']";
-    private static final Pattern TO_STRING_PATTERN = Pattern.compile("User\\[name='(.+)'\\]");
-
+public class User implements Comparable<User> {
     private String name;
     private String password;
 
@@ -39,17 +32,6 @@ public class User implements Comparable<User>{
         this.password = password;
     }
 
-    public static User fromString(String user) {
-        User result = new User();
-
-        Matcher m = TO_STRING_PATTERN.matcher(user);
-        m.matches();
-
-        result.name = m.group(1);
-
-        return result;
-    }
-
     @Override
     public int compareTo(User o) {
         if (name == null || o.name == null) {
@@ -61,6 +43,6 @@ public class User implements Comparable<User>{
 
     @Override
     public String toString() {
-        return String.format(TO_STRING_FORMAT, name);
+        return new StringBuilder("User[name='").append(name).append("']").toString();
     }
 }

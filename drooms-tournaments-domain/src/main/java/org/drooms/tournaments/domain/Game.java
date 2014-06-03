@@ -88,7 +88,8 @@ public class Game implements Comparable<Game> {
 
     @Override
     public String toString() {
-        return String.format("Game[id='%s', tournament='%s', playground='%s', finished='%s', results='%s']", id, tournament,
-                playground, finished, results);
+        return new StringBuilder("Game[id='").append(id).append("', tournament='").append(tournament).append("', playground='")
+                .append(playground).append("', finished='").append(finished).append("', results='").append(results)
+                .append("']").toString();
     }
 }

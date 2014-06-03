@@ -1,13 +1,6 @@
 package org.drooms.tournaments.domain;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class Strategy implements Comparable<Strategy> {
-    // Keep these two in sync
-    private static final Pattern TO_STRING_PATTERN = Pattern.compile("Strategy\\[gav='(.+)', active='(.+)'\\]");
-    private static final String TO_STRING_FORMAT = "Strategy[gav='%s', active='%s']";
-
     private GAV gav;
     private boolean active = false;
     private User player;
@@ -48,18 +41,6 @@ public class Strategy implements Comparable<Strategy> {
         this.player = player;
     }
 
-    public static Strategy fromString(String strategy) {
-        Strategy result = new Strategy();
-
-        Matcher m = TO_STRING_PATTERN.matcher(strategy);
-        m.matches();
-
-        result.gav = GAV.fromString(m.group(1));
-        result.active = Boolean.valueOf(m.group(2));
-
-        return result;
-    }
-
     @Override
     public int compareTo(Strategy o) {
         if (gav == null || o.gav == null) {
@@ -70,6 +51,6 @@ public class Strategy implements Comparable<Strategy> {
 
     @Override
     public String toString() {
-        return String.format(TO_STRING_FORMAT, gav, active);
+        return new StringBuilder("Strategy[gav='").append(gav).append("', active='").append(active).append("']").toString();
     }
 }
