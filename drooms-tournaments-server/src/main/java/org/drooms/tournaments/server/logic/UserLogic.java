@@ -1,13 +1,26 @@
 package org.drooms.tournaments.server.logic;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.drooms.tournaments.domain.User;
 import org.drooms.tournaments.server.data.UserDAO;
 import org.drooms.tournaments.server.data.model.UserEntity;
 
+@ApplicationScoped
 public class UserLogic {
     private UserDAO users;
+
+    public UserLogic() {
+        this(null);
+    }
+
+    @Inject
+    public UserLogic(UserDAO users) {
+        this.users = users;
+    }
 
     public void registerUser(User user) {
         UserEntity entity = new UserEntity();

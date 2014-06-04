@@ -2,7 +2,7 @@ package org.drooms.tournaments.server.logic;
 
 import java.util.Collection;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.drooms.tournaments.domain.Strategy;
@@ -12,7 +12,7 @@ import org.drooms.tournaments.server.data.model.StrategyEntity;
 import org.drooms.tournaments.server.data.model.UserEntity;
 import org.drooms.tournaments.server.util.Converter;
 
-@RequestScoped
+@ApplicationScoped
 public class StrategyLogic {
     private UserDAO users;
     private StrategyDAO strategies;

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.event.TransactionPhase;
 import javax.inject.Inject;
@@ -30,6 +31,7 @@ import org.drooms.tournaments.server.logic.task.GameResultUpdateTask;
 import org.drooms.tournaments.server.logic.task.TournamentResultUpdateTask;
 import org.drooms.tournaments.server.util.Converter;
 
+@ApplicationScoped
 public class TournamentLogic {
     private TournamentDAO tournaments;
     private PlaygroundDAO playgrounds;

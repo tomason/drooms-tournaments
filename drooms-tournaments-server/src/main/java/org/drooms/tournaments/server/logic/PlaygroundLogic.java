@@ -3,7 +3,7 @@ package org.drooms.tournaments.server.logic;
 import java.util.Collection;
 import java.util.Map.Entry;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.drooms.tournaments.domain.Playground;
@@ -13,7 +13,7 @@ import org.drooms.tournaments.server.data.model.PlaygroundConfigEntity;
 import org.drooms.tournaments.server.data.model.PlaygroundEntity;
 import org.drooms.tournaments.server.util.Converter;
 
-@RequestScoped
+@ApplicationScoped
 public class PlaygroundLogic {
     private UserDAO users;
     private PlaygroundDAO playgrounds;
