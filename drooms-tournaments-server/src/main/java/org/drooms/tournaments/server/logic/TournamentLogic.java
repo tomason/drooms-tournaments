@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import org.drooms.tournaments.domain.Playground;
 import org.drooms.tournaments.domain.Tournament;
 import org.drooms.tournaments.server.data.GameDAO;
+import org.drooms.tournaments.server.data.GameResultDAO;
 import org.drooms.tournaments.server.data.PlaygroundDAO;
 import org.drooms.tournaments.server.data.StrategyDAO;
 import org.drooms.tournaments.server.data.TournamentDAO;
@@ -33,8 +34,10 @@ import org.drooms.tournaments.server.util.Converter;
 
 @ApplicationScoped
 public class TournamentLogic {
+    private TournamentResultDAO tournamentResults;
     private TournamentDAO tournaments;
     private PlaygroundDAO playgrounds;
+    private GameResultDAO gameResults;
     private StrategyDAO strategies;
     private GameDAO games;
     private UserDAO users;
@@ -43,12 +46,15 @@ public class TournamentLogic {
     }
 
     @Inject
-    public TournamentLogic(UserDAO users, GameDAO games, StrategyDAO strategies, PlaygroundDAO playgrounds, TournamentDAO tournaments) {
+    public TournamentLogic(UserDAO users, GameDAO games, GameResultDAO gameResults, StrategyDAO strategies,
+            PlaygroundDAO playgrounds, TournamentDAO tournaments, TournamentResultDAO tournamentResults) {
         this.users = users;
         this.games = games;
         this.strategies = strategies;
+        this.gameResults = gameResults;
         this.playgrounds = playgrounds;
         this.tournaments = tournaments;
+        this.tournamentResults = tournamentResults;
     }
 
     public void newTournament(Tournament tournament) {
@@ -109,7 +115,7 @@ public class TournamentLogic {
         result.setPlayer(user);
         result.setTournament(entity);
 
-        tournaments.updateTournament(entity);
+        tournamentResults.insertTournamentResult(result);
     }
 
     List<TournamentEntity> getUnfinishedTournaments() {
@@ -129,6 +135,7 @@ public class TournamentLogic {
                 GameResultEntity resultEntity = new GameResultEntity();
                 resultEntity.setGame(gameEntity);
                 resultEntity.setStrategy(strategyEntity);
+                gameResults.insertGameResult(resultEntity);
             }
         }
 
