@@ -3,8 +3,10 @@ package org.drooms.tournaments.domain;
 import java.io.Serializable;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.jboss.errai.databinding.client.api.Bindable;
 
 @Portable
+@Bindable
 public class GAV implements Serializable, Comparable<GAV> {
     private static final long serialVersionUID = 1L;
 

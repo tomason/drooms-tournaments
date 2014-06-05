@@ -3,8 +3,10 @@ package org.drooms.tournaments.domain;
 import java.util.List;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.jboss.errai.databinding.client.api.Bindable;
 
 @Portable
+@Bindable
 public class Game implements Comparable<Game> {
     private String id;
     private Tournament tournament;
