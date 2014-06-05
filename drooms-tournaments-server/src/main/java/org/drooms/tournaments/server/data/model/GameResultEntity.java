@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -22,6 +24,9 @@ public class GameResultEntity implements Serializable, Comparable<GameResultEnti
     private Long id;
     private Integer points;
     @ManyToOne(optional = false)
+    @JoinColumns({ @JoinColumn(name = "STRATEGY_GROUPID", referencedColumnName = "GROUPID"),
+            @JoinColumn(name = "STRATEGY_ARTIFACTID", referencedColumnName = "ARTIFACTID"),
+            @JoinColumn(name = "STRATEGY_VERSION", referencedColumnName = "VERSION") })
     private StrategyEntity strategy;
     @ManyToOne(optional = false)
     private GameEntity game;

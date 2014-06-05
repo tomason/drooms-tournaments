@@ -1,23 +1,17 @@
 package org.drooms.tournaments.server.data.model;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.drooms.tournaments.domain.GAV;
 import org.drooms.tournaments.domain.Strategy;
 import org.drooms.tournaments.server.util.Converter;
 import org.drooms.tournaments.server.util.Convertible;
-import org.drooms.tournaments.server.util.NullForbiddingSet;
 
 @Entity
 @IdClass(GAV.class)
@@ -34,8 +28,6 @@ public class StrategyEntity implements Serializable, Convertible<Strategy> {
     private boolean active = false;
     @ManyToOne(optional = false)
     private UserEntity author;
-    @OneToMany(mappedBy = "strategy", cascade = CascadeType.ALL)
-    private Set<GameResultEntity> gameResults = new NullForbiddingSet<>();
 
     public StrategyEntity() {
     }
@@ -81,6 +73,7 @@ public class StrategyEntity implements Serializable, Convertible<Strategy> {
             throw new IllegalArgumentException("Author must not be null");
         }
         this.author = author;
+        author.addStrategy(this);
     }
 
     public boolean isActive() {
@@ -89,25 +82,6 @@ public class StrategyEntity implements Serializable, Convertible<Strategy> {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public Collection<GameResultEntity> getGameResults() {
-        return Collections.unmodifiableCollection(gameResults);
-    }
-
-    public void setGameResults(Collection<GameResultEntity> gameResults) {
-        if (gameResults == null) {
-            throw new IllegalArgumentException("GameResults must not be null");
-        }
-        this.gameResults.clear();
-        this.gameResults.addAll(gameResults);
-    }
-
-    public void addGameResult(GameResultEntity gameResult) {
-        if (gameResult == null) {
-            throw new IllegalArgumentException("GameResult must not be null");
-        }
-        gameResults.add(gameResult);
     }
 
     @Override

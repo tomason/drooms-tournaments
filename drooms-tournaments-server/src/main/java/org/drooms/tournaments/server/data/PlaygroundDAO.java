@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
 import org.drooms.tournaments.server.data.model.PlaygroundEntity;
@@ -34,17 +33,6 @@ public class PlaygroundDAO {
 
     public PlaygroundEntity getPlayground(String name) {
         return em.find(PlaygroundEntity.class, name);
-    }
-
-    public PlaygroundEntity getPlaygroundWithTournaments(String name) {
-        CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<PlaygroundEntity> query = builder.createQuery(PlaygroundEntity.class);
-
-        Root<PlaygroundEntity> playground = query.from(PlaygroundEntity.class);
-        playground.fetch("tournaments", JoinType.LEFT);
-        query.select(playground).where(builder.equal(playground.get("name"), name));
-
-        return em.createQuery(query).getSingleResult();
     }
 
     public void updatePlayground(PlaygroundEntity entity) {

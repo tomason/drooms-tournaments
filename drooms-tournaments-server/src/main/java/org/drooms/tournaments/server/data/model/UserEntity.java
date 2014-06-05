@@ -24,8 +24,6 @@ public class UserEntity implements Serializable, Convertible<User> {
     private String name;
     private String password;
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    private Set<PlaygroundEntity> playgrounds = new NullForbiddingSet<>();
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private Set<StrategyEntity> strategies = new NullForbiddingSet<>();
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
     private Set<TournamentResultEntity> tournamentResults = new NullForbiddingSet<>();
@@ -65,28 +63,6 @@ public class UserEntity implements Serializable, Convertible<User> {
             throw new IllegalArgumentException("Password must not be null");
         }
         this.password = password;
-    }
-
-    public Collection<PlaygroundEntity> getPlaygrounds() {
-        return Collections.unmodifiableCollection(playgrounds);
-    }
-
-    public void setPlaygrounds(Collection<PlaygroundEntity> playgrounds) {
-        if (playgrounds == null) {
-            throw new IllegalArgumentException("Playgrounds must not be null");
-        }
-        this.playgrounds.clear();
-        this.playgrounds.addAll(playgrounds);
-    }
-
-    public void addPlayground(PlaygroundEntity playground) {
-        if (playground == null) {
-            throw new IllegalArgumentException("Playground must not be null");
-        }
-        if (!equals(playground.getAuthor())) {
-            throw new IllegalArgumentException("Playground must not be assigned to another User");
-        }
-        playgrounds.add(playground);
     }
 
     public Collection<StrategyEntity> getStrategies() {

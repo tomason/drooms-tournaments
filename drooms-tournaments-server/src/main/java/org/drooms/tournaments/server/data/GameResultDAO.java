@@ -31,6 +31,7 @@ public class GameResultDAO {
     // CRUD operations
     public void insertGameResult(GameResultEntity entity) {
         em.persist(entity);
+        em.flush();
     }
 
     public GameResultEntity getGameResult(Long id) {
@@ -39,10 +40,12 @@ public class GameResultDAO {
 
     public void updateGameResult(GameResultEntity entity) {
         em.merge(entity);
+        em.flush();
     }
 
     public void deleteGameResult(GameResultEntity entity) {
         em.remove(entity);
+        em.flush();
     }
 
     // queries
@@ -51,16 +54,6 @@ public class GameResultDAO {
         CriteriaQuery<GameResultEntity> query = builder.createQuery(GameResultEntity.class);
 
         query.select(query.from(GameResultEntity.class));
-
-        return em.createQuery(query).getResultList();
-    }
-
-    public List<GameResultEntity> getGameResults(GameEntity game) {
-        CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<GameResultEntity> query = builder.createQuery(GameResultEntity.class);
-
-        Root<GameResultEntity> gameResult = query.from(GameResultEntity.class);
-        query.select(gameResult).where(builder.equal(gameResult.get("game"), game));
 
         return em.createQuery(query).getResultList();
     }

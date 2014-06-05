@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -34,8 +35,10 @@ public class GameEntity implements Serializable, Convertible<Game> {
     private Calendar lastModified;
     private String artifactPath;
     @ManyToOne(optional = false)
+    @JoinColumn(name = "PLAYGROUND_NAME")
     private PlaygroundEntity playground;
     @ManyToOne(optional = false)
+    @JoinColumn(name = "TOURNAMENT_NAME")
     private TournamentEntity tournament;
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<GameResultEntity> gameResults = new NullForbiddingSet<>();

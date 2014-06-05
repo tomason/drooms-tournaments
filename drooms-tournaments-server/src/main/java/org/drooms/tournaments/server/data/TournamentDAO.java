@@ -37,6 +37,7 @@ public class TournamentDAO {
         em.persist(entity);
 
         newTournament.fire(new NewTournamentEvent(entity));
+        em.flush();
     }
 
     public TournamentEntity getTournament(String name) {
@@ -77,24 +78,14 @@ public class TournamentDAO {
         return em.createQuery(query).getSingleResult();
     }
 
-    public TournamentEntity getTournamentWithPlaygroundsAndGames(String name) {
-        CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<TournamentEntity> query = builder.createQuery(TournamentEntity.class);
-
-        Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
-        tournament.fetch("playgrounds", JoinType.LEFT);
-        tournament.fetch("games", JoinType.LEFT);
-        query.select(tournament).distinct(true).where(builder.equal(tournament.get("name"), name));
-
-        return em.createQuery(query).getSingleResult();
-    }
-
     public void updateTournament(TournamentEntity entity) {
         em.merge(entity);
+        em.flush();
     }
 
     public void deleteTournament(TournamentEntity entity) {
         em.remove(entity);
+        em.flush();
     }
 
     // queries
@@ -138,7 +129,6 @@ public class TournamentDAO {
 
         Root<TournamentEntity> tournament = query.from(TournamentEntity.class);
         tournament.fetch("playgrounds");
-        tournament.fetch("games", JoinType.LEFT);
         query.select(tournament).distinct(true).where(builder.greaterThan(tournament.<Date> get("end"), builder.currentDate()));
 
         return em.createQuery(query).getResultList();

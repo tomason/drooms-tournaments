@@ -65,7 +65,7 @@ public class TournamentLogic {
         entity.setEnd(end);
 
         for (Playground playground : tournament.getPlaygrounds()) {
-            entity.addPlayground(playgrounds.getPlaygroundWithTournaments(playground.getName()));
+            entity.addPlayground(playgrounds.getPlayground(playground.getName()));
         }
 
         tournaments.insertTournament(entity);

@@ -32,8 +32,6 @@ public class TournamentEntity implements Serializable, Convertible<Tournament> {
     private Calendar end;
     private int period = 24;
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
-    private Set<GameEntity> games = new NullForbiddingSet<>();
-    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
     private Set<TournamentResultEntity> results = new NullForbiddingSet<>();
     @ManyToMany
     private Set<PlaygroundEntity> playgrounds = new NullForbiddingSet<>();
@@ -108,28 +106,6 @@ public class TournamentEntity implements Serializable, Convertible<Tournament> {
             throw new IllegalArgumentException("Period must be greater than zero");
         }
         this.period = period;
-    }
-
-    public Collection<GameEntity> getGames() {
-        return Collections.unmodifiableCollection(games);
-    }
-
-    public void setGames(Collection<GameEntity> games) {
-        if (games == null) {
-            throw new IllegalArgumentException("Games must not be null");
-        }
-        this.games.clear();
-        this.games.addAll(games);
-    }
-
-    public void addGame(GameEntity game) {
-        if (game == null) {
-            throw new IllegalArgumentException("Game must not be null");
-        }
-        if (!equals(game.getTournament())) {
-            throw new IllegalArgumentException("Game is already assigned to another tournament");
-        }
-        games.add(game);
     }
 
     public Collection<TournamentResultEntity> getResults() {

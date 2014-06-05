@@ -12,7 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -32,13 +32,11 @@ public class PlaygroundEntity implements Serializable, Convertible<Playground> {
     @Column(length = 100_000)
     private String source;
     @ManyToOne(optional = false)
+    @JoinColumn(name = "AUTHOR_NAME")
     private UserEntity author;
-    @OneToMany(mappedBy = "playground", cascade = CascadeType.ALL)
-    private Set<GameEntity> games = new NullForbiddingSet<>();
-    @OneToMany(mappedBy = "playground", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "PLAYGROUND_NAME", nullable = false)
     private Set<PlaygroundConfigEntity> configurations = new NullForbiddingSet<>();
-    @ManyToMany(mappedBy = "playgrounds", cascade = CascadeType.ALL)
-    private Set<TournamentEntity> tournaments = new NullForbiddingSet<>();
 
     public PlaygroundEntity() {
     }
@@ -104,28 +102,6 @@ public class PlaygroundEntity implements Serializable, Convertible<Playground> {
         this.author = author;
     }
 
-    public Collection<GameEntity> getGames() {
-        return Collections.unmodifiableCollection(games);
-    }
-
-    public void setGames(Collection<GameEntity> games) {
-        if (games == null) {
-            throw new IllegalArgumentException("Games must not be null");
-        }
-        this.games.clear();
-        this.games.addAll(games);
-    }
-
-    public void addGame(GameEntity game) {
-        if (game == null) {
-            throw new IllegalArgumentException("Game must not be null");
-        }
-        if (!equals(game.getPlayground())) {
-            throw new IllegalArgumentException("Game must not be assigned to another Playground");
-        }
-        games.add(game);
-    }
-
     public Collection<PlaygroundConfigEntity> getConfigurations() {
         return Collections.unmodifiableCollection(configurations);
     }
@@ -150,28 +126,6 @@ public class PlaygroundEntity implements Serializable, Convertible<Playground> {
             throw new IllegalArgumentException("Configuration must not be null");
         }
         configurations.remove(configuration);
-    }
-
-    public Collection<TournamentEntity> getTournaments() {
-        return Collections.unmodifiableCollection(tournaments);
-    }
-
-    public void setTournaments(Collection<TournamentEntity> tournaments) {
-        if (tournaments == null) {
-            throw new IllegalArgumentException("Tournaments must not be null");
-        }
-        this.tournaments.clear();
-        this.tournaments.addAll(tournaments);
-    }
-
-    public void addTournament(TournamentEntity tournament) {
-        if (tournament == null) {
-            throw new IllegalArgumentException("Tournament must not be null");
-        }
-        if (!tournament.getPlaygrounds().contains(this)) {
-            throw new IllegalArgumentException("This playground is not registered in Tournament");
-        }
-        tournaments.add(tournament);
     }
 
     @Override

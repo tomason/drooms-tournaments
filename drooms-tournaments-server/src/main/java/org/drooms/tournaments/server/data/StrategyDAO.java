@@ -11,7 +11,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
 import org.drooms.tournaments.domain.GAV;
@@ -104,7 +103,6 @@ public class StrategyDAO {
         CriteriaQuery<StrategyEntity> query = builder.createQuery(StrategyEntity.class);
 
         Root<StrategyEntity> strategy = query.from(StrategyEntity.class);
-        strategy.fetch("gameResults", JoinType.LEFT);
         Join<StrategyEntity, TournamentResultEntity> join = strategy.<StrategyEntity, UserEntity> join("author").join(
                 "tournamentResults");
 

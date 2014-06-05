@@ -33,6 +33,7 @@ public class TournamentResultDAO {
     // CRUD operations
     public void insertTournamentResult(TournamentResultEntity entity) {
         em.persist(entity);
+        em.flush();
     }
 
     public TournamentResultEntity getTournamentResult(Long id) {
@@ -41,6 +42,7 @@ public class TournamentResultDAO {
 
     public void updateTournamentResult(TournamentResultEntity entity) {
         em.merge(entity);
+        em.flush();
     }
 
     public void updateTournamentresults(Collection<TournamentResultEntity> entities) {
