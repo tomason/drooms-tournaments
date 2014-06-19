@@ -11,8 +11,6 @@
 
   <modules>
     <module>drooms-tournaments-domain</module>
-    <module>drooms-tournaments-server</module>
-    <module>drooms-tournaments-client</module>
   </modules>
 
   <properties>
@@ -163,4 +161,29 @@
       <url>http://nexus-drooms.rhcloud.com/nexus/content/repositories/snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
+
+  <profiles>
+    <profile>
+      <id>all-modules</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>drooms-tournaments-server</module>
+        <module>drooms-tournaments-client</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>client</id>
+      <modules>
+        <module>drooms-tournaments-client</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>openshift</id>
+      <modules>
+        <module>drooms-tournaments-server</module>
+      </modules>
+    </profile>
+  </profiles>
 </project>
