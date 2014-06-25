@@ -34,6 +34,11 @@ public class PlaygroundServiceImpl implements PlaygroundService {
     }
 
     @Override
+    public Playground getPlayground(String name) {
+        return logic.getPlayground(name);
+    }
+
+    @Override
     public Collection<Playground> getUserPlaygrounds() {
         return logic.getUserPlaygrounds(security.getUserPrincipal().getName());
     }

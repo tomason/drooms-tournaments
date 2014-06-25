@@ -31,6 +31,10 @@ public class PlaygroundLogic {
         return getConverter().convert(playgrounds.getPlaygrounds());
     }
 
+    public Playground getPlayground(String name) {
+        return playgrounds.getPlayground(name).convert(0);
+    }
+
     public Collection<Playground> getUserPlaygrounds(String userName) {
         return getConverter().convert(playgrounds.getPlaygrounds(users.getUser(userName)));
     }
