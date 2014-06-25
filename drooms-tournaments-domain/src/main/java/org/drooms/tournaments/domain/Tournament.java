@@ -4,9 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.jboss.errai.databinding.client.api.Bindable;
 
-@Bindable
 @Portable
 public class Tournament implements Comparable<Tournament> {
     private String name;

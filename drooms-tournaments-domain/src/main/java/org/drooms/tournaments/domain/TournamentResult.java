@@ -1,9 +1,7 @@
 package org.drooms.tournaments.domain;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.jboss.errai.databinding.client.api.Bindable;
 
-@Bindable
 @Portable
 public class TournamentResult implements Comparable<TournamentResult> {
     private User player;
@@ -27,12 +25,7 @@ public class TournamentResult implements Comparable<TournamentResult> {
 
     @Override
     public int compareTo(TournamentResult o) {
-        int result = position - o.position;
-        if (result == 0) {
-            result = player.getName().compareTo(o.player.getName());
-        }
-
-        return result;
+        return position - o.position;
     }
 
     @Override

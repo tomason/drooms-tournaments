@@ -1,10 +1,8 @@
 package org.drooms.tournaments.domain;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.jboss.errai.databinding.client.api.Bindable;
 
 @Portable
-@Bindable
 public class GameResult implements Comparable<GameResult> {
     private Strategy strategy;
     private int points;
