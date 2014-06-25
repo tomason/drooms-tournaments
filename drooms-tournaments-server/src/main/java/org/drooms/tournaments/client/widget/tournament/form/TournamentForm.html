@@ -1,0 +1,66 @@
+<div>
+  <div data-field="error"></div>
+  <table>
+    <tr>
+      <td><label for="name">Tournament name:</label></td>
+      <td><input data-field="name" id="name" /></td>
+    </tr>
+    <tr>
+      <td><label for="start">Tournment start:</label></td>
+      <td><input data-field="start" id="start" /></td>
+    </tr>
+    <tr>
+      <td><label for="end">Tournment end:</label></td>
+      <td><input data-field="end" id="end" /></td>
+    </tr>
+    <tr>
+      <td><label for="period">Tournment period:</label></td>
+      <td><div data-field="period" id="period" style="position: relative;"></div></td>
+    </tr>
+    <tr>
+      <td><label for="playgrounds">Playgrounds:</label></td>
+      <td>
+        <table data-field="playgrounds" id="playgrounds">
+          <tbody>
+            <tr>
+              <td>boxes</td>
+            </tr>
+            <tr>
+              <td>test playground</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="float: right;">
+          <button data-field="editPlaygrounds">Edit playgrounds</button>
+        </div>
+      </td>
+    </tr>
+    <tr data-field="playersRow">
+      <td><label for="results">Results:</label></td>
+      <td>
+        <table data-field="results" id="results">
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Player</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>tschloss</td>
+            </tr>
+          </tbody>
+        </table>
+        <div  style="float: right;">
+          <button data-field="join">Join</button>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div style="float: right;">
+    <button data-field="refresh">Refresh</button>
+    <button data-field="create">Create</button>
+  </div>
+</div>

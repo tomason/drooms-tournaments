@@ -1,0 +1,51 @@
+<div>
+  <table>
+    <tr>
+      <td><label for="username">Name:</label></td>
+      <td><input data-field="username" id="username"></td>
+    </tr>
+    <tr data-field="passwordRow">
+      <td>Password:</td>
+      <td>
+        <button data-field="changePassword">Change password</button>
+
+        <div data-field="error" style="color: red;">Passwords don't match.</div>
+        <input data-field="newPassword" type="password">
+        <input data-field="newPasswordRepeat" type="password">
+        <button data-field="savePassword">Save</button>
+      </td>
+    </tr>
+    <tr>
+      <td><label for="strategies">Strategies</label></td>
+      <td>
+        <table data-field="strategies" id="strategies">
+          <thead>
+            <tr>
+              <th>Group Id</th>
+              <th>Artifact Id</th>
+              <th>Version</th>
+              <th>Active</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>cz.schlosserovi.tomas</td>
+              <td>drooms-strategy</td>
+              <td>2.0-SNAPSHOT</td>
+              <td><input data-field="active" type="radio" name="activeStrategy"></td>
+            </tr>
+            <tr>
+              <td>cz.schlosserovi.tomas</td>
+              <td>drooms-strategy</td>
+              <td>2.0</td>
+              <td><input type="radio" name="activeStrategy"></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="float: right;">
+          <button data-field="newStrategy">Add strategy</button>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
