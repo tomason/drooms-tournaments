@@ -1,15 +1,20 @@
 package org.drooms.tournaments.client.widget.playground.form;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import org.drooms.tournaments.client.event.CollectiblePopupClosed;
 import org.drooms.tournaments.client.page.PlaygroundsPage;
+import org.drooms.tournaments.client.util.Collectible;
 import org.drooms.tournaments.client.util.Form;
 import org.drooms.tournaments.client.util.FormMode;
 import org.drooms.tournaments.client.widget.error.ErrorForm;
+import org.drooms.tournaments.client.widget.spinner.Spinner;
 import org.drooms.tournaments.domain.Playground;
 import org.drooms.tournaments.services.PlaygroundService;
 import org.jboss.errai.common.client.api.Caller;
@@ -20,13 +25,20 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
+import com.google.gwt.cell.client.ButtonCell;
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.NumberCell;
+import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.http.client.Request;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.view.client.ListDataProvider;
 
 @Templated
 public class PlaygroundForm extends Composite implements Form<Playground> {
@@ -40,7 +52,31 @@ public class PlaygroundForm extends Composite implements Form<Playground> {
 
     @Inject
     @DataField
-    private TextArea properties;
+    private Spinner startLength;
+
+    @Inject
+    @DataField
+    private Spinner turns;
+
+    @Inject
+    @DataField
+    private Spinner bonus;
+
+    @Inject
+    @DataField
+    private Spinner timeout;
+
+    @Inject
+    @DataField
+    private Spinner inactive;
+
+    @DataField
+    private CellTable<Collectible> collectibles = new CellTable<Collectible>(20);
+    private ListDataProvider<Collectible> collectiblesList = new ListDataProvider<Collectible>();
+
+    @Inject
+    @DataField
+    private Button addCollectible;
 
     @Inject
     @DataField
@@ -56,30 +92,86 @@ public class PlaygroundForm extends Composite implements Form<Playground> {
     @Inject
     private TransitionTo<PlaygroundsPage> playgrounds;
 
+    @Inject
+    private CollectiblePopup collectiblePopup;
+
+    @PostConstruct
+    public void init() {
+        collectiblesList.addDataDisplay(collectibles);
+
+        collectibles.addColumn(new Column<Collectible, String>(new TextCell()) {
+            @Override
+            public String getValue(Collectible object) {
+                return object.getId();
+            }
+        }, "Id");
+        collectibles.addColumn(new Column<Collectible, Number>(new NumberCell()) {
+            @Override
+            public Number getValue(Collectible object) {
+                return object.getPrice();
+            }
+        }, "Price");
+        collectibles.addColumn(new Column<Collectible, Number>(new NumberCell()) {
+            @Override
+            public Number getValue(Collectible object) {
+                return object.getExpiration();
+            }
+        }, "Expiration");
+        collectibles.addColumn(new Column<Collectible, String>(new TextCell()) {
+            @Override
+            public String getValue(Collectible object) {
+                return Double.toString(object.getProbability() * 100) + "%";
+            }
+        }, "Probability");
+    }
+
     @Override
     public void setMode(FormMode mode) {
         name.setEnabled(mode == FormMode.NEW);
-        properties.setEnabled(mode == FormMode.NEW);
         source.setEnabled(mode == FormMode.NEW);
         create.setEnabled(mode == FormMode.NEW);
         create.setVisible(mode == FormMode.NEW);
+        addCollectible.setVisible(mode == FormMode.NEW);
+
+        startLength.setEnabled(mode == FormMode.NEW);
+        startLength.setup(null, 1, null, 1);
+        turns.setEnabled(mode == FormMode.NEW);
+        turns.setup(null, 1, null, 100);
+        bonus.setEnabled(mode == FormMode.NEW);
+        bonus.setup(null, 0, null, 1);
+        timeout.setEnabled(mode == FormMode.NEW);
+        timeout.setup(null, 1, null, 1);
+        inactive.setEnabled(mode == FormMode.NEW);
+        inactive.setup(null, 1, null, 1);
+
+        if (mode == FormMode.NEW) {
+            Column<Collectible, String> removeColumn = new Column<Collectible, String>(new ButtonCell()) {
+                @Override
+                public String getValue(Collectible object) {
+                    return "Remove";
+                }
+            };
+            removeColumn.setFieldUpdater(new FieldUpdater<Collectible, String>() {
+                @Override
+                public void update(int index, Collectible object, String value) {
+                    collectiblesList.getList().remove(object);
+                }
+            });
+            collectibles.addColumn(removeColumn);
+        }
+
+        setConfiguration(null);
     }
 
     @Override
     public void setValue(Playground value) {
         name.setValue(value.getName());
         source.setValue(value.getSource());
+        // set text area size
+        source.setCharacterWidth(value.getSource().indexOf('\n'));
+        source.setVisibleLines(value.getSource().length() - value.getSource().replaceAll("\n", "").length() + 1);
 
-        if (value.getConfiguration() != null) {
-            StringBuilder configuration = new StringBuilder();
-            for (Entry<String, String> entry : value.getConfiguration().entrySet()) {
-                if (configuration.length() > 0) {
-                    configuration.append("\n");
-                }
-                configuration.append(entry.getKey()).append("=").append(entry.getValue());
-            }
-            properties.setValue(configuration.toString());
-        }
+        setConfiguration(value.getConfiguration());
 
         error.clear();
     }
@@ -90,15 +182,7 @@ public class PlaygroundForm extends Composite implements Form<Playground> {
             Playground p = new Playground();
             p.setName(name.getValue());
             p.setSource(source.getValue());
-
-            Map<String, String> configuration = new HashMap<String, String>();
-            for (String line : properties.getValue().split("\n")) {
-                String[] parsed = line.split("=");
-                if (parsed.length == 2) {
-                    configuration.put(parsed[0], parsed[1]);
-                }
-            }
-            p.setConfiguration(configuration);
+            p.setConfiguration(getConfiguration());
 
             service.call(new VoidCallback() {
                 @Override
@@ -126,6 +210,16 @@ public class PlaygroundForm extends Composite implements Form<Playground> {
         validate();
     }
 
+    @EventHandler("addCollectible")
+    public void addCollectibleClicked(ClickEvent event) {
+        collectiblePopup.show();
+    }
+
+    public void addCollectible(@Observes CollectiblePopupClosed event) {
+        collectiblesList.getList().add(event.getCollectible());
+        validate();
+    }
+
     private boolean validate() {
         error.clear();
 
@@ -139,9 +233,54 @@ public class PlaygroundForm extends Composite implements Form<Playground> {
         if (s.length() - s.replaceAll("@", "").length() < 2) {
             error.addError("Playground must have at least two starting positions.");
         }
+        if (collectiblesList.getList().size() == 0) {
+            error.addError("At least one collectible must be defined.");
+        }
 
         create.setEnabled(error.isValid());
 
         return error.isValid();
+    }
+
+    private void setConfiguration(Map<String, String> configuration) {
+        if (configuration == null) {
+            configuration = Collections.emptyMap();
+        }
+
+        String property;
+        // parse worm.* properties
+        property = configuration.get("worm.length.start");
+        startLength.setValue(property != null ? Integer.parseInt(property) : 3);
+        property = configuration.get("worm.max.turns");
+        turns.setValue(property != null ? Integer.parseInt(property) : 1000);
+        property = configuration.get("worm.survival.bonus");
+        bonus.setValue(property != null ? Integer.parseInt(property) : 5);
+        property = configuration.get("worm.timeout.seconds");
+        timeout.setValue(property != null ? Integer.parseInt(property) : 1);
+        property = configuration.get("worm.max.inactive.turns");
+        inactive.setValue(property != null ? Integer.parseInt(property) : 3);
+
+        property = configuration.get("collectibles");
+        if (property != null && property.length() > 0) {
+            for (String collectible : property.split(",")) {
+                collectiblesList.getList().add(new Collectible(collectible, configuration));
+            }
+        }
+    }
+
+    private Map<String, String> getConfiguration() {
+        Map<String, String> result = new HashMap<String, String>();
+
+        result.put("worm.length.start", Integer.toString(startLength.getValue()));
+        result.put("worm.max.turns", Integer.toString(turns.getValue()));
+        result.put("worm.survival.bonus", Integer.toString(bonus.getValue()));
+        result.put("worm.timeout.seconds", Integer.toString(timeout.getValue()));
+        result.put("worm.max.inactive.turns", Integer.toString(inactive.getValue()));
+
+        for (Collectible collectible : collectiblesList.getList()) {
+            collectible.addToConfiguration(result);
+        }
+
+        return result;
     }
 }

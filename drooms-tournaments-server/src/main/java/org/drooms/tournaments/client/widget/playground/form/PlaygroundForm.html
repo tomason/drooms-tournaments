@@ -9,15 +9,64 @@
     </colgroup>
     <tr>
       <td><label for="name">Name:</label></td>
-      <td><input data-field="name" id="name"></td>
+      <td><input data-field="name" id="name" class="form-input"></td>
+    </tr>
+    <tr>
+      <td><label for="startLength">Start length:</label></td>
+      <td><input data-field="startLength" id="startLength"class="form-input"></td>
+    </tr>
+    <tr>
+      <td><label for="turns">Maximum turns:</label></td>
+      <td><input data-field="turns" id="turns"class="form-input"></td>
+    </tr>
+    <tr>
+      <td><label for="bonus">Survival bonus:</label></td>
+      <td><input data-field="bonus" id="bonus"class="form-input"></td>
+    </tr>
+    <tr>
+      <td><label for="timeout">Timeout:</label></td>
+      <td><input data-field="timeout" id="timeout"class="form-input"> seconds</td>
+    </tr>
+    <tr>
+      <td><label for="inactive">Maximum inactivity:</label></td>
+      <td><input data-field="inactive" id="inactive"class="form-input"> turns</td>
+    </tr>
+    <tr>
+      <td><label for="collectibles">Collectibles:</label>
+      <td>
+        <table data-field="collectibles" id="collectibles">
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Expiration</th>
+            <th>Probability</th>
+          </tr>
+          <tr>
+            <td>cheap</td>
+            <td>5</td>
+            <td>60</td>
+            <td>20%</td>
+          </tr>
+          <tr>
+            <td>good</td>
+            <td>10</td>
+            <td>45</td>
+            <td>10%</td>
+          </tr>
+          <tr>
+            <td>extreme</td>
+            <td>20</td>
+            <td>30</td>
+            <td>5%</td>
+          </tr>
+        </table>
+        <div style="float: right;">
+          <button data-field="addCollectible">Add collectible</button>
+        </div>
+      </td>
     </tr>
     <tr style="vertical-align: top;">
-      <td><label for="properties">Properties:</label></td>
-      <td><textarea data-field="properties" id="properties"></textarea></td>
-    </tr>
-    <tr style="vertical-align: top;">
-      <td><label for="source">Source:</label></td>
-      <td><textarea data-field="source" id="source"></textarea></td>
+      <td colspan="2"><textarea data-field="source" id="source"></textarea></td>
     </tr>
   </table>
   <div style="float: right;">
