@@ -33,3 +33,10 @@
 .playgroundOther {
   background-color: red;
 }
+
+.form-input {
+  width: 180px;
+  height: 26px;
+  display: inline-block;
+  box-sizing: border-box;
+}
