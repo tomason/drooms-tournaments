@@ -1,5 +1,6 @@
 package org.drooms.tournaments.client.interactive;
 
+import org.apache.commons.codec.binary.Base64;
 import org.drooms.tournaments.client.interactive.menu.ExitMenu;
 import org.drooms.tournaments.client.interactive.menu.MainMenu;
 import org.drooms.tournaments.client.interactive.menu.api.Menu;
@@ -34,7 +35,7 @@ public class InteractiveClient {
         TournamentsServerClient client = new TournamentsServerClient(serverName);
 
         if (arguments.getCredentials() != null) {
-            client.login(arguments.getCredentials());
+            client.login(new String(Base64.decodeBase64(arguments.getCredentials())));
         }
 
         Menu menu = new MainMenu(console, client);

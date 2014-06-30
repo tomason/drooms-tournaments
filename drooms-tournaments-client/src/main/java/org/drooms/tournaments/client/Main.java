@@ -17,6 +17,9 @@ public class Main {
         RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
         ResteasyProviderFactory.getInstance().registerProvider(ResteasyJacksonProvider.class);
 
+        // avoid checking SSL certificate validity
+        System.setProperty("jsse.enableSNIExtension", "false");
+
         CommonArguments arguments = new CommonArguments(args);
         if (arguments.isHelp()) {
             arguments.printHelp();

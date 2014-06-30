@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.drooms.tournaments.client.services.TournamentsServerClient;
 import org.drooms.tournaments.domain.Game;
 import org.drooms.tournaments.services.GameService;
@@ -31,7 +32,7 @@ public class ExecutorClient {
             arguments.printHelp();
         } else {
             TournamentsServerClient client = new TournamentsServerClient(arguments.getServer());
-            client.login(arguments.getCredentials());
+            client.login(new String (Base64.decodeBase64(arguments.getCredentials())));
 
             GameService service = client.getService(GameService.class);
             LOGGER.info("Starting execution...");
