@@ -15,12 +15,27 @@
   <dependencies>
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-jaxrs</artifactId>
+      <artifactId>jaxrs-api</artifactId>
     </dependency>
 
     <dependency>
-       <groupId>org.jboss.errai</groupId>
-       <artifactId>errai-marshalling</artifactId>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-common</artifactId>
+      <!-- We only need annotations, exclude everything else -->
+      <exclusions>
+        <exclusion>
+          <groupId>org.jboss.errai.reflections</groupId>
+          <artifactId>reflections</artifactId>
+        </exclusion>
+        <exclusion>
+          <artifactId>gwt-slf4j</artifactId>
+          <groupId>de.benediktmeurer.gwt-slf4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-lang</artifactId>
+          <groupId>commons-lang</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 
