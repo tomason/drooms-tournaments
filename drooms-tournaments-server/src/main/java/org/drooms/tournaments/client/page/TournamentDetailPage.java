@@ -35,10 +35,10 @@ public class TournamentDetailPage extends MyDefaultPage {
     @PageShowing
     public void preparePage() {
         if (tournamentName != null && tournamentName.length() > 0) {
+            content.setMode(FormMode.DETAIL);
             tournamentService.call(new RemoteCallback<Tournament>() {
                 @Override
                 public void callback(Tournament response) {
-                    content.setMode(FormMode.DETAIL);
                     content.setValue(response);
                 }
             }).getTournament(tournamentName);
