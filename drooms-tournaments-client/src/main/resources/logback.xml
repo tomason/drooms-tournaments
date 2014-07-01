@@ -34,7 +34,7 @@
     <level value="TRACE" />
     <appender-ref ref="asyncFileAppender" />
   </logger>
-  <logger name="cz.schlosserovi.tomas">
+  <logger name="org.drooms.tournaments">
     <level value="TRACE" />
     <appender-ref ref="asyncConsoleAppender" />
   </logger>
