@@ -27,6 +27,8 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.view.client.NoSelectionModel;
+import com.google.gwt.view.client.SelectionChangeEvent;
 
 @Templated
 public class PlaygroundsList extends Composite {
@@ -77,6 +79,18 @@ public class PlaygroundsList extends Composite {
                 return object.getMaxPlayers();
             }
         }, "Players");
+
+        final NoSelectionModel<Playground> selection = new NoSelectionModel<Playground>();
+        selection.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+            @Override
+            public void onSelectionChange(SelectionChangeEvent event) {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("playgroundName", selection.getLastSelectedObject().getName());
+                detail.go(Multimaps.forMap(params));
+            }
+        });
+        playgrounds.setSelectionModel(selection);
+
         playgrounds.flush();
         playgrounds.setWidth("100%");
         playgrounds.setColumnWidth(1, "100px");

@@ -22,13 +22,14 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import com.google.common.collect.Multimaps;
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.DateCell;
-import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.NumberCell;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.view.client.NoSelectionModel;
+import com.google.gwt.view.client.SelectionChangeEvent;
 
 @Templated
 public class TournamentsList extends Composite {
@@ -57,21 +58,12 @@ public class TournamentsList extends Composite {
         newTournament.setEnabled(context.isLoggedIn());
         newTournament.setVisible(context.isLoggedIn());
 
-        Column<Tournament, String> nameColumn = new Column<Tournament, String>(new ClickableTextCell()) {
+        tournaments.addColumn(new Column<Tournament, String>(new ClickableTextCell()) {
             @Override
             public String getValue(Tournament object) {
                 return object.getName();
             }
-        };
-        nameColumn.setFieldUpdater(new FieldUpdater<Tournament, String>() {
-            @Override
-            public void update(int index, Tournament object, String value) {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("tournamentName", object.getName());
-                detail.go(Multimaps.forMap(params));
-            }
-        });
-        tournaments.addColumn(nameColumn, "Name");
+        }, "Name");
         tournaments.addColumn(new Column<Tournament, Date>(new DateCell(ApplicationContext.DATE_FORMAT)) {
             @Override
             public Date getValue(Tournament object) {
@@ -90,6 +82,18 @@ public class TournamentsList extends Composite {
                 return object.getPeriod();
             }
         }, "Period");
+
+        final NoSelectionModel<Tournament> selection = new NoSelectionModel<Tournament>();
+        selection.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+            @Override
+            public void onSelectionChange(SelectionChangeEvent event) {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("tournamentName", selection.getLastSelectedObject().getName());
+                detail.go(Multimaps.forMap(params));
+            }
+        });
+        tournaments.setSelectionModel(selection);
+
         tournaments.setWidth("100%");
         tournaments.setColumnWidth(1, "100px");
         tournaments.setColumnWidth(2, "100px");

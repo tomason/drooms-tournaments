@@ -28,6 +28,8 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.NoSelectionModel;
+import com.google.gwt.view.client.SelectionChangeEvent;
 
 @Templated
 public class PlaygroundSelector extends Composite {
@@ -93,18 +95,35 @@ public class PlaygroundSelector extends Composite {
                 return object.getMaxPlayers();
             }
         }, "Capacity");
+
+        final NoSelectionModel<Playground> selection = new NoSelectionModel<Playground>();
+        selection.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+            @Override
+            public void onSelectionChange(SelectionChangeEvent event) {
+                if (selectedPlaygrounds.contains(selection.getLastSelectedObject())) {
+                    selectedPlaygrounds.remove(selection.getLastSelectedObject());
+                } else {
+                    selectedPlaygrounds.add(selection.getLastSelectedObject());
+                }
+                playgrounds.flush();
+                playgrounds.redraw();
+            }
+        });
+        playgrounds.setSelectionModel(selection);
     }
 
     @EventHandler("selectAll")
     public void selectAllClicked(ClickEvent event) {
         selectedPlaygrounds.clear();
         selectedPlaygrounds.addAll(playgroundList.getList());
+        playgrounds.flush();
         playgrounds.redraw();
     }
 
     @EventHandler("selectNone")
     public void selectNoneClicked(ClickEvent event) {
         selectedPlaygrounds.clear();
+        playgrounds.flush();
         playgrounds.redraw();
     }
 
