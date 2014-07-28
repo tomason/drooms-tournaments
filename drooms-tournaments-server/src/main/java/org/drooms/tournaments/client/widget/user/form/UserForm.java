@@ -9,6 +9,8 @@ import javax.inject.Inject;
 
 import org.drooms.tournaments.client.event.ReloadStrategiesEvent;
 import org.drooms.tournaments.client.util.ApplicationContext;
+import org.drooms.tournaments.client.util.Form;
+import org.drooms.tournaments.client.util.FormMode;
 import org.drooms.tournaments.client.widget.user.form.newstrategy.StrategyPopup;
 import org.drooms.tournaments.domain.Strategy;
 import org.drooms.tournaments.domain.User;
@@ -25,11 +27,14 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
@@ -37,7 +42,7 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 
 @Templated
-public class UserForm extends Composite {
+public class UserForm extends Composite implements Form<User> {
     private User user;
 
     @Inject
@@ -71,6 +76,9 @@ public class UserForm extends Composite {
     @DataField
     private Button newStrategy;
 
+    @DataField
+    private Element passwordRow = DOM.createTR();
+
     @Inject
     private ApplicationContext context;
 
@@ -85,12 +93,6 @@ public class UserForm extends Composite {
 
     @PostConstruct
     public void init() {
-        error.setVisible(false);
-        newPassword.setVisible(false);
-        newPasswordRepeat.setVisible(false);
-        savePassword.setVisible(false);
-        savePassword.setEnabled(false);
-
         strategies.addColumn(new Column<Strategy, String>(new TextCell()) {
             @Override
             public String getValue(Strategy object) {
@@ -187,7 +189,29 @@ public class UserForm extends Composite {
         username.setText(user.getName());
         username.setEnabled(false);
 
+        boolean loggedIn = user.getName().equals(context.getUsername());
+        if (loggedIn) {
+            passwordRow.getStyle().clearDisplay();
+        } else {
+            passwordRow.getStyle().setDisplay(Display.NONE);
+
+            strategies.removeColumn(3);
+        }
+        newStrategy.setVisible(loggedIn);
+
         refreshStrategies();
+    }
+
+    @Override
+    public void setMode(FormMode mode) {
+        // currently only detail mode is used
+        if (mode == FormMode.DETAIL) {
+            error.setVisible(false);
+            newPassword.setVisible(false);
+            newPasswordRepeat.setVisible(false);
+            savePassword.setVisible(false);
+            savePassword.setEnabled(false);
+        }
     }
 
     public void strategiesChanged(@Observes ReloadStrategiesEvent event) {
@@ -214,13 +238,12 @@ public class UserForm extends Composite {
     }
 
     private void refreshStrategies() {
-        // FIXME service missing for retrieving strategies of other users
         strategyService.call(new RemoteCallback<List<Strategy>>() {
             @Override
             public void callback(List<Strategy> response) {
                 Collections.sort(response);
                 strategies.setRowData(response);
             }
-        }).getUserStrategies();
+        }).getStrategies(user.getName());
     }
 }
