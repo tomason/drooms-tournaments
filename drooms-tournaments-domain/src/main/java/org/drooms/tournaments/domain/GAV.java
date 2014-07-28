@@ -15,13 +15,23 @@ public class GAV implements Serializable, Comparable<GAV> {
     public GAV() {
     }
 
-    public GAV(String groupId, String artifactId, String version) {
-        if (groupId == null || artifactId == null || version == null) {
-            throw new IllegalArgumentException("groupId, artifactId and version must not be null");
+    public GAV(String gav) {
+        if (gav == null) {
+            throw new IllegalArgumentException("gav must not be null");
         }
-        this.groupId = groupId;
-        this.artifactId = artifactId;
-        this.version = version;
+        String[] components = gav.split(":");
+        if (components.length != 3) {
+            throw new IllegalArgumentException("gav must be in format groupId:artifactId:version");
+        }
+        setGroupId(components[0]);
+        setArtifactId(components[1]);
+        setVersion(components[2]);
+    }
+
+    public GAV(String groupId, String artifactId, String version) {
+        setGroupId(groupId);
+        setArtifactId(artifactId);
+        setVersion(version);
     }
 
     public String getGroupId() {
