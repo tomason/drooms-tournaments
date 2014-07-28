@@ -12,6 +12,7 @@ import org.drooms.tournaments.client.widget.error.ErrorForm;
 import org.drooms.tournaments.domain.User;
 import org.drooms.tournaments.services.UserService;
 import org.jboss.errai.common.client.api.Caller;
+import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.common.client.api.VoidCallback;
 import org.jboss.errai.enterprise.client.jaxrs.api.RestErrorCallback;
 import org.jboss.errai.ui.nav.client.local.TransitionTo;
@@ -122,6 +123,16 @@ public class RegistrationForm extends Composite {
 
     private boolean validate() {
         error.clear();
+
+        service.call(new RemoteCallback<User>() {
+            @Override
+            public void callback(User response) {
+                if (response != null) {
+                    error.addError("User with this name already registered.");
+                }
+            }
+        }).getUser(username.getValue());
+
         if (username.getValue().length() < 3) {
             error.addError("User name must be at least 3 characters long.");
         }
