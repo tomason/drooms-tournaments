@@ -14,8 +14,8 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -98,17 +98,17 @@ public class StrategyPopup extends Composite {
     }
 
     @EventHandler("groupId")
-    public void groupIdChanged(ChangeEvent event) {
+    public void groupIdKeyUp(KeyUpEvent event) {
         validate();
     }
 
     @EventHandler("artifactId")
-    public void artifactIdChanged(ChangeEvent event) {
+    public void artifactIdKeyUp(KeyUpEvent event) {
         validate();
     }
 
     @EventHandler("version")
-    public void versionChanged(ChangeEvent event) {
+    public void versionKeyUp(KeyUpEvent event) {
         validate();
     }
 
