@@ -30,13 +30,13 @@ public class StrategyServiceImpl implements StrategyService {
     }
 
     @Override
-    public Collection<Strategy> getStrategies() {
-        return logic.getAllStrategies();
+    public Collection<Strategy> getStrategies(String username) {
+        return logic.getStrategies(username);
     }
 
     @Override
     public Collection<Strategy> getUserStrategies() {
-        return logic.getUserStrategies(security.getUserPrincipal().getName());
+        return getStrategies(security.getUserPrincipal().getName());
     }
 
     @Override

@@ -26,14 +26,14 @@ public class StrategyLogic {
         this.strategies = strategies;
     }
 
-    public Collection<Strategy> getAllStrategies() {
-        return getConverter().convert(strategies.getStrategies());
-    }
-
-    public Collection<Strategy> getUserStrategies(String userName) {
+    public Collection<Strategy> getStrategies(String userName) {
         UserEntity user = users.getUser(userName);
 
-        return getConverter().convert(strategies.getStrategies(user));
+        if (user == null) {
+            return getConverter().convert(strategies.getStrategies());
+        } else {
+            return getConverter().convert(strategies.getStrategies(user));
+        }
     }
 
     public void insertStrategy(String userName, Strategy strategy) {
