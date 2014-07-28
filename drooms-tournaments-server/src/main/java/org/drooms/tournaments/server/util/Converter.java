@@ -41,7 +41,7 @@ public class Converter<S extends Convertible<T>, T> {
      * @return Converted domain class.
      */
     public T convert(S source) {
-        return source.convert(depth);
+        return source == null ? null : source.convert(depth);
     }
 
     /**
