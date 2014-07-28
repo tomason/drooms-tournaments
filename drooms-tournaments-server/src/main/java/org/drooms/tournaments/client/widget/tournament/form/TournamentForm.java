@@ -1,13 +1,17 @@
 package org.drooms.tournaments.client.widget.tournament.form;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.drooms.tournaments.client.event.ReloadPlaygroundsEvent;
+import org.drooms.tournaments.client.page.PlaygroundDetailPage;
 import org.drooms.tournaments.client.page.TournamentsPage;
+import org.drooms.tournaments.client.page.UserDetailPage;
 import org.drooms.tournaments.client.util.ApplicationContext;
 import org.drooms.tournaments.client.util.Form;
 import org.drooms.tournaments.client.util.FormMode;
@@ -22,11 +26,12 @@ import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.common.client.api.VoidCallback;
 import org.jboss.errai.enterprise.client.jaxrs.api.RestErrorCallback;
-import org.jboss.errai.ui.nav.client.local.TransitionTo;
+import org.jboss.errai.ui.nav.client.local.Navigation;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
+import com.google.common.collect.Multimaps;
 import com.google.gwt.cell.client.NumberCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.dom.client.Element;
@@ -46,6 +51,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DateBox.DefaultFormat;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.NoSelectionModel;
+import com.google.gwt.view.client.SelectionChangeEvent;
 
 @Templated
 public class TournamentForm extends Composite implements Form<Tournament> {
@@ -102,7 +109,7 @@ public class TournamentForm extends Composite implements Form<Tournament> {
     private Caller<TournamentService> service;
 
     @Inject
-    private TransitionTo<TournamentsPage> tournamentsPage;
+    private Navigation navigation;
 
     @Inject
     private PlaygroundSelector selector;
@@ -115,28 +122,51 @@ public class TournamentForm extends Composite implements Form<Tournament> {
         end.setFormat(new DefaultFormat(ApplicationContext.DATE_FORMAT));
         period.setup(1, 1, null, 1);
 
-        // create playgrounds table
-        playgrounds.addColumn(new Column<Playground, String>(new TextCell()) {
-            @Override
-            public String getValue(Playground object) {
-                return object.getName();
-            }
-        });
-        playgroundsList.addDataDisplay(playgrounds);
+        {// create playgrounds table
+            playgrounds.addColumn(new Column<Playground, String>(new TextCell()) {
+                @Override
+                public String getValue(Playground object) {
+                    return object.getName();
+                }
+            });
+            final NoSelectionModel<Playground> selection = new NoSelectionModel<Playground>();
+            selection.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+                @Override
+                public void onSelectionChange(SelectionChangeEvent event) {
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put("playgroundName", selection.getLastSelectedObject().getName());
+                    navigation.goTo(PlaygroundDetailPage.class, Multimaps.forMap(map));
+                }
+            });
+            playgrounds.setSelectionModel(selection);
+    
+            playgroundsList.addDataDisplay(playgrounds);
+        }
 
-        // create results table
-        results.addColumn(new Column<TournamentResult, Number>(new NumberCell()) {
-            @Override
-            public Number getValue(TournamentResult object) {
-                return object.getPosition();
-            }
-        }, "Position");
-        results.addColumn(new Column<TournamentResult, String>(new TextCell()) {
-            @Override
-            public String getValue(TournamentResult object) {
-                return object.getPlayer().getName();
-            }
-        }, "Player");
+        { // create results table
+            results.addColumn(new Column<TournamentResult, Number>(new NumberCell()) {
+                @Override
+                public Number getValue(TournamentResult object) {
+                    return object.getPosition();
+                }
+            }, "Position");
+            results.addColumn(new Column<TournamentResult, String>(new TextCell()) {
+                @Override
+                public String getValue(TournamentResult object) {
+                    return object.getPlayer().getName();
+                }
+            }, "Player");
+            final NoSelectionModel<TournamentResult> selection = new NoSelectionModel<TournamentResult>();
+            selection.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+                @Override
+                public void onSelectionChange(SelectionChangeEvent event) {
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put("userName", selection.getLastSelectedObject().getPlayer().getName());
+                    navigation.goTo(UserDetailPage.class, Multimaps.forMap(map));
+                }
+            });
+            results.setSelectionModel(selection);
+        }
 
         // add value change handler (for date change)
         ValueChangeHandler<Date> handler = new ValueChangeHandler<Date>() {
@@ -176,6 +206,7 @@ public class TournamentForm extends Composite implements Form<Tournament> {
         end.setValue(value.getEnd());
         period.setValue(value.getPeriod());
         playgroundsList.setList(value.getPlaygrounds());
+        Collections.sort(value.getResults());
         results.setRowData(value.getResults());
 
         setJoinVisibility();
@@ -219,7 +250,7 @@ public class TournamentForm extends Composite implements Form<Tournament> {
             service.call(new VoidCallback() {
                 @Override
                 public void callback(Void response) {
-                    tournamentsPage.go();
+                    navigation.goTo(TournamentsPage.class, null);
                 }
             }, new RestErrorCallback() {
                 @Override
