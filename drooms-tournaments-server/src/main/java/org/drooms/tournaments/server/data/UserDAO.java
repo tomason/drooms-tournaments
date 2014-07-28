@@ -29,8 +29,19 @@ public class UserDAO {
         em.persist(entity);
     }
 
+    /**
+     * Searches database for user with given name.
+     * 
+     * @param name
+     *            Name of the user to find.
+     * @return UserEntity with given name or null if no such user exists.
+     */
     public UserEntity getUser(String name) {
-        return em.find(UserEntity.class, name);
+        if (name == null || name.length() == 0) {
+            return null;
+        } else {
+            return em.find(UserEntity.class, name);
+        }
     }
 
     public UserEntity getUserWithTournamentResults(String name) {

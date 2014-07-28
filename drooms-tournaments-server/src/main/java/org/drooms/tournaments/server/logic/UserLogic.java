@@ -8,6 +8,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.drooms.tournaments.domain.User;
 import org.drooms.tournaments.server.data.UserDAO;
 import org.drooms.tournaments.server.data.model.UserEntity;
+import org.drooms.tournaments.server.util.Converter;
 
 @ApplicationScoped
 public class UserLogic {
@@ -37,6 +38,10 @@ public class UserLogic {
             entity.setPassword(encryptPassword(user.getPassword()));
             users.updateUser(entity);
         }
+    }
+
+    public User getUser(String userName) {
+        return Converter.forClass(UserEntity.class).convert(users.getUser(userName));
     }
 
     private String encryptPassword(String password) {

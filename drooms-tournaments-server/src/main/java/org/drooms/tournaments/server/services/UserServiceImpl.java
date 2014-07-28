@@ -35,4 +35,9 @@ public class UserServiceImpl implements UserService {
     public void changePassword(User user) {
         logic.changePassword(security.getUserPrincipal().getName(), user);
     }
+
+    @Override
+    public User getUser(String userName) {
+        return logic.getUser(userName);
+    }
 }

@@ -8,6 +8,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.drooms.tournaments.domain.Game;
@@ -41,6 +42,35 @@ public interface GameService {
     @GET
     @Path("/games")
     public Collection<Game> getGames();
+
+    /**
+     * Retrieves all the games based on supplied parameters.
+     * 
+     * @param playerName
+     *            Player to retrieve games for or null.
+     * @param strategyGav
+     *            Strategy to retrieve games for or null.
+     * @param playgroundName
+     *            Playground to retrieve games for or null.
+     * @param tournamentName
+     *            Tournament to retrieve games for or null.
+     * @return Collection of games.
+     */
+    @GET
+    @Path("/games")
+    public Collection<Game> getGames(@QueryParam("player") String playerName, @QueryParam("strategy") String strategyGav,
+            @QueryParam("playground") String playgroundName, @QueryParam("tournament") String tournamentName);
+
+    /**
+     * Retrieves game with details (i.e. game results, reports).
+     * 
+     * @param gameId
+     *            Id of a game to retrieve.
+     * @return Game with given id.
+     */
+    @GET
+    @Path("/games/game")
+    public Game getGame(@QueryParam("id") String gameId);
 
     /**
      * Retrieves the games of the user. The user is identified by his username

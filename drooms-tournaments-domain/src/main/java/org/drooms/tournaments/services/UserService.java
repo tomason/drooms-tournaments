@@ -1,9 +1,11 @@
 package org.drooms.tournaments.services;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -44,6 +46,17 @@ public interface UserService {
     @POST
     @Path("/users")
     public void register(User user);
+
+    /**
+     * Asks server whether given user is registered.
+     * 
+     * @param username
+     *            Name of the user.
+     * @return User object if the user with given name is registered.
+     */
+    @GET
+    @Path("/users/{name}")
+    public User getUser(@PathParam("name") String username);
 
     /**
      * Chenges the password of already registered user.
