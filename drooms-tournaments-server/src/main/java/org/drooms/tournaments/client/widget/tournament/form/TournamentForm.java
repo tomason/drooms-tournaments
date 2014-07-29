@@ -115,6 +115,7 @@ public class TournamentForm extends Composite implements Form<Tournament> {
     private PlaygroundSelector selector;
 
     private ListDataProvider<Playground> playgroundsList = new ListDataProvider<Playground>();
+    private ListDataProvider<TournamentResult> resultsList = new ListDataProvider<TournamentResult>();
 
     @PostConstruct
     public void init() {
@@ -166,6 +167,8 @@ public class TournamentForm extends Composite implements Form<Tournament> {
                 }
             });
             results.setSelectionModel(selection);
+
+            resultsList.addDataDisplay(results);
         }
 
         // add value change handler (for date change)
@@ -207,7 +210,7 @@ public class TournamentForm extends Composite implements Form<Tournament> {
         period.setValue(value.getPeriod());
         playgroundsList.setList(value.getPlaygrounds());
         Collections.sort(value.getResults());
-        results.setRowData(value.getResults());
+        resultsList.setList(value.getResults());
 
         setJoinVisibility();
     }
