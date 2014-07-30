@@ -16,5 +16,7 @@
   <inherits name="org.jboss.errai.databinding.DataBinding" />
   <inherits name="org.jboss.errai.ui.nav.Navigation" />
 
+  <inherits name="org.vectomatic.libgwtsvg"/>
+
   <source path="client" />
 </module>

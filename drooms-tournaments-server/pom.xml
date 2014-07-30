@@ -159,6 +159,12 @@
       <artifactId>errai-ui</artifactId>
       <scope>provided</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.vectomatic</groupId>
+      <artifactId>lib-gwt-svg</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>

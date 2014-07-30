@@ -14,6 +14,7 @@ import org.drooms.tournaments.client.util.Collectible;
 import org.drooms.tournaments.client.util.Form;
 import org.drooms.tournaments.client.util.FormMode;
 import org.drooms.tournaments.client.widget.error.ErrorForm;
+import org.drooms.tournaments.client.widget.playground.editor.PlaygroundEditor;
 import org.drooms.tournaments.client.widget.spinner.Spinner;
 import org.drooms.tournaments.domain.Playground;
 import org.drooms.tournaments.services.PlaygroundService;
@@ -36,7 +37,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.view.client.ListDataProvider;
 
@@ -80,7 +80,7 @@ public class PlaygroundForm extends Composite implements Form<Playground> {
 
     @Inject
     @DataField
-    private TextArea source;
+    private PlaygroundEditor editor;
 
     @Inject
     @DataField
@@ -128,7 +128,6 @@ public class PlaygroundForm extends Composite implements Form<Playground> {
     @Override
     public void setMode(FormMode mode) {
         name.setEnabled(mode == FormMode.NEW);
-        source.setEnabled(mode == FormMode.NEW);
         create.setEnabled(mode == FormMode.NEW);
         create.setVisible(mode == FormMode.NEW);
         addCollectible.setVisible(mode == FormMode.NEW);
@@ -160,16 +159,15 @@ public class PlaygroundForm extends Composite implements Form<Playground> {
             collectibles.addColumn(removeColumn);
         }
 
+        editor.setMode(mode);
+
         setConfiguration(null);
     }
 
     @Override
     public void setValue(Playground value) {
         name.setValue(value.getName());
-        source.setValue(value.getSource());
-        // set text area size
-        source.setCharacterWidth(value.getSource().indexOf('\n'));
-        source.setVisibleLines(value.getSource().length() - value.getSource().replaceAll("\n", "").length() + 1);
+        editor.setValue(value.getSource());
 
         setConfiguration(value.getConfiguration());
 
@@ -181,7 +179,7 @@ public class PlaygroundForm extends Composite implements Form<Playground> {
         if (validate()) {
             Playground p = new Playground();
             p.setName(name.getValue());
-            p.setSource(source.getValue());
+            p.setSource(editor.getValue());
             p.setConfiguration(getConfiguration());
 
             service.call(new VoidCallback() {
@@ -205,11 +203,6 @@ public class PlaygroundForm extends Composite implements Form<Playground> {
         validate();
     }
 
-    @EventHandler("source")
-    public void sourceKeyUp(KeyUpEvent event) {
-        validate();
-    }
-
     @EventHandler("addCollectible")
     public void addCollectibleClicked(ClickEvent event) {
         collectiblePopup.show();
@@ -226,7 +219,7 @@ public class PlaygroundForm extends Composite implements Form<Playground> {
         if (name.getValue().length() == 0) {
             error.addError("Playground name must not be empty.");
         }
-        String s = source.getValue();
+        String s = editor.getValue();
         if (s.length() == 0) {
             error.addError("Playground source must not be empty.");
         }
