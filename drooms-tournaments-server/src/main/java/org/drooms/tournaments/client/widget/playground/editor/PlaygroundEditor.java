@@ -20,6 +20,7 @@ import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.MenuItem;
 
 // TODO tooltips on the menu
 @Templated("PlaygroundEditor.html#root")
@@ -32,8 +33,13 @@ public class PlaygroundEditor extends Composite implements Form<String> {
     @DataField
     private Element canvas = model.getSvgElement();
 
+    @DataField
+    private MenuBar status = new MenuBar();
+
     private boolean dragging = false;
     private Tool selectedTool = Tool.NONE;
+    private MenuItem position;
+    private MenuItem tool;
 
     @PostConstruct
     public void init() {
@@ -50,10 +56,26 @@ public class PlaygroundEditor extends Composite implements Form<String> {
             }
         });
         menu.addSeparator();
+
+        ScheduledCommand noCommand = new ScheduledCommand() {
+            @Override
+            public void execute() {
+                // intentionaly left blank
+            }
+        };
+        status.addItem("Selected tool:", noCommand).setEnabled(false);
+        tool = status.addItem(selectedTool.getText(), noCommand);
+        tool.setEnabled(false);
+        status.addSeparator();
+        status.addItem("Position:", noCommand).setEnabled(false);
+        position = status.addItem("0, 0", noCommand);
+        position.setEnabled(false);
     }
 
     @Override
     public void setMode(FormMode mode) {
+        status.setVisible(mode == FormMode.NEW);
+
         if (mode == FormMode.NEW) {
             menu.addItem("Empty space", new ScheduledCommand() {
                 @Override
@@ -133,6 +155,7 @@ public class PlaygroundEditor extends Composite implements Form<String> {
                     if (selectedTool == Tool.PORTAL) {
                         portalMouseMove(coordinates);
                     }
+                    position.setText((coordinates.getRow() + 1) + ", " + (coordinates.getCol() + 1));
                 }
             });
         }
@@ -147,7 +170,16 @@ public class PlaygroundEditor extends Composite implements Form<String> {
     }
 
     private enum Tool {
-        NONE, SPACE, WALL, START, PORTAL
+        NONE(" - "), SPACE("Space"), WALL("Wall"), START("Start position"), PORTAL("Portal");
+        private final String text;
+
+        private Tool(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
     }
 
     private void draw(Coordinates coordinates) {
@@ -203,6 +235,7 @@ public class PlaygroundEditor extends Composite implements Form<String> {
 
     private void switchTool(Tool tool) {
         selectedTool = tool;
+        this.tool.setText(selectedTool.getText());
         clearTempElements();
     }
 
