@@ -4,8 +4,8 @@ import javax.annotation.PostConstruct;
 
 import org.drooms.tournaments.client.model.CanvasEventHandler;
 import org.drooms.tournaments.client.model.Coordinates;
-import org.drooms.tournaments.client.model.PlaygroundModel;
-import org.drooms.tournaments.client.model.PortalCell;
+import org.drooms.tournaments.client.model.playground.PlaygroundModel;
+import org.drooms.tournaments.client.model.playground.PortalCell;
 import org.drooms.tournaments.client.util.Form;
 import org.drooms.tournaments.client.util.FormMode;
 import org.jboss.errai.ui.shared.api.annotations.DataField;

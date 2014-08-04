@@ -1,4 +1,4 @@
-package org.drooms.tournaments.client.model;
+package org.drooms.tournaments.client.model.playground;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -8,6 +8,8 @@ import java.util.Queue;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.drooms.tournaments.client.model.CanvasEventHandler;
+import org.drooms.tournaments.client.model.Coordinates;
 import org.vectomatic.dom.svg.OMSVGDefsElement;
 import org.vectomatic.dom.svg.OMSVGDocument;
 import org.vectomatic.dom.svg.OMSVGElement;
@@ -32,13 +34,15 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 
 public class PlaygroundModel {
-    private final OMSVGDocument document = OMSVGParser.createDocument();
-    private final OMSVGSVGElement canvas = document.createSVGSVGElement();
-    private final OMSVGRectElement grid;
+    protected final OMSVGDocument document = OMSVGParser.createDocument();
+    protected final OMSVGSVGElement canvas = document.createSVGSVGElement();
+    protected final OMSVGDefsElement defs = document.createSVGDefsElement();
+
+    private final OMSVGRectElement grid = document.createSVGRectElement();
     private final Queue<Character> portalCharacters = new LinkedList<Character>();
+    private final List<OMSVGLineElement> portalLines = new LinkedList<OMSVGLineElement>();
     private final List<CanvasEventHandler> eventHandlers = new LinkedList<CanvasEventHandler>();
     private final SortedMap<Coordinates, PlaygroundCell<?>> source = new TreeMap<Coordinates, PlaygroundCell<?>>();
-    private final List<OMSVGLineElement> portalLines = new LinkedList<OMSVGLineElement>();
 
     private int width = 30;
     private int height = 20;
@@ -46,8 +50,6 @@ public class PlaygroundModel {
 
     public PlaygroundModel() {
         // TODO move definitions to file?
-        OMSVGDefsElement defs = document.createSVGDefsElement();
-
         { // define grid pattern
             OMSVGPatternElement pattern = document.createSVGPatternElement();
             pattern.setId("grid");
@@ -99,7 +101,6 @@ public class PlaygroundModel {
         }
 
         { // create grid
-            grid = document.createSVGRectElement();
             grid.setAttribute("width", "100%");
             grid.setAttribute("height", "100%");
             grid.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, "url(#grid)");

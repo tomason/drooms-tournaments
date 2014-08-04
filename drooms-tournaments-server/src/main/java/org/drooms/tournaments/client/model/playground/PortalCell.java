@@ -1,5 +1,6 @@
-package org.drooms.tournaments.client.model;
+package org.drooms.tournaments.client.model.playground;
 
+import org.drooms.tournaments.client.model.Coordinates;
 import org.vectomatic.dom.svg.OMSVGDocument;
 import org.vectomatic.dom.svg.OMSVGLineElement;
 import org.vectomatic.dom.svg.OMSVGRectElement;
