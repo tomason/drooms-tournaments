@@ -1,0 +1,61 @@
+<div>
+  <div style="border-bottom: thin black solid; width: 100%;">
+    <table>
+      <tr>
+        <td><label for="user">Player:</label></td>
+        <td><input data-field="user" id="user"></td>
+      </tr>
+      <tr>
+        <td><label for="tournament">Tournament:</label></td>
+        <td>
+          <select data-field="tournament" id="tournament">
+            <option>test tournament</option>
+            <option>Grand tournament</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td><label for="finished">Finished:</label></td>
+        <td><input data-field="finished" id="finished" type="checkbox"></td>
+      </tr>
+    </table>
+    <div>
+      <button>Clear filter</button>
+      <button data-field="filter">Filter</button>
+    </div>
+  </div>
+
+  <table data-field="games" style="width: 100%;">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Tournament</th>
+        <th>Playground</th>
+        <th>Records</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>5ced4bf3-07d6-419b-8af8-b3d4cbd5a4d8</td>
+        <td>test tournament</td>
+        <td>boxes</td>
+        <td><a href="">Download</a></td>
+      </tr>
+      <tr>
+        <td>7e1c99b8-b276-42d6-839e-34d88914aa3b</td>
+        <td>test tournament</td>
+        <td>semi-open</td>
+        <td>N/A</td>
+      </tr>
+    </tbody>
+  </table>
+  <table data-field="pager">
+    <tr>
+      <td>first</td>
+      <td>back</td>
+      <td>1/1</td>
+      <td>next</td>
+      <td>last</td>
+    <tr>
+  </table>
+</div>

@@ -3,6 +3,7 @@ package org.drooms.tournaments.client.widget.menu;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.drooms.tournaments.client.page.GamesPage;
 import org.drooms.tournaments.client.page.LandingPage;
 import org.drooms.tournaments.client.page.LoginPage;
 import org.drooms.tournaments.client.page.PlaygroundsPage;
@@ -36,6 +37,10 @@ public class MainMenu extends Composite {
     @Inject
     @DataField
     private TransitionAnchor<PlaygroundsPage> playgrounds;
+
+    @Inject
+    @DataField
+    private TransitionAnchor<GamesPage> games;
 
     @Inject
     @DataField

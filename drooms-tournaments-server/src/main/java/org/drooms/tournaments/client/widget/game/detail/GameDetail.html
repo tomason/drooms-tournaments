@@ -1,0 +1,47 @@
+<div>
+  <table>
+    <tr>
+      <td><label for="id">Id:</label></td>
+      <td><input id="id" data-field="id" disabled="disabled"></td>
+    </tr>
+    <tr>
+      <td><label for="tournament">Tournament:</label></td>
+      <td><a id="tournament" data-field="tournament" href="">test tournament</a></td>
+    </tr>
+    <tr>
+      <td><label for="playground">Playground:</label></td>
+      <td><input id="playground" data-field="playground"></td>
+    </tr>
+    <tr>
+      <td><label for="results">Results:</label></td>
+      <td>
+        <table id="results" data-field="results">
+          <tr>
+            <th>Points</th>
+            <th>Player</th>
+            <th>Strategy</th>
+          </tr>
+          <tr>
+            <td>15</td>
+            <td>random</td>
+            <td>org.drooms:drooms-strategy-random:2.0-SNAPSHOT</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>tschloss</td>
+            <td>cz.schlosserovi.tomas:drooms-strategy:4.0-SNAPSHOT</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td><label for="report">Report:</label></td>
+      <td>
+        <div style="overflow: scroll; width: 718px;">
+          <svg data-field="report" style="border: thin black solid;"></svg>
+        </div>
+        <button data-field="next">Next turn</button>
+      </td>
+    </tr>
+  </table>
+</div>

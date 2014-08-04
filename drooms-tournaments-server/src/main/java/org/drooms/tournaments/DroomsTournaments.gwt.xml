@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to="DroomsTournaments">
   <inherits name="com.google.gwt.user.User" />
+  <inherits name="com.google.gwt.xml.XML" />
   <inherits name="com.google.gwt.user.theme.chrome.Chrome" />
 
   <!-- Disable everything but chrome for now -->
@@ -16,7 +17,7 @@
   <inherits name="org.jboss.errai.databinding.DataBinding" />
   <inherits name="org.jboss.errai.ui.nav.Navigation" />
 
-  <inherits name="org.vectomatic.libgwtsvg"/>
+  <inherits name="org.vectomatic.libgwtsvg" />
 
   <source path="client" />
 </module>
