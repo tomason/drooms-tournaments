@@ -7,10 +7,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.drooms.tournaments.domain.Game;
+import org.drooms.tournaments.domain.GameFilter;
 
 /**
  * This service provides access to Games on the server.
@@ -41,6 +45,47 @@ public interface GameService {
     @GET
     @Path("/games")
     public Collection<Game> getGames();
+
+    /**
+     * Retrieves all the games based on supplied parameters.
+     * 
+     * @param playerName
+     *            Player to retrieve games for or null.
+     * @param strategyGav
+     *            Strategy to retrieve games for or null.
+     * @param playgroundName
+     *            Playground to retrieve games for or null.
+     * @param tournamentName
+     *            Tournament to retrieve games for or null.
+     * @return Collection of games.
+     */
+    @POST
+    @Path("/games")
+    public Collection<Game> getGames(GameFilter filter);
+
+    /**
+     * Retrieves game with details (i.e. game results, reports).
+     * 
+     * @param gameId
+     *            Id of a game to retrieve.
+     * @return Game with given id.
+     */
+    @GET
+    @Path("/games/game")
+    public Game getGame(@QueryParam("id") String gameId);
+
+    /**
+     * Retrieves game report for given game. Game report is a zip file
+     * containing xml game report and execution log.
+     * 
+     * @param gameId
+     *            Id of a game to retrieve report for.
+     * @return Zip file.
+     */
+    @GET
+    @Path("/games/{id}/report")
+    @Produces("application/zip")
+    public Response getGameReport(@PathParam("id") String gameId);
 
     /**
      * Retrieves the games of the user. The user is identified by his username

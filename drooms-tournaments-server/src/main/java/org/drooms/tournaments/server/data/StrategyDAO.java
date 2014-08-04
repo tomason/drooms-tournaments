@@ -42,7 +42,11 @@ public class StrategyDAO {
     }
 
     public StrategyEntity getStrategy(GAV gav) {
-        return em.find(StrategyEntity.class, gav);
+        if (gav == null) {
+            return null;
+        } else {
+            return em.find(StrategyEntity.class, gav);
+        }
     }
 
     public void updateStrategy(StrategyEntity entity) {

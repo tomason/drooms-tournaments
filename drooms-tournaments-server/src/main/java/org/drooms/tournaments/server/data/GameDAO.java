@@ -1,6 +1,7 @@
 package org.drooms.tournaments.server.data;
 
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.drooms.tournaments.server.data.model.GameEntity;
+import org.drooms.tournaments.server.data.model.GameResultEntity;
 import org.drooms.tournaments.server.data.model.GameStatus;
 import org.drooms.tournaments.server.data.model.PlaygroundEntity;
 import org.drooms.tournaments.server.data.model.StrategyEntity;
@@ -99,12 +101,45 @@ public class GameDAO {
     }
 
     public List<GameEntity> getGames(UserEntity user) {
+        return getGames(user, null, null, null, null);
+    }
+
+    public List<GameEntity> getGames(UserEntity user, StrategyEntity strategy, PlaygroundEntity playground,
+            TournamentEntity tournament, Boolean finishedGames) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<GameEntity> query = builder.createQuery(GameEntity.class);
 
         Root<GameEntity> game = query.from(GameEntity.class);
-        Join<GameEntity, StrategyEntity> join = game.join("gameResults").join("strategy");
-        query.select(game).where(builder.equal(join.get("author"), user));
+
+        List<Predicate> predicates = new LinkedList<Predicate>();
+        if (user != null) {
+            Join<GameEntity, StrategyEntity> join = game.join("gameResults").join("strategy");
+            predicates.add(builder.equal(join.get("author"), user));
+        }
+        if (strategy != null) {
+            Join<GameEntity, GameResultEntity> join = game.join("gameResults");
+            predicates.add(builder.equal(join.get("strategy"), strategy));
+        }
+        if (playground != null) {
+            predicates.add(builder.equal(game.get("playground"), playground));
+        }
+        if (tournament != null) {
+            predicates.add(builder.equal(game.get("tournament"), tournament));
+        }
+        if (finishedGames != null && Boolean.TRUE.equals(finishedGames)) {
+            predicates.add(builder.equal(game.get("status"), GameStatus.FINISHED));
+        }
+
+        switch (predicates.size()) {
+        case 0:
+            query.select(game);
+            break;
+        case 1:
+            query.select(game).where(predicates.get(0));
+            break;
+        default:
+            query.select(game).where(predicates.toArray(new Predicate[0]));
+        }
 
         return em.createQuery(query).getResultList();
     }

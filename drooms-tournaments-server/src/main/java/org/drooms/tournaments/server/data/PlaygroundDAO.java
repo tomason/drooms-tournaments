@@ -32,7 +32,11 @@ public class PlaygroundDAO {
     }
 
     public PlaygroundEntity getPlayground(String name) {
-        return em.find(PlaygroundEntity.class, name);
+        if (name == null || name.length() == 0) {
+            return null;
+        } else {
+            return em.find(PlaygroundEntity.class, name);
+        }
     }
 
     public void updatePlayground(PlaygroundEntity entity) {

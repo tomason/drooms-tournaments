@@ -41,7 +41,11 @@ public class TournamentDAO {
     }
 
     public TournamentEntity getTournament(String name) {
-        return em.find(TournamentEntity.class, name);
+        if (name == null || name.length() == 0) {
+            return null;
+        } else {
+            return em.find(TournamentEntity.class, name);
+        }
     }
 
     public TournamentEntity getTournamentDetail(String name) {

@@ -1,12 +1,17 @@
 package org.drooms.tournaments.server.services;
 
+import java.io.File;
 import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
 import org.drooms.tournaments.domain.Game;
+import org.drooms.tournaments.domain.GameFilter;
 import org.drooms.tournaments.server.logic.GameLogic;
 import org.drooms.tournaments.services.GameService;
 
@@ -30,7 +35,31 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Collection<Game> getGames() {
-        return logic.getAllGames();
+        return getGames(null);
+    }
+
+    @Override
+    public Collection<Game> getGames(GameFilter filter) {
+        return logic.getGames(filter);
+    }
+
+    @Override
+    public Game getGame(String gameId) {
+        return logic.getGame(gameId);
+    }
+
+    @Override
+    public Response getGameReport(String gameId) {
+        File report = logic.getGameReport(gameId);
+        ResponseBuilder builder;
+        if (report == null) {
+            builder = Response.status(Status.GONE);
+        } else {
+            builder = Response.ok(report);
+            builder.header("Content-Disposition", "attachment; filename=\"" + gameId + ".zip\"");
+        }
+
+        return builder.build();
     }
 
     @Override
