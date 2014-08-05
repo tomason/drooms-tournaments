@@ -27,7 +27,7 @@ public class Snake {
         return tail;
     }
 
-    public void addNode(SnakeNode node) {
+    void addNode(SnakeNode node) {
         if (body.size() == 0) {
             head = node;
         } else {

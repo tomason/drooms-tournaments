@@ -14,6 +14,8 @@ import org.vectomatic.dom.svg.OMSVGUseElement;
 import org.vectomatic.dom.svg.utils.SVGConstants;
 
 public class GameReplay extends PlaygroundModel {
+    private List<OMSVGElement> tempNodes = new LinkedList<OMSVGElement>();
+    private int currentTurn = 0;
     private GameReport report;
 
     public GameReplay() {
@@ -77,9 +79,9 @@ public class GameReplay extends PlaygroundModel {
             g.setId("tail");
             OMSVGPolygonElement tail = document.createSVGPolygonElement();
             tail.getPoints().appendItem(canvas.createSVGPoint(3, 0));
-            tail.getPoints().appendItem(canvas.createSVGPoint(3, 8));
-            tail.getPoints().appendItem(canvas.createSVGPoint(5, 10));
-            tail.getPoints().appendItem(canvas.createSVGPoint(7, 8));
+            tail.getPoints().appendItem(canvas.createSVGPoint(3, 5));
+            tail.getPoints().appendItem(canvas.createSVGPoint(5, 7));
+            tail.getPoints().appendItem(canvas.createSVGPoint(7, 5));
             tail.getPoints().appendItem(canvas.createSVGPoint(7, 0));
             g.appendChild(tail);
 
@@ -123,7 +125,7 @@ public class GameReplay extends PlaygroundModel {
             setWall(wall);
         }
 
-        turnCount = 0;
+        currentTurn = 0;
         redraw();
     }
 
@@ -133,23 +135,58 @@ public class GameReplay extends PlaygroundModel {
         tempNodes.add(element);
     }
 
-    private List<OMSVGElement> tempNodes = new LinkedList<OMSVGElement>();
-    private int turnCount = 0;
+    @Override
+    public void removeTempElement(OMSVGElement element) {
+        super.removeTempElement(element);
+        tempNodes.remove(element);
+    }
+
+    public int getTurnCount() {
+        return report.getTurns().size();
+    }
 
     public void nextTurn() {
-        if (turnCount < report.getTurns().size() - 1) {
-            turnCount++;
+        if (currentTurn < report.getTurns().size() - 1) {
+            currentTurn++;
         } else {
-            turnCount = 0;
+            currentTurn = 0;
         }
         redraw();
+    }
+
+    public int getCurrentTurn() {
+        return currentTurn;
+    }
+
+    public void setCurrentTurn(int turn) {
+        if (turn >= 0 && turn < getTurnCount()) {
+            currentTurn = turn;
+            redraw();
+        }
+    }
+
+    public List<Score> getCurrentScore() {
+        return report.getTurns().get(currentTurn).getScores();
     }
 
     private void redraw() {
         for (OMSVGElement tempNode : tempNodes) {
             removeTempElement(tempNode);
         }
-        Turn turn = report.getTurns().get(turnCount);
+
+        Turn turn = report.getTurns().get(currentTurn);
+        for (Collectible collectible : turn.getCollectibles()) {
+            OMSVGGElement strawberry = document.createSVGGElement();
+            OMSVGUseElement use = new OMSVGUseElement();
+            use.getHref().setBaseVal("#collectible");
+            strawberry.appendChild(use);
+            OMSVGTransform move = canvas.createSVGTransform();
+            move.setTranslate(collectible.getPosition().getCol() * 10, collectible.getPosition().getRow() * 10);
+            strawberry.getTransform().getBaseVal().appendItem(move);
+
+            addTempElement(strawberry);
+        }
+
         for (Snake snake : turn.getSnakes()) {
             SnakeNode node = snake.getHead();
             { // head
@@ -164,6 +201,7 @@ public class GameReplay extends PlaygroundModel {
                 OMSVGTransform rotate = canvas.createSVGTransform();
                 rotate.setRotate(node.getRotation(), 5, 5);
                 head.getTransform().getBaseVal().appendItem(rotate);
+
                 addTempElement(head);
             }
             // move to next node
@@ -188,8 +226,8 @@ public class GameReplay extends PlaygroundModel {
                 OMSVGTransform rotate = canvas.createSVGTransform();
                 rotate.setRotate(node.getRotation(), 5, 5);
                 body.getTransform().getBaseVal().appendItem(rotate);
-                addTempElement(body);
 
+                addTempElement(body);
                 node = node.getNext();
             }
             { // tail
@@ -205,6 +243,7 @@ public class GameReplay extends PlaygroundModel {
                 OMSVGTransform rotate = canvas.createSVGTransform();
                 rotate.setRotate(node.getRotation(), 5, 5);
                 tail.getTransform().getBaseVal().appendItem(rotate);
+
                 addTempElement(tail);
             }
         }
