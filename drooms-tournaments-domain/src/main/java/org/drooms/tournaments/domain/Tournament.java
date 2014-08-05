@@ -19,6 +19,10 @@ public class Tournament implements Comparable<Tournament> {
     public Tournament() {
     }
 
+    public Tournament(String name) {
+        this.name = name;
+    }
+
     public Tournament(String name, Date start, Date end, int period, List<Playground> playgrounds) {
         this.name = name;
         this.start = start;
