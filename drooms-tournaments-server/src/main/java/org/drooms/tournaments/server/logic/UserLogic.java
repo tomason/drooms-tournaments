@@ -1,5 +1,7 @@
 package org.drooms.tournaments.server.logic;
 
+import java.util.Collection;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -21,6 +23,10 @@ public class UserLogic {
     @Inject
     public UserLogic(UserDAO users) {
         this.users = users;
+    }
+
+    public Collection<User> getUsers() {
+        return Converter.forClass(UserEntity.class).convert(users.getUsers());
     }
 
     public void registerUser(User user) {

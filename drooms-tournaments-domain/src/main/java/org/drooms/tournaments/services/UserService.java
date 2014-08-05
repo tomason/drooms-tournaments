@@ -1,5 +1,7 @@
 package org.drooms.tournaments.services;
 
+import java.util.Collection;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -36,6 +38,15 @@ import org.drooms.tournaments.domain.User;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface UserService {
+
+    /**
+     * Retrieves all users registered on this server.
+     * 
+     * @return List of users.
+     */
+    @GET
+    @Path("/users")
+    public Collection<User> getUsers();
 
     /**
      * Registers a new User on a server.

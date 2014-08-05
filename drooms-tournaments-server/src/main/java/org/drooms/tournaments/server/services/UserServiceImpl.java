@@ -1,5 +1,7 @@
 package org.drooms.tournaments.server.services;
 
+import java.util.Collection;
+
 import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
@@ -19,6 +21,11 @@ public class UserServiceImpl implements UserService {
     @Inject
     public UserServiceImpl(UserLogic logic) {
         this(logic, null);
+    }
+
+    @Override
+    public Collection<User> getUsers() {
+        return logic.getUsers();
     }
 
     public UserServiceImpl(UserLogic logic, SecurityContext security) {
