@@ -65,8 +65,6 @@ public class GamesList extends Composite {
         gamesList.addDataDisplay(games);
         pager.setDisplay(games);
 
-        reload();
-
         games.addColumn(new Column<Game, String>(new TextCell()) {
             @Override
             public String getValue(Game object) {
@@ -88,9 +86,9 @@ public class GamesList extends Composite {
         games.addColumn(new Column<Game, String>(new TextCell()) {
             @Override
             public String getValue(Game object) {
-                return "Not Available (yet)";
+                return object.isFinished() ? "Yes" : "No";
             }
-        }, "Records");
+        }, "Finished");
 
         final NoSelectionModel<Game> selection = new NoSelectionModel<Game>();
         selection.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -102,6 +100,8 @@ public class GamesList extends Composite {
             }
         });
         games.setSelectionModel(selection);
+
+        finished.setValue(true);
     }
 
     @EventHandler("filter")
@@ -109,7 +109,7 @@ public class GamesList extends Composite {
         reload();
     }
 
-    private void reload() {
+    public void reload() {
         GameFilter filter = new GameFilter();
 
         filter.setPlayer(new User(user.getValue()));

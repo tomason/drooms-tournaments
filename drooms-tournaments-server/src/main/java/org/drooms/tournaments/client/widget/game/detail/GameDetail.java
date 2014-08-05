@@ -7,16 +7,14 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.drooms.tournaments.client.model.report.GameReplay;
 import org.drooms.tournaments.client.page.PlaygroundDetailPage;
-import org.drooms.tournaments.client.page.TournamentDetailPage;
 import org.drooms.tournaments.client.page.UserDetailPage;
 import org.drooms.tournaments.client.util.Form;
 import org.drooms.tournaments.client.util.FormMode;
+import org.drooms.tournaments.client.widget.game.replay.GameReplayPlayer;
 import org.drooms.tournaments.domain.Game;
 import org.drooms.tournaments.domain.GameResult;
 import org.jboss.errai.ui.nav.client.local.Navigation;
-import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -24,46 +22,47 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import com.google.common.collect.Multimaps;
 import com.google.gwt.cell.client.NumberCell;
 import com.google.gwt.cell.client.TextCell;
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.AnchorElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.widget.client.TextButton;
 
 @Templated
 public class GameDetail extends Composite implements Form<Game> {
     private Game value;
-    private GameReplay reportModel = new GameReplay();
 
-    @Inject
     @DataField
-    private TextBox id;
+    private LabelElement id = Document.get().createLabelElement();
 
-    @Inject
     @DataField
-    private TransitionAnchor<TournamentDetailPage> tournament;
+    private AnchorElement tournament = Document.get().createAnchorElement();
 
-    @Inject
     @DataField
-    private TextButton playground;
+    private AnchorElement playground = Document.get().createAnchorElement();
 
     @DataField
     private CellTable<GameResult> results = new CellTable<GameResult>();
 
+    @Inject
     @DataField
-    private Element report = reportModel.getSvgElement();
+    private Button replay;
 
     @Inject
     @DataField
-    private Button next;
+    private Button download;
 
     @Inject
     private Navigation navigation;
+
+    @Inject
+    private GameReplayPlayer player;
 
     @Override
     public void setMode(FormMode mode) {
@@ -107,18 +106,15 @@ public class GameDetail extends Composite implements Form<Game> {
     public void setValue(Game value) {
         this.value = value;
 
-        id.setText(value.getId());
-        tournament.setText(value.getTournament().getName());
+        id.setInnerText(value.getId());
+        tournament.setInnerText(value.getTournament().getName());
         tournament.setHref("#TournamentDetailPage;tournamentName=" + value.getTournament().getName());
 
-        playground.setText(value.getPlayground().getName());
+        playground.setInnerText(value.getPlayground().getName());
+        playground.setHref("#PlaygroundDetailPage;playgroundName=" + value.getPlayground().getName());
 
-        Collections.sort(value.getResults());
+        Collections.sort(value.getResults(), Collections.reverseOrder());
         results.setRowData(value.getResults());
-
-        if (value.getGameReport() != null && value.getGameReport().length() > 0) {
-            reportModel.setSource(value.getGameReport());
-        }
     }
 
     @EventHandler("playground")
@@ -128,8 +124,14 @@ public class GameDetail extends Composite implements Form<Game> {
         navigation.goTo(PlaygroundDetailPage.class, Multimaps.forMap(map));
     }
 
-    @EventHandler("next")
-    public void nextClicked(ClickEvent event) {
-        reportModel.nextTurn();
+    @EventHandler("replay")
+    public void replayClicked(ClickEvent event) {
+        player.setGameReport(value.getGameReport());
+        player.show();
+    }
+
+    @EventHandler("download")
+    public void downloadClicked(ClickEvent event) {
+        Window.open("/services/games/" + value.getId() + "/report", "_self", "");
     }
 }
