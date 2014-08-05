@@ -238,6 +238,31 @@
               <warName>ROOT</warName>
             </configuration>
           </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>gwt-maven-plugin</artifactId>
+            <configuration>
+              <module>org.drooms.tournaments.DroomsTournaments</module>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>development</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>gwt-maven-plugin</artifactId>
+            <configuration>
+              <module>org.drooms.tournaments.DroomsTournamentsDevel</module>
+            </configuration>
+          </plugin>
         </plugins>
       </build>
     </profile>
