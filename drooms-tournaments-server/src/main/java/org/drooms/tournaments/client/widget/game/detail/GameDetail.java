@@ -24,10 +24,13 @@ import com.google.gwt.cell.client.NumberCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LabelElement;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -46,6 +49,9 @@ public class GameDetail extends Composite implements Form<Game> {
 
     @DataField
     private AnchorElement playground = Document.get().createAnchorElement();
+
+    @DataField
+    private Element resultsRow = DOM.createTR();
 
     @DataField
     private CellTable<GameResult> results = new CellTable<GameResult>();
@@ -115,6 +121,12 @@ public class GameDetail extends Composite implements Form<Game> {
 
         Collections.sort(value.getResults(), Collections.reverseOrder());
         results.setRowData(value.getResults());
+        
+        if (value.getGameReport() != null && value.getGameReport().length() > 0) {
+            player.setGameReport(value.getGameReport());
+        } else {
+            resultsRow.getStyle().setDisplay(Display.NONE);
+        }
     }
 
     @EventHandler("playground")
@@ -126,7 +138,6 @@ public class GameDetail extends Composite implements Form<Game> {
 
     @EventHandler("replay")
     public void replayClicked(ClickEvent event) {
-        player.setGameReport(value.getGameReport());
         player.show();
     }
 
