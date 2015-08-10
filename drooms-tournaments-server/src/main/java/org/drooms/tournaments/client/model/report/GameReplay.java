@@ -14,7 +14,7 @@ import org.vectomatic.dom.svg.OMSVGUseElement;
 import org.vectomatic.dom.svg.utils.SVGConstants;
 
 public class GameReplay extends PlaygroundModel {
-    private List<OMSVGElement> tempNodes = new LinkedList<>();
+    private List<OMSVGElement> tempNodes = new LinkedList<OMSVGElement>();
     private int currentTurn = 0;
     private GameReport report;
 
