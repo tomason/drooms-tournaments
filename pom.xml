@@ -17,7 +17,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.jboss.bom>1.0.4.Final-redhat-1</version.jboss.bom>
     <version.drooms>2.0-SNAPSHOT</version.drooms>
-    <version.drools>6.1.0.CR1</version.drools>
+    <version.drools>6.2.0.Final</version.drools>
     <version.errai>3.0.0.Final</version.errai>
     <version.gwt>2.5.1</version.gwt>
   </properties>
@@ -104,6 +104,12 @@
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
         <version>1.1.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpcore</artifactId>
+        <version>4.2.6</version>
       </dependency>
 
       <dependency>
