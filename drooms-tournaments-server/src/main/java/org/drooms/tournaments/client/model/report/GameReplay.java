@@ -14,7 +14,7 @@ import org.vectomatic.dom.svg.OMSVGUseElement;
 import org.vectomatic.dom.svg.utils.SVGConstants;
 
 public class GameReplay extends PlaygroundModel {
-    private List<OMSVGElement> tempNodes = new LinkedList<OMSVGElement>();
+    private List<OMSVGElement> tempNodes = new LinkedList<>();
     private int currentTurn = 0;
     private GameReport report;
 
@@ -58,7 +58,7 @@ public class GameReplay extends PlaygroundModel {
         }
 
         { // snake bend
-            OMSVGElement g = document.createSVGAElement();
+            OMSVGElement g = document.createSVGGElement();
             g.setId("bend");
             OMSVGPolygonElement bend = document.createSVGPolygonElement();
             bend.getPoints().appendItem(canvas.createSVGPoint(7, 10));
