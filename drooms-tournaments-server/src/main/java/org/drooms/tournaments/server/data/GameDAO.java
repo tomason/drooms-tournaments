@@ -111,7 +111,7 @@ public class GameDAO {
 
         Root<GameEntity> game = query.from(GameEntity.class);
 
-        List<Predicate> predicates = new LinkedList<Predicate>();
+        List<Predicate> predicates = new LinkedList<>();
         if (user != null) {
             Join<GameEntity, StrategyEntity> join = game.join("gameResults").join("strategy");
             predicates.add(builder.equal(join.get("author"), user));
@@ -138,10 +138,10 @@ public class GameDAO {
             query.select(game).where(predicates.get(0));
             break;
         default:
-            query.select(game).where(predicates.toArray(new Predicate[0]));
+            query.select(game).where(predicates.toArray(new Predicate[predicates.size()]));
         }
 
-        return em.createQuery(query).getResultList();
+        return em.createQuery(query.orderBy(builder.desc(game.get("lastModified")))).getResultList();
     }
 
     /**
