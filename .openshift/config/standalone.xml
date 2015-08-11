@@ -491,12 +491,10 @@
 				status-socket-binding="txn-status-manager" />
 			<coordinator-environment default-timeout="300" />
 		</subsystem>
-		<subsystem xmlns="urn:jboss:domain:web:1.5"
-			default-virtual-server="default-host" native="false">
-			<connector name="http" protocol="HTTP/1.1" scheme="http"
-				socket-binding="http" />
-			<virtual-server name="default-host"
-				enable-welcome-root="false">
+		<subsystem xmlns="urn:jboss:domain:web:1.5" default-virtual-server="default-host" native="false">
+			<connector name="http" protocol="HTTP/1.1" scheme="http" socket-binding="http"
+							proxy-name="${env.OPENSHIFT_GEAR_DNS}" proxy-port="443" secure="true" />
+			<virtual-server name="default-host" enable-welcome-root="false">
 				<alias name="localhost" />
 			</virtual-server>
 			<valve name="remoteipvalve" module="org.jboss.as.web" class-name="org.apache.catalina.valves.RemoteIpValve">
